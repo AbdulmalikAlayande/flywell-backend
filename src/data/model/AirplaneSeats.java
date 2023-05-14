@@ -5,7 +5,7 @@ public class AirplaneSeats {
 	static int numberOfSeats = 20;
 	private static final boolean[] seats = new boolean[numberOfSeats];
 	
-	public static boolean[] getSeats() {
+	public      static boolean[] getSeats() {
 		return seats;
 	}
 	

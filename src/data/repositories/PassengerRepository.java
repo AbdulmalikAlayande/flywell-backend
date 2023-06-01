@@ -12,6 +12,7 @@ public interface PassengerRepository {
 	
 	int getCountOfPassengers();
 	int getSeatNumberOfPassenger(int passengerSeat);
+	List<Passenger> getAllPassengers();
 	
 	Passenger findPassengerByUserName(String userName);
 	

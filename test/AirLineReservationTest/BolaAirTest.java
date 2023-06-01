@@ -135,21 +135,21 @@ class BolaAirTest {
 		
 		passenger.setFirstName("Abdulmalik");
 		passenger.setLastName("Alayande");
-		passenger.setFullName();
+//		passenger.setFullName();
 		passenger.setEmail("alaabdulmalik03@gmail.com");
 		passenger.setPhoneNumber("07036174617");
 		airLine.registerNewUser(passenger);
 		
 		passenger1.setFirstName("Abdul");
 		passenger1.setLastName("Alayande");
-		passenger1.setFullName();
+//		passenger1.setFullName();
 		passenger1.setEmail("alaabdulmalik03@outlook.com");
 		passenger1.setPhoneNumber("07041774617");
 		airLine.registerNewUser(passenger1);
 		
 		passenger2.setFirstName("Alabi");
 		passenger2.setLastName("Alayande");
-		passenger2.setFullName();
+//		passenger2.setFullName();
 		passenger2.setEmail("alaabdulmalik03@yahoo.com");
 		passenger2.setPhoneNumber("08054674617");
 		airLine.registerNewUser(passenger2);
@@ -168,7 +168,7 @@ class BolaAirTest {
 		Date date = new Date();
 		passenger1.setFirstName("Abdul");
 		passenger1.setLastName("Alayande");
-		passenger1.setFullName();
+//		passenger1.setFullName();
 		passenger1.setEmail("alaabdulmalik03@outlook.com");
 		passenger1.setPhoneNumber("07041774617");
 		
@@ -187,7 +187,7 @@ class BolaAirTest {
 	 public void testThatUserIdIsBeingGeneratedEachTimeAUserRegistersANewAccount(){
 		 passenger.setFirstName("Abdulmalik");
 		 passenger.setLastName("Alayande");
-		 passenger.setFullName();
+//		 passenger.setFullName();
 		 passenger.setEmail("alaabdulmalik03@gmail.com");
 		 passenger.setPhoneNumber("07036174617");
 		 airLine.registerNewUser(passenger);
@@ -204,7 +204,7 @@ class BolaAirTest {
 		
 		passenger.setFirstName("Abdulmalik");
 		passenger.setLastName("Alayande");
-		passenger.setFullName();
+//		passenger.setFullName();
 		passenger.setEmail("alaabdulmalik03@gmail.com");
 		passenger.setPhoneNumber("07036174617");
 		airline12.registerNewUser(passenger);
@@ -212,7 +212,7 @@ class BolaAirTest {
 		
 		passenger1.setFirstName("Abdul");
 		passenger1.setLastName("Alayande");
-		passenger1.setFullName();
+//		passenger1.setFullName();
 		passenger1.setEmail("alaabdulmalik03@outlook.com");
 		passenger1.setPhoneNumber("07041774617");
 		airline12.registerNewUser(passenger1);

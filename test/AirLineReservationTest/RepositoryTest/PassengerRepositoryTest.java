@@ -42,16 +42,6 @@ class PassengerRepositoryTest {
 		assertNotNull(foundPassenger.getId());
 	}
 	
-//	@Test @DisplayName("Get All passengers belonging to a particular flight test") void getAllPassengersInPlaneTest(){
-//		Passenger passenger1 = new Passenger();
-//		List<Passenger> passengers = new ArrayList<>();
-//		passengerRepo.savePassenger(passenger1);
-//		passenger1.setFlightId("1234");
-//		passengers.add(passenger);
-//		passengers.add(passenger1);
-//		assertEquals(passengers, passengerRepo.getAllPassengersBy("1234"));
-//	}
-	
 	@Test @DisplayName("remove Passenger By Id Test") void savePassenger_DeleteByIdTest(){
 		boolean isDeletedPassenger = passengerRepo.removePassenger(passenger.getId());
 		assertTrue(isDeletedPassenger);
@@ -74,5 +64,17 @@ class PassengerRepositoryTest {
 		Passenger foundPassenger = passengerRepo.findPassengerByUserName(passenger.getUserName());
 		assertNotNull(foundPassenger);
 		assertEquals(foundPassenger, passenger);
+	}
+	
+	@Test void getAllPassengersTest(){
+		Passenger passenger1 = new Passenger();
+		Passenger savedPassenger1 = passengerRepo.savePassenger(passenger1);
+		List<Passenger> passengers = new ArrayList<>();
+		passengers.add(passenger);
+		passengers.add(savedPassenger1);
+		for (int i = 0; i < passengerRepo.getAllPassengers().size(); i++) {
+			assertNotNull(passengerRepo.getAllPassengers().get(i));
+		}
+		assertEquals(passengers, passengerRepo.getAllPassengers());
 	}
 }

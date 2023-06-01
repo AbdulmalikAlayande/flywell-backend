@@ -7,24 +7,24 @@ import dtos.Response.PassengerResponse;
 
 public class Mapper {
 	public static Passenger map(PassengerRequest passengerRequest) {
-		Passenger newPassenger = new Passenger();
-		newPassenger.setLastName(passengerRequest.getLastName());
-		newPassenger.setEmail(passengerRequest.getEmail());
-		newPassenger.setFirstName(passengerRequest.getFirstName());
-		newPassenger.setFullName();
-		newPassenger.setPhoneNumber(passengerRequest.getPhoneNumber());
-		newPassenger.setPassword(passengerRequest.getPassword());
-		newPassenger.setUserName(passengerRequest.getUserName());
-		return newPassenger;
+		return Passenger.builder()
+				       .password(passengerRequest.getPassword())
+				       .lastName(passengerRequest.getLastName())
+				       .firstName(passengerRequest.getFirstName())
+				       .Email(passengerRequest.getEmail())
+				       .userName(passengerRequest.getUserName())
+				       .phoneNumber(passengerRequest.getPhoneNumber())
+				       .build();
 	}
 	public static PassengerResponse map(Passenger passenger) {
-		PassengerResponse response = new PassengerResponse();
-		response.setEmail(passenger.getEmail());
-		response.setFullName(passenger.getFullName());
-		response.setPhoneNumber(passenger.getPhoneNumber());
-		response.setFullName(passenger.getPassword());
-		response.setUserName(passenger.getUserName());
-		return response;
+		return PassengerResponse.builder()
+				       .id(passenger.getId())
+				       .Email(passenger.getEmail())
+				       .fullName(passenger.getFullName())
+				       .phoneNumber(passenger.getPhoneNumber())
+				       .userName(passenger.getUserName())
+				       .flightId(passenger.getFlightId())
+				       .build();
 	}
 	
 	public static Passenger map(UpdateRequest updateRequest){

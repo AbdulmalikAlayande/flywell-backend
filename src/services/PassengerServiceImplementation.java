@@ -7,7 +7,11 @@ import data.repositories.PassengerRepositoryImpl;
 import dtos.Request.PassengerRequest;
 import dtos.Request.UpdateRequest;
 import dtos.Response.PassengerResponse;
+import utils.exceptions.FailedRegistrationException;
+import utils.exceptions.InvalidRequestException;
+import utils.mycustomannotations.AdminMethod;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -23,14 +27,96 @@ public class PassengerServiceImplementation implements PassengerService{
 		return instance;
 	}
 	
-	@Override
-	public PassengerResponse registerNewPassenger(PassengerRequest passengerRequest) {
+	@Override public PassengerResponse registerNewPassenger(PassengerRequest passengerRequest)throws FailedRegistrationException {
+		validateThatPassengerRequestDoesNotHaveAnyNullField(passengerRequest);
 		Passenger mappedPassenger = Mapper.map(passengerRequest);
-		if (emailIsValid(mappedPassenger.getEmail()) && passwordIsValid(mappedPassenger.getPassword())) {
-			Passenger savedPassenger = passengerRepository.savePassenger(mappedPassenger);
-			return Mapper.map(savedPassenger);
+		if (emailIsValid(mappedPassenger.getEmail()) && passwordIsValid(mappedPassenger.getPassword()))
+			return Mapper.map(passengerRepository.savePassenger(mappedPassenger));
+		throw new FailedRegistrationException("Registration Failed");
+	}
+	
+	@Override public PassengerResponse updateDetailsOfRegisteredPassenger(UpdateRequest updateRequest) {
+		Passenger foundPassenger = passengerRepository.findPassengerByUserName(updateRequest.getUserName());
+		foundPassenger.setUserName(updateRequest.getUserName());
+		if (updateRequest.getEmail() != null) foundPassenger.setEmail(updateRequest.getEmail());
+		if (updateRequest.getFirstName() != null) foundPassenger.setFirstName(updateRequest.getFirstName());
+		if (updateRequest.getLastName() != null) foundPassenger.setLastName(updateRequest.getLastName());
+		if (updateRequest.getPassword() != null) foundPassenger.setPassword(updateRequest.getPassword());
+		if (updateRequest.getPhoneNumber() != null) foundPassenger.setPhoneNumber(updateRequest.getPhoneNumber());
+		return Mapper.map(passengerRepository.savePassenger(foundPassenger));
+	}
+	
+	@Override public PassengerResponse findPassengerById(String passengerId) throws InvalidRequestException {
+		Passenger foundPassenger = passengerRepository.getPassengerById(passengerId);
+		if (foundPassenger == null)
+			throw new InvalidRequestException("Error: Incorrect Id");
+		return Mapper.map(passengerRepository.getPassengerById(passengerId));
+		
+	}
+	
+	@Override
+	public Passenger findPassengerByIdForAdmin(String passengerId) throws InvalidRequestException {
+		Passenger foundPassenger = passengerRepository.getPassengerById(passengerId);
+		if (foundPassenger == null)
+			throw new InvalidRequestException("Error: Incorrect Id");
+		return foundPassenger;
+	}
+	
+	@Override public List<PassengerResponse> getAllPassengersBy(String flightId) {
+		List<PassengerResponse> passengerResponses = new ArrayList<>();
+		for (int i = 0; i < passengerRepository.getCountOfPassengers(); i++) {
+			if (passengerRepository.getAllPassengers().get(i) != null)
+				passengerResponses.add(Mapper.map(passengerRepository.getAllPassengers().get(i)));
 		}
-		throw new IllegalArgumentException("Invalid email or password");
+		return passengerResponses;
+	}
+	
+	@Override public void removePassengerBId(String passengerId) throws InvalidRequestException {
+		boolean isDeleted = passengerRepository.removePassenger(passengerId);
+		if (!isDeleted) throw new InvalidRequestException("Error: Invalid Password");
+	}
+	
+	@Override public int getCountOfPassengers() {
+		return passengerRepository.getCountOfPassengers();
+	}
+	
+	@Override
+	public List<PassengerResponse> getAllPassengers() {
+		List<PassengerResponse> responses = new ArrayList<>();
+		for (int i = 0; i < passengerRepository.getCountOfPassengers(); i++) {
+			if (passengerRepository.getAllPassengers().get(i) != null)
+				responses.add(Mapper.map(passengerRepository.getAllPassengers().get(i)));
+		}
+		return responses;
+	}
+	
+	@Override public PassengerResponse findPassengerByEmailAndPassword(String email, String password) throws InvalidRequestException {
+		Passenger foundPassenger = passengerRepository.findPassengerByEmailAndPassword(email, password);
+		if (foundPassenger == null)
+			throw new InvalidRequestException("ERROR: Not found due to invalid email or password");
+		return Mapper.map(foundPassenger);
+	}
+	
+	@Override public PassengerResponse findPassengerByUserName(String userName) throws InvalidRequestException {
+		Passenger foundPassenger = passengerRepository.findPassengerByUserName(userName);
+		if (foundPassenger == null)
+			throw new InvalidRequestException("ERROR: Name Not Found");
+		return Mapper.map(foundPassenger);
+	}
+	
+	@Override @AdminMethod public Passenger findAPassengerByUserName(String userName) {
+		return passengerRepository.findPassengerByUserName(userName);
+	}
+	
+	@Override public boolean removePassengerByUserName(String userName) throws InvalidRequestException {
+		boolean isDeletedPassenger = passengerRepository.removePassengerByUserName(userName);
+		if (!isDeletedPassenger)
+			throw new InvalidRequestException("ERROR: Invalid username");
+		return true;
+	}
+	
+	@Override @AdminMethod() public Passenger findPassengerByUserNameForAdmin(String passengerUsername) {
+		return passengerRepository.findPassengerByUserName(passengerUsername);
 	}
 	
 	private boolean passwordIsValid(String password) {
@@ -43,11 +129,13 @@ public class PassengerServiceImplementation implements PassengerService{
 				break;
 			}
 		}
-		if (!isValidPassword) {
-			throw new IllegalArgumentException("Invalid password format" +
-					                                   "password must contain special characters like: @, %, &, ^, $, #, !, (, ), ()");
-		}
-		return isValidPassword;
+		if (!isValidPassword)
+			throw new IllegalArgumentException("""
+				Invalid password format\040
+				password must contain special characters\040
+				like: @, %, &, ^, $, #, !, (, ), ()
+				""");
+		return true;
 	}
 	
 	private boolean emailIsValid(String email) {
@@ -68,59 +156,10 @@ public class PassengerServiceImplementation implements PassengerService{
 		return true;
 	}
 	
-	@Override
-	public PassengerResponse updateDetailsOfRegisteredPassenger(UpdateRequest updateRequest) {
-		Passenger foundPassenger = passengerRepository.findPassengerByUserName(updateRequest.getUserName());
-		if (updateRequest.getEmail() != null) foundPassenger.setEmail(updateRequest.getEmail());
-		if (updateRequest.getUserName() != null) foundPassenger.setUserName(updateRequest.getUserName());
-		if (updateRequest.getFirstName() != null) foundPassenger.setFirstName(updateRequest.getFirstName());
-		if (updateRequest.getLastName() != null) foundPassenger.setLastName(updateRequest.getLastName());
-		if (updateRequest.getPassword() != null) foundPassenger.setPassword(updateRequest.getPassword());
-		if (updateRequest.getPhoneNumber() != null) foundPassenger.setPhoneNumber(updateRequest.getPhoneNumber());
-		return Mapper.map(passengerRepository.savePassenger(foundPassenger));
-	}
-	
-	@Override
-	public PassengerResponse findPassengerById(String passengerId) {
-		return null;
-	}
-	
-	@Override
-	public List<PassengerResponse> getAllPassengersBy(String flightId) {
-		return null;
-	}
-	
-	@Override
-	public boolean removePassengerBId(String passengerId) {
-		return false;
-	}
-	
-	@Override
-	public int getCountOfPassengers() {
-		return passengerRepository.getCountOfPassengers();
-	}
-	
-	@Override
-	public PassengerResponse findPassengerByEmailAndPassword(String email, String password) {
-		Passenger foundPassenger = passengerRepository.findPassengerByEmailAndPassword(email, password);
-		if (foundPassenger != null) return Mapper.map(foundPassenger);
-		throw new RuntimeException("ERROR: Not found due to invalid email or password");
-	}
-	
-	@Override
-	public PassengerResponse findPassengerByUserName(String userName) {
-		Passenger foundPassenger = passengerRepository.findPassengerByUserName(userName);
-		System.out.println("The found passenger is: "+ foundPassenger);
-		if (foundPassenger == null)
-			throw new RuntimeException("ERROR: Name Not Found");
-		return Mapper.map(foundPassenger);
-	}
-	
-	@Override
-	public boolean removePassengerByUserName(String userName) {
-		boolean isDeletedPassenger = passengerRepository.removePassengerByUserName(userName);
-		if (!isDeletedPassenger)
-			throw new RuntimeException("ERROR: Invalid username");
-		return true;
+	private void validateThatPassengerRequestDoesNotHaveAnyNullField(PassengerRequest passengerRequest) {
+		if (passengerRequest.getEmail() == null || passengerRequest.getUserName() == null || passengerRequest.getPassword() == null
+				    || passengerRequest.getPhoneNumber() == null || passengerRequest.getLastName() == null || passengerRequest.getFirstName() == null){
+			throw new IllegalArgumentException("Please fill the empty field");
+		}
 	}
 }

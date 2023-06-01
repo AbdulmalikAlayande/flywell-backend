@@ -1,10 +1,15 @@
 package dtos.Request;
 
 import data.model.Passenger;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import utils.DateTime.Date;
 
 import java.time.LocalTime;
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class FlightRequest {
 	private LocalTime departureTime;
 	private Date departureDate;

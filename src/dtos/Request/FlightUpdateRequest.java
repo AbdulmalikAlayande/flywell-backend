@@ -1,11 +1,16 @@
 package dtos.Request;
 
 import data.model.Passenger;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 import utils.DateTime.Date;
 
 import java.time.LocalTime;
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class FlightUpdateRequest {
 	private String flightId;
 	@Nullable private LocalTime departureTime;

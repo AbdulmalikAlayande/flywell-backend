@@ -15,7 +15,6 @@ public class FlightMapper {
 		flight.setBaggageAllowance(flightRequest.getBaggageAllowance());
 		flight.setDepartureDate(flightRequest.getDepartureDate());
 		flight.setDepartureTime(flightRequest.getDepartureTime());
-		flight.setPassengers(flight.getPassengers());
 		return flight;
 	}
 	public static FlightResponse map(Flight flight) {

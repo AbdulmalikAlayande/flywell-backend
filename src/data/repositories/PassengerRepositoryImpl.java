@@ -1,7 +1,7 @@
 package data.repositories;
 
-import utils.appUtils.IdLetterCharacter;
 import data.model.Passenger;
+import utils.appUtils.IdLetterCharacter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,23 +28,6 @@ public class PassengerRepositoryImpl implements PassengerRepository{
 		listOfPassengers.add(passenger);
 	}
 	
-	private String GeneratedFlightId() {
-		String id = "";
-		id+="BolaAir-"+IdLetterCharacter.getCharacter()+listOfPassengers+1;
-		return id;
-	}
-	
-	private String generatedId() {
-		int counter = 0;
-		int idRecognizer = IdLetterCharacter.values().length;
-		String userId =  idRecognizer+ counter + getCountOfPassengers() + IdLetterCharacter.getCharacter();
-		if (getCountOfPassengers()  % 10 == 0){
-			counter++;
-			userId =  idRecognizer+ counter + getCountOfPassengers() + IdLetterCharacter.getCharacter();
-		}
-		return userId;
-	}
-	
 	private Passenger existingPassenger(Passenger passenger) {
 		return getPassengerById(passenger.getId());
 	}
@@ -57,6 +40,11 @@ public class PassengerRepositoryImpl implements PassengerRepository{
 	@Override
 	public int getSeatNumberOfPassenger(int passengerSeat) {
 		return 0;
+	}
+	
+	@Override
+	public List<Passenger> getAllPassengers() {
+		return listOfPassengers;
 	}
 	
 	@Override
@@ -90,13 +78,6 @@ public class PassengerRepositoryImpl implements PassengerRepository{
 		return null;
 	}
 	
-//	@Override
-//	public List<Passenger> getAllPassengersBy(String flightId) {
-//		List<Passenger> listOfPassengersBelongingToTheFlight = new ArrayList<>();
-//		for (Passenger passenger : listOfPassengers) if (Objects.equals(passenger.getFlightId(), flightId))
-//				listOfPassengersBelongingToTheFlight.add(passenger);
-//		return listOfPassengersBelongingToTheFlight;
-//	}
 	
 	@Override
 	public boolean removePassenger(String passengerId) {
@@ -107,4 +88,22 @@ public class PassengerRepositoryImpl implements PassengerRepository{
 		}
 		return false;
 	}
+	
+	private String generatedId() {
+		int counter = 0;
+		int idRecognizer = IdLetterCharacter.values().length;
+		String userId =  idRecognizer+ counter + getCountOfPassengers() + IdLetterCharacter.getCharacter();
+		if (getCountOfPassengers()  % 10 == 0){
+			counter++;
+			userId =  idRecognizer+ counter + getCountOfPassengers() + IdLetterCharacter.getCharacter();
+		}
+		return userId;
+	}
+	//	@Override
+//	public List<Passenger> getAllPassengersBy(String flightId) {
+//		List<Passenger> listOfPassengersBelongingToTheFlight = new ArrayList<>();
+	//		for (Passenger passenger : listOfPassengers) if (Objects.equals(passenger.getFlightId(), flightId))
+//				listOfPassengersBelongingToTheFlight.add(passenger);
+//		return listOfPassengersBelongingToTheFlight;
+//	}
 }

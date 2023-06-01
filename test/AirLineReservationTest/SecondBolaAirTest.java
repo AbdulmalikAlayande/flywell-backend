@@ -27,7 +27,7 @@ public class SecondBolaAirTest {
 		passenger.setFirstName("Abdulmalik");
 		passenger.setLastName("Alayande");
 		passenger.setEmail("alaabdulmalik03@gmail.com");
-		passenger.setFullName();
+//		passenger.setFullName();
 	}
 	@Test
 	@DisplayName("Number of seats on airplane test")

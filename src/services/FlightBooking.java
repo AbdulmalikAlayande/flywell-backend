@@ -1,35 +1,33 @@
 package services;
 
 import data.model.Flight;
+import data.model.Passenger;
 import data.model.TravelClass;
 import dtos.Request.BookingRequest;
 import dtos.Request.FlightRequest;
 import dtos.Response.FlightResponse;
 import dtos.Response.PassengerResponse;
+import lombok.SneakyThrows;
 import utils.DateTime.Date;
 
 import java.time.LocalTime;
 import java.util.EnumSet;
 import java.util.List;
-/*when the passenger wants to book a flight,
-they must input their name
-find the passenger by name if found book a flight in a current unfilled flight for the passenger
-return the passenger for use later in the future
-the if the flight has been booked
-generate a flight form
-call the save flight form service of the service class
-pass in flightForm Request
-then map and save the flight form and return the response
-then save the form
-*/
+
 import static data.model.TravelClass.ECONOMY_CLASS;
 import static data.model.TravelClass.FIRST_CLASS;
+
 
 public class FlightBooking implements Bookable{
 	FlightService flightService = new FlightServiceImpl();
 	PassengerService passengerService = PassengerServiceImplementation.getInstance();
 	
-	
+	private final List<BookingCategory> bookingCategories = List.of(
+			FirstClassBookingCategory.getInstance(),
+			BusinessClassBookingCategory.getInstance(),
+			PremiumEconomyClassBookingCategory.getInstance(),
+			EconomyClassBookingCategory.getInstance()
+	);
 	@Override
 	public Flight checkAvailableFlight() {
 		List<Flight> allFlights = flightService.getAllFLights();
@@ -42,27 +40,43 @@ public class FlightBooking implements Bookable{
 		}
 		return flight;
 	}
+	
 	@Override
 	public Flight bookFlight(BookingRequest bookingRequest) {
 		if (bookingRequestIsValid(bookingRequest) && paymentIsCompleted(bookingRequest) && nameIsValid(bookingRequest)) {
 			Flight availableFlight = checkAvailableFlight();
-			if (bookingRequest.getBookingCategory() == 0 && !availableFlight.getSeats()[4])
-				bookFlightForFirstClass(availableFlight, bookingRequest.getBookingCategory());
-			else if (bookingRequest.getBookingCategory() == 1 && !availableFlight.getSeats()[9])
-				bookFlightForBusinessClass(availableFlight, bookingRequest.getBookingCategory());
-			else if (bookingRequest.getBookingCategory() == 2 && !availableFlight.getSeats()[14])
-				bookFlightForPremiumEconomyClass(availableFlight, bookingRequest.getBookingCategory());
-			else if (bookingRequest.getBookingCategory() == 3 && !availableFlight.getSeats()[19])
-				bookFlightForEconomyClass(availableFlight, bookingRequest.getBookingCategory());
-			return availableFlight;
+			setPassengerToArrayOfPassengers(bookingRequest, availableFlight);
+			BookingCategory bookingCategory = iDontKnowTheName(bookingRequest.getBookingCategory());
+			if (bookingCategory.canBook(availableFlight)) {
+				bookingCategory.assignSeat(availableFlight);
+				return availableFlight;
+			}
 		}
 		throw new RuntimeException("Invalid booking request");
+	}
+	
+	private void setPassengerToArrayOfPassengers(BookingRequest bookingRequest, Flight availableFlight) {
+		for (int i = 0; i < availableFlight.getPassengers().length; i++) {
+			if (availableFlight.getPassengers()[i] == null) {
+				availableFlight.getPassengers()[i] = foundPassenger(bookingRequest);
+				break;
+			}
+		}
+	}
+	
+	private Passenger foundPassenger(BookingRequest bookingRequest) {
+		return passengerService.findPassengerByUserNameForAdmin(bookingRequest.getPassengerUsername());
+	}
+	
+	private BookingCategory iDontKnowTheName(int bookingCategory){
+		return bookingCategories.get(bookingCategory);
 	}
 	
 	private boolean paymentIsCompleted(BookingRequest bookingRequest) {
 		return true;
 	}
 	
+	@SneakyThrows
 	private boolean nameIsValid(BookingRequest bookingRequest){
 		PassengerResponse passengerResponse = passengerService.findPassengerByUserName(bookingRequest.getPassengerUsername());
 		return passengerResponse != null;
@@ -97,25 +111,6 @@ public class FlightBooking implements Bookable{
 		flightRequest.setArrivalDate(new Date().setDate(23, 9, 2024));
 		saveFlight(flightRequest);
 		return flightService.saveFlightForAdmin(flightRequest);
-	}
-	
-	private void bookFlightForEconomyClass(Flight availableFlight, int bookingCategory) {assignSeatToPassenger(availableFlight, bookingCategory);}
-	private void bookFlightForPremiumEconomyClass(Flight availableFlight, int bookingCategory) {assignSeatToPassenger(availableFlight, bookingCategory);}
-	private void bookFlightForBusinessClass(Flight availableFlight, int bookingCategory) {assignSeatToPassenger(availableFlight, bookingCategory);}
-	private void bookFlightForFirstClass(Flight availableFlight, int bookingCategory) {assignSeatToPassenger(availableFlight, bookingCategory);}
-	private void assignSeatToPassenger(Flight availableFlight, int bookingCategory) {
-		int lastAvailableSeatForTheBookingCategory = 0;
-		int firstSeatNumber = 0;
-		if (bookingCategory == 0) {lastAvailableSeatForTheBookingCategory = 5;}
-		else if (bookingCategory == 1) {lastAvailableSeatForTheBookingCategory = 9;firstSeatNumber = 5;}
-		else if (bookingCategory == 2) {lastAvailableSeatForTheBookingCategory = 14;firstSeatNumber = 10;}
-		else if (bookingCategory == 3) {lastAvailableSeatForTheBookingCategory = 19;firstSeatNumber = 15;}
-		for (int firstSeat = firstSeatNumber; firstSeat < lastAvailableSeatForTheBookingCategory; firstSeat++) {
-			if (!availableFlight.getSeats()[firstSeat]) {
-				availableFlight.getSeats()[firstSeat] = true;
-				break;
-			}
-		}
 	}
 	
 	@Override

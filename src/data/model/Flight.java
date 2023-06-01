@@ -17,7 +17,7 @@ public class Flight {
 	private int baggageAllowance;
 	private String destination;
 	private int numberOfPassengers;
-	private Passenger[] passengers;
+	private final Passenger[] passengers = new Passenger[20];
 	private final int numberOfSeats = 20;
 	private final boolean[] seats = new boolean[numberOfSeats];
 	
@@ -92,21 +92,18 @@ public class Flight {
 	public void setDestination(String destination) {
 		this.destination = destination;
 	}
+	public void setNumberOfPassengers(int numberOfPassengers) {
+		this.numberOfPassengers = numberOfPassengers;
+	}
 	
 	public Passenger[] getPassengers() {
 		return passengers;
 	}
-	
-	public void setPassengers(Passenger[] passengers) {
-		this.passengers = passengers;
+	public Passenger getPassenger(int index){
+		return passengers[index];
 	}
-	
 	public int getNumberOfPassengers() {
 		return numberOfPassengers;
-	}
-	
-	public void setNumberOfPassengers(int numberOfPassengers) {
-		this.numberOfPassengers = numberOfPassengers;
 	}
 	
 	public boolean[] getSeats() {
@@ -116,7 +113,6 @@ public class Flight {
 	public boolean getSeats(int seatIndex){
 		return seats[seatIndex];
 	}
-	
 	public int getNumberOfSeats(){
 		return seats.length;
 	}

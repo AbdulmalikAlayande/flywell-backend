@@ -1,8 +1,12 @@
 package AirLineReservationTest.ServicesTest;
 
-import data.model.*;
+import data.model.Flight;
+import data.model.Payment;
+import data.model.PaymentMethod;
+import data.model.Price;
 import dtos.Request.BookingRequest;
 import dtos.Request.PassengerRequest;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,36 +34,64 @@ class BookableTest {
 		passengerRequest = new PassengerRequest();
 	}
 	
-	@Test void testThatAvailableFlightCanBeChecked(){
+	@Test void checkAvailableFlightTest(){
 		Bookable bookable1 = new FlightBooking();
 		Flight availableFlight = bookable1.checkAvailableFlight();
 		assertNotNull(availableFlight);
 	}
-	@Test void testThatPassengerCanBookFlight(){
-		passengerRequest.setUserName("bendel");
-		passengerRequest.setEmail("ala@gmail.com");
-		passengerRequest.setPassword("ayanniyi@20");
-		passengerService.registerNewPassenger(passengerRequest);
+	@SneakyThrows
+	@Test void testThatPassengerCanBookFlight_AndSeatsWillBeAssignedToThePassenger(){
+		passengerService.registerNewPassenger(buildPassenger());
 		bookingRequest.setBookingCategory(3);
-		bookingRequest.setPassengerUsername("bendel");
+		bookingRequest.setPassengerUsername(buildPassenger().getUserName());
 		booked = bookable.bookFlight(bookingRequest);
-		System.out.println("The seat at index 15 is: "+booked.getSeats()[15]);
 		assertTrue(booked.getSeats()[15]);
 	}
 	
+	@SneakyThrows
 	@Test void testThatAFlightHasToBeFullyBookedBeforeAnother(){
-		BookingRequest bookingRequest1 = getBookingRequest1();
+		passengerService.registerNewPassenger(buildPassenger());
+		passengerService.registerNewPassenger(buildPassenger1());
 		
-		PassengerRequest passengerRequest2 = new PassengerRequest();
-		passengerRequest2.setLastName("Bobo");
-		passengerRequest2.setFirstName("Thyme");
-		passengerRequest2.setPhoneNumber("09093456787");
-		passengerRequest2.setPassword("bobo@thyme");
-		passengerRequest2.setUserName("dende");
-		passengerRequest2.setEmail("bobo@gmail.com");
-		passengerService.registerNewPassenger(passengerRequest2);
-		
-		
+		Flight bookedFlight = bookable.bookFlight(getBookingRequest1());
+		Flight bookedFlight2 = bookable.bookFlight(getBookingRequest2());
+		assertTrue(bookedFlight.getSeats()[10]);
+		assertTrue(bookedFlight2.getSeats()[15]);
+		System.out.println(booked);
+	}
+	
+	
+	@Test void bookFlight_AddPassengerToFlightListOfPassengersTest(){
+	
+	}
+	
+	@Test void bookFlight_GenerateFlightFormTest(){
+	
+	}
+	
+	private PassengerRequest buildPassenger(){
+		return PassengerRequest.builder()
+				       .userName("abdul@20")
+				       .Email("alaabdulmalik03@gmail.com")
+				       .phoneNumber("07036174617")
+				       .firstName("Abdulmalik")
+				       .lastName("Alayande")
+				       .password("ayanniyi@20")
+				       .build();
+	}
+	
+	private PassengerRequest buildPassenger1(){
+		return PassengerRequest.builder()
+				       .userName("crayon")
+				       .Email("alaabdulmalik03@gmail.com")
+				       .phoneNumber("07036174617")
+				       .firstName("pencil")
+				       .lastName("eraser")
+				       .password("ayanniyi@20")
+				       .build();
+	}
+	@NotNull
+	private BookingRequest getBookingRequest2(){
 		Payment payment2 = new Payment();
 		payment2.setPaymentMethod(PaymentMethod.CARD);
 		payment2.setPrice(Price.ECONOMY_CLASS);
@@ -68,27 +100,11 @@ class BookableTest {
 		BookingRequest bookingRequest2 = new BookingRequest();
 		bookingRequest2.setBookingCategory(3);
 		bookingRequest2.setPayment(payment2);
-		bookingRequest2.setPassengerUsername("dende");
-		
-		Flight bookedFlight = bookable.bookFlight(bookingRequest1);
-		Flight bookedFlight2 = bookable.bookFlight(bookingRequest2);
-		System.out.println("This is: "+bookedFlight.getSeats()[10]);
-		System.out.println("This is: "+bookedFlight2.getSeats()[15]);
-		assertTrue(bookedFlight.getSeats()[10]);
-		assertTrue(bookedFlight2.getSeats()[15]);
-		System.out.println(booked);
+		bookingRequest2.setPassengerUsername(buildPassenger1().getUserName());
+		return bookingRequest2;
 	}
 	
-	@NotNull
 	private BookingRequest getBookingRequest1() {
-		PassengerRequest passengerRequest1 = new PassengerRequest();
-		passengerRequest1.setLastName("Bolabo");
-		passengerRequest1.setFirstName("curry");
-		passengerRequest1.setPhoneNumber("07036174617");
-		passengerRequest1.setPassword("bola@curry");
-		passengerRequest1.setUserName("cadet419");
-		passengerRequest1.setEmail("bola@gmail.com");
-		passengerService.registerNewPassenger(passengerRequest1);
 		Payment payment1 = new Payment();
 		payment1.setPaymentMethod(PaymentMethod.CASH);
 		payment1.setPrice(Price.BUSINESS_CLASS);
@@ -97,7 +113,7 @@ class BookableTest {
 		BookingRequest bookingRequest1 = new BookingRequest();
 		bookingRequest1.setBookingCategory(2);
 		bookingRequest1.setPayment(payment1);
-		bookingRequest1.setPassengerUsername("cadet419");
+		bookingRequest1.setPassengerUsername(buildPassenger().getUserName());
 		return bookingRequest1;
 	}
 }

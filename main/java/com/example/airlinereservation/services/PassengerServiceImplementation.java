@@ -7,15 +7,16 @@ import com.example.airlinereservation.dtos.Request.*;
 import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import com.example.airlinereservation.utils.exceptions.*;
 import com.example.airlinereservation.utils.mycustomannotations.AdminMethod;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.*;
+
+import static com.example.airlinereservation.utils.Exceptions.*;
 
 @Service
 @NoArgsConstructor
@@ -34,20 +35,30 @@ public class PassengerServiceImplementation implements PassengerService{
 	public PassengerResponse registerNewPassenger(PassengerRequest passengerRequest)throws FailedRegistrationException {
 		Field[] declaredFields = passengerRequest.getClass().getDeclaredFields();
 		PassengerResponse passengerResponse = new PassengerResponse();
-		try {
-			checkForNullFields(declaredFields, passengerRequest);
-			Passenger passenger = new Passenger();
-			UserBiodata biodata = new UserBiodata();
-			mapper.map(passengerRequest, biodata);
-			biodata.setFullName(passengerResponse.getFullName());
-			passenger.setUserBioData(biodata);
-			passengerRepository.save(passenger);
-			mapper.map(passenger.getUserBioData(), passengerResponse);
-			return passengerResponse;
+		if (userDoesNotExistBy(passengerRequest.getUserName())){
+			try {
+				checkForNullFields(declaredFields, passengerRequest);
+				Passenger passenger = new Passenger();
+				UserBiodata biodata = new UserBiodata();
+				mapper.map(passengerRequest, biodata);
+				biodata.setFullName(passengerResponse.getFullName());
+				passenger.setUserBioData(biodata);
+				passengerRepository.save(passenger);
+				mapper.map(passenger.getUserBioData(), passengerResponse);
+				return passengerResponse;
+			} catch (Throwable throwable) {
+				throwFailedRegistrationException(throwable);
+			}
 		}
-		catch (Throwable throwable){
-			throw new FailedRegistrationException("Registration Failed "+ throwable.getMessage()+"\n"+throwable.getCause());
-		}
+		throw new FailedRegistrationException("Registration Failed:: Seems Like You Already Have An Account With Us");
+	}
+	
+	private boolean userDoesNotExistBy(String userName) {
+		Optional<UserBiodata> foundBio = userBioDataRepository.findByUserName(userName);
+		return foundBio.filter(userBiodata ->
+				       passengerRepository
+					   .existsByUserBioData(userBiodata))
+				       .isPresent();
 	}
 	
 	private void checkForNullFields(Field[] declaredFields, PassengerRequest passengerRequest) {
@@ -125,19 +136,14 @@ public class PassengerServiceImplementation implements PassengerService{
 			return true;
 		}).orElseThrow(()-> {
 			try {
-				return throwInvalidRequestException (message);
+				return throwInvalidRequestException(message);
 			} catch (InvalidRequestException e) {
 				throw new RuntimeException(e);
 			}
 		});
 	}
 	
-	
 	@Override @AdminMethod() public Optional<Passenger> findPassengerByUserNameForAdmin(String passengerUsername) {
 		return Optional.empty();
-	}
-	
-	private static RuntimeException throwInvalidRequestException(String message) throws InvalidRequestException {
-		throw new InvalidRequestException(message);
 	}
 }

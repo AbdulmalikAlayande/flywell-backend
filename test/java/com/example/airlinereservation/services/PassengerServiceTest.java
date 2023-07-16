@@ -24,7 +24,6 @@ class PassengerServiceTest {
 	
 	@BeforeEach
 	public void startAllTestWith(){
-		passengerService.removePassengerByUserName("cocolate");
 		updateRequest = new UpdateRequest();
 	}
 	
@@ -38,6 +37,7 @@ class PassengerServiceTest {
 	
 	@SneakyThrows
 	@Test void whenPassengerTriesToRegisterTwice_RegistrationFailedExceptionIsThrown() {
+		passengerService.registerNewPassenger(buildPassenger());
 		assertThatThrownBy(() -> passengerService
 				                         .registerNewPassenger(buildPassenger()), "Seems Like You Already Have An Account With Us")
 				.as("Seems Like You Already Have An Account With Us")

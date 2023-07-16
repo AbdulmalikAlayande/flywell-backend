@@ -35,9 +35,7 @@ public class PassengerServiceImplementation implements PassengerService{
 		Field[] declaredFields = passengerRequest.getClass().getDeclaredFields();
 		PassengerResponse passengerResponse = new PassengerResponse();
 		try {
-			System.out.println(Arrays.toString(declaredFields));
-			System.out.println("Sodiq");
-			checkForNullFields(declaredFields);
+			checkForNullFields(declaredFields, passengerRequest);
 			Passenger passenger = new Passenger();
 			UserBiodata biodata = new UserBiodata();
 			mapper.map(passengerRequest, biodata);
@@ -52,14 +50,9 @@ public class PassengerServiceImplementation implements PassengerService{
 		}
 	}
 	
-	private void checkForNullFields(Field[] declaredFields) {
-		Arrays.stream(declaredFields).forEach(System.out::println);
-		List<Field> listOfNullValues = Arrays.stream(declaredFields).filter(Objects::isNull).toList();
-		listOfNullValues.stream().findAny().ifPresent(x->{
-			String name = x.getName();
-			System.out.println(x);
-			System.out.println(name);
-			throw new EmptyFieldException("Field is empty");
+	private void checkForNullFields(Field[] declaredFields, PassengerRequest passengerRequest) {
+		Arrays.stream(declaredFields).findAny().ifPresent(x->{
+		
 		});
 	}
 	

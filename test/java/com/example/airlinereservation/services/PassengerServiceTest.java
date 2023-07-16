@@ -24,35 +24,21 @@ class PassengerServiceTest {
 	
 	@BeforeEach
 	public void startAllTestWith(){
-//		passengerService.removePassengerByUserName("ayanniyi@20");
-//		passengerService.removePassengerByUserName("Obinali G");
-		passengerService.removePassengerByUserName("cocolate");
 		updateRequest = new UpdateRequest();
-	}
-	
-	@SneakyThrows
-	@Test void testThatPassengerCanRegister(){
-		passengerResponse = passengerService.registerNewPassenger(buildPassenger());
-		assertThat(passengerResponse).isNotNull();
 	}
 	
 	@SneakyThrows
 	@Test void testThatPassengerTriesToRegisterWithIncompleteDetails_ExceptionIsThrown(){
 		assertThatThrownBy(()->passengerService
-				        .registerNewPassenger(buildIncompletePassenger()), "Incomplete Details")
-						.as("")
-						.isInstanceOf(FailedRegistrationException.class).hasMessageContaining("Incomplete Details");
-	}
-	
-	private PassengerRequest buildIncompletePassenger() {
-		return PassengerRequest.builder().Email("theeniolasamuel@gmail.com").firstName("Samuel")
-				               .lastName("Eniola").userName("cocolate").password("coco@22").build();
+				.registerNewPassenger(buildIncompletePassenger()), "Incomplete Details")
+				.as("")
+				.isInstanceOf(FailedRegistrationException.class).hasMessageContaining("Incomplete Details");
 	}
 	
 	@SneakyThrows
-	@Test void whenPassengerTriesToRegisterTwice_RegistrationFailedExceptionIsThrown(){
-		assertThatThrownBy(()->	passengerService
-				.registerNewPassenger(buildPassenger()), "Seems Like You Already Have An Account With Us")
+	@Test void whenPassengerTriesToRegisterTwice_RegistrationFailedExceptionIsThrown() {
+		assertThatThrownBy(() -> passengerService
+				                         .registerNewPassenger(buildPassenger()), "Seems Like You Already Have An Account With Us")
 				.as("Seems Like You Already Have An Account With Us")
 				.isInstanceOf(FailedRegistrationException.class).hasMessageContaining("Seems Like You Already Have An Account With Us");
 		
@@ -63,6 +49,17 @@ class PassengerServiceTest {
 			String message = "Registration Failed because The Email was in the incorrect format or the password was in the incorrect format";
 			return message + "\nplease check your email format of password format";
 		});
+	}
+	
+	@SneakyThrows
+	@Test void testThatPassengerCanRegisterSuccessfully_IfAllChecksArePassed(){
+		passengerResponse = passengerService.registerNewPassenger(buildPassenger());
+		assertThat(passengerResponse).isNotNull();
+	}
+	
+	private PassengerRequest buildIncompletePassenger() {
+		return PassengerRequest.builder().Email("theeniolasamuel@gmail.com").firstName("Samuel")
+				       .lastName("Eniola").userName("cocolate").password("coco@22").build();
 	}
 	
 	private PassengerRequest buildPassengerWithIncorrectFormatDetails() {

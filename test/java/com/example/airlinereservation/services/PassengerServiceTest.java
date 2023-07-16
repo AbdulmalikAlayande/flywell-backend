@@ -24,6 +24,7 @@ class PassengerServiceTest {
 	
 	@BeforeEach
 	public void startAllTestWith(){
+		passengerService.removePassengerByUserName("cocolate");
 		updateRequest = new UpdateRequest();
 	}
 	

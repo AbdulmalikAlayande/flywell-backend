@@ -51,9 +51,19 @@ public class PassengerServiceImplementation implements PassengerService{
 	}
 	
 	private void checkForNullFields(Field[] declaredFields, PassengerRequest passengerRequest) {
-		Arrays.stream(declaredFields).findAny().ifPresent(x->{
-		
-		});
+		Arrays.stream(declaredFields)
+			  .forEach(field -> {
+				  String errorMessage = "Field " + field.getName() + " is null or empty";
+				  try {
+					  field.setAccessible(true);
+					  Object accessesField = field.get(passengerRequest);
+					  if (accessesField == null || (accessesField instanceof String && accessesField.toString().isEmpty()))
+						  throw new EmptyFieldException("Incomplete Details\n" + errorMessage);
+				  }
+				  catch (Throwable e) {
+					throw new EmptyFieldException(e.getMessage());
+				}
+			  });
 	}
 	
 	@Override public PassengerResponse updateDetailsOfRegisteredPassenger(UpdateRequest updateRequest) {

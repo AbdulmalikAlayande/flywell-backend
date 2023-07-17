@@ -1,5 +1,6 @@
 package com.example.airlinereservation.data.model;
 
+import com.example.airlinereservation.utils.mycustomannotations.EmailPattern;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
+import javax.validation.constraints.Email.List;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
@@ -30,6 +32,7 @@ public class UserBiodata {
 	@NotBlank
 	@Column(unique = true)
 	@Email(message = "Please enter a valid email format", regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
+	@EmailPattern
 	private String Email;
 	@NotBlank
 	private String phoneNumber;

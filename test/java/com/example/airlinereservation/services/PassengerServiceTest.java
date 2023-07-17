@@ -1,19 +1,16 @@
 package com.example.airlinereservation.services;
 
-import com.example.airlinereservation.dtos.Request.PassengerRequest;
-import com.example.airlinereservation.dtos.Request.UpdateRequest;
-import com.example.airlinereservation.dtos.Response.PassengerResponse;
+import com.example.airlinereservation.dtos.Request.*;
+import com.example.airlinereservation.dtos.Response.*;
 import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigInteger;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 @SpringBootTest
@@ -24,9 +21,8 @@ class PassengerServiceTest {
 	private PassengerResponse passengerResponse;
 	UpdateRequest updateRequest;
 	
-	@BeforeEach
-	public void startAllTestWith(){
-		updateRequest = new UpdateRequest();
+	@AfterEach void endAllTestWith(){
+	
 	}
 	
 	@SneakyThrows
@@ -39,9 +35,8 @@ class PassengerServiceTest {
 	
 	@SneakyThrows
 	@Test void whenPassengerTriesToRegisterTwice_RegistrationFailedExceptionIsThrown() {
-		passengerService.registerNewPassenger(buildPassenger());
 		assertThatThrownBy(() -> passengerService
-				                         .registerNewPassenger(buildPassenger()), "Seems Like You Already Have An Account With Us")
+				.registerNewPassenger(buildPassenger()), "Seems Like You Already Have An Account With Us")
 				.as("Seems Like You Already Have An Account With Us")
 				.isInstanceOf(FailedRegistrationException.class).hasMessageContaining("Seems Like You Already Have An Account With Us");
 		
@@ -52,15 +47,6 @@ class PassengerServiceTest {
 				()-> passengerService.registerNewPassenger(buildPassengerWithIncorrectFormatDetails()), "Please enter a valid email format");
 	}
 	
-	@SneakyThrows
-	@Test void testThatPassengerCanRegisterSuccessfully_IfAllChecksArePassed(){
-		passengerResponse = passengerService.registerNewPassenger(buildPassenger1());
-		assertThat(passengerService.getCountOfPassengers()).isNotZero();
-		assertThat(passengerService.getCountOfPassengers()).isGreaterThan(BigInteger.ZERO.intValue());
-		assertThat(passengerResponse).isNotNull();
-		passengerService.removePassengerByUserName("zen@20");
-	}
-	
 	private PassengerRequest buildIncompletePassenger() {
 		return PassengerRequest.builder().Email("theeniolasamuel@gmail.com").firstName("Samuel")
 				       .lastName("Eniola").userName("cocolate").password("coco@22").build();
@@ -68,8 +54,32 @@ class PassengerServiceTest {
 	
 	private PassengerRequest buildPassengerWithIncorrectFormatDetails() {
 		return PassengerRequest.builder().password("Obim").userName("Obinali G").Email("emailgmail")
-				               .lastName("Obinali").firstName("Goodness").phoneNumber("08045673421").build();
+				       .lastName("Obinali").firstName("Goodness").phoneNumber("08045673421").build();
 	}
+	
+	@Nested
+	class Group1{
+		@BeforeEach
+		public void startAllTestWith() throws FailedRegistrationException {
+			updateRequest = new UpdateRequest();
+		}
+		@SneakyThrows
+		@Test void testThatPassengerCanRegisterSuccessfully_IfAllChecksArePassed(){
+			passengerResponse = passengerService.registerNewPassenger(buildPassenger1());
+			assertThat(passengerService.getCountOfPassengers()).isNotZero();
+			assertThat(passengerService.getCountOfPassengers()).isGreaterThan(BigInteger.ZERO.intValue());
+			assertThat(passengerResponse).isNotNull();
+			passengerService.removePassengerByUserName("zen@20");
+		}
+	}
+	
+	@Nested class DataRetrievalTest{
+		
+		@BeforeEach void startAllDataRetrievalTestWith(){
+		
+		}
+	}
+	
 	
 //	@Test void testThatPassengerCanUpdateTheirDetails(){
 //		updateRequest.setUserName(buildPassenger().getUserName());

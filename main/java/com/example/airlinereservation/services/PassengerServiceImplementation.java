@@ -82,14 +82,21 @@ public class PassengerServiceImplementation implements PassengerService{
 	}
 	
 	@Override public Optional<PassengerResponse> findPassengerById(String passengerId) throws InvalidRequestException {
+		PassengerResponse response = new PassengerResponse();
 		Optional<Passenger> foundPassenger = passengerRepository.findById(passengerId);
-		return Optional.ofNullable(foundPassenger.map(passenger -> new PassengerResponse()).orElseThrow(() -> {
-			try {
-				throw new InvalidRequestException("Error: Incorrect Id");
-			} catch (InvalidRequestException e) {
-				throw new RuntimeException(e);
-			}
-		}));
+		return Optional.of(foundPassenger
+				                   .map(passenger -> {
+									mapper.map(passenger, response);
+									return response;
+									})
+				                   .orElseThrow(()->{
+									   try {
+											throw new InvalidRequestException("");
+									   } catch (InvalidRequestException e) {
+											throw new RuntimeException(e);
+									   }
+									}
+		));
 	}
 	
 	@Override public List<PassengerResponse> getAllPassengersBy(String flightId) {

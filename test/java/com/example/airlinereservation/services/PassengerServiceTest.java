@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigInteger;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
@@ -52,8 +54,11 @@ class PassengerServiceTest {
 	
 	@SneakyThrows
 	@Test void testThatPassengerCanRegisterSuccessfully_IfAllChecksArePassed(){
-		passengerResponse = passengerService.registerNewPassenger(buildPassenger());
+		passengerResponse = passengerService.registerNewPassenger(buildPassenger1());
+		assertThat(passengerService.getCountOfPassengers()).isNotZero();
+		assertThat(passengerService.getCountOfPassengers()).isGreaterThan(BigInteger.ZERO.intValue());
 		assertThat(passengerResponse).isNotNull();
+		passengerService.removePassengerByUserName("zen@20");
 	}
 	
 	private PassengerRequest buildIncompletePassenger() {

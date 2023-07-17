@@ -58,7 +58,7 @@ public class PassengerServiceImplementation implements PassengerService{
 		return foundBio.filter(userBiodata ->
 				       passengerRepository
 					   .existsByUserBioData(userBiodata))
-				       .isPresent();
+				       .isEmpty();
 	}
 	
 	private void checkForNullFields(Field[] declaredFields, PassengerRequest passengerRequest) {

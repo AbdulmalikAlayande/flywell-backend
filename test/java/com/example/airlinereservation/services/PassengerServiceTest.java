@@ -46,10 +46,8 @@ class PassengerServiceTest {
 	}
 	
 	@Test void testThatPassengerTriesToRegisterUsingDetailsWithIncorrectFormat_RegistrationFailedExceptionIsThrown(){
-		assertThrowsExactly(FailedRegistrationException.class, ()-> passengerService.registerNewPassenger(buildPassengerWithIncorrectFormatDetails()), ()->{
-			String message = "Registration Failed because The Email was in the incorrect format or the password was in the incorrect format";
-			return message + "\nplease check your email format of password format";
-		});
+		assertThrowsExactly(FailedRegistrationException.class,
+				()-> passengerService.registerNewPassenger(buildPassengerWithIncorrectFormatDetails()), "Please enter a valid email format");
 	}
 	
 	@SneakyThrows

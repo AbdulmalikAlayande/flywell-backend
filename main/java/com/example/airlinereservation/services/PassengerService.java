@@ -1,5 +1,6 @@
 package com.example.airlinereservation.services;
 
+import com.example.airlinereservation.data.model.Passenger;
 import com.example.airlinereservation.dtos.Request.PassengerRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.PassengerResponse;
@@ -13,7 +14,6 @@ public interface PassengerService {
 	PassengerResponse registerNewPassenger(PassengerRequest passengerRequest) throws FailedRegistrationException;
 	PassengerResponse updateDetailsOfRegisteredPassenger(UpdateRequest updateRequest);
 	Optional<PassengerResponse> findPassengerById(String passengerId) throws InvalidRequestException;
-	List<PassengerResponse> getAllPassengersBy(String flightId);
 	void removePassengerBId(String passengerId) throws InvalidRequestException;
 	long getCountOfPassengers();
 	List<PassengerResponse> getAllPassengers();
@@ -21,4 +21,6 @@ public interface PassengerService {
 	
 	Optional<PassengerResponse> findPassengerByUserName(String userName) throws InvalidRequestException;
 	boolean removePassengerByUserName(String userName);
+	
+	Optional<Passenger> findPassengerByUserNameForAdmin(String passengerUsername);
 }

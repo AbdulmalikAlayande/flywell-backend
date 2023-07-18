@@ -1,7 +1,9 @@
 package com.example.airlinereservation.services;
 
-import com.example.airlinereservation.dtos.Request.*;
-import com.example.airlinereservation.dtos.Response.*;
+import com.example.airlinereservation.config.TestConfigurations;
+import com.example.airlinereservation.dtos.Request.PassengerRequest;
+import com.example.airlinereservation.dtos.Request.UpdateRequest;
+import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.SneakyThrows;
@@ -12,15 +14,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(classes = {TestConfigurations.class})
 class PassengerServiceTest {
 	
 	@Autowired
 	PassengerService passengerService;
-	private PassengerResponse passengerResponse;
+	PassengerResponse passengerResponse;
 	
 	@Nested
 	class DataSavingAndPersistenceTest{
@@ -81,7 +84,6 @@ class PassengerServiceTest {
 		assertEquals(1, passengerService.getCountOfPassengers());
 	}
 	}
-	
 	@Nested class DataRetrievalTest {
 		
 		static PassengerService passengerService;
@@ -128,8 +130,7 @@ class PassengerServiceTest {
 		}
 	}
 	
-//	@SneakyThrows
-//
+
 //	@SneakyThrows
 //	@Test void removePassengerByIdTest(){
 //		passengerService.removePassengerBId(passengerResponse.getId());

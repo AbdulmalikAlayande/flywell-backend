@@ -6,16 +6,14 @@ import com.example.airlinereservation.data.repositories.*;
 import com.example.airlinereservation.dtos.Request.*;
 import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import com.example.airlinereservation.utils.exceptions.*;
-import com.example.airlinereservation.utils.mycustomannotations.AdminMethod;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.*;
-
 import static com.example.airlinereservation.utils.Exceptions.*;
 
 @Service
@@ -84,10 +82,10 @@ public class PassengerServiceImplementation implements PassengerService{
 		Optional<UserBioData> userBio = userBioDataRepository.findByUserName(updateRequest.getUserName());
 		return userBio.map(userBioData -> {
 				   modelMapper.map(updateRequest, userBioData);
-				   Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
-				   foundPassenger.ifPresent(passenger -> {
-					  passenger.setUserBioData(userBioData);
-					  passengerRepository.save(passenger);
+			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
+			foundPassenger.ifPresent(passenger -> {
+				passenger.setUserBioData(userBioData);
+				passengerRepository.save(passenger);
 				   });
 				   modelMapper.map(userBioData, response);
 				   return response;
@@ -106,9 +104,8 @@ public class PassengerServiceImplementation implements PassengerService{
 				       .orElseThrow(()-> throwInvalidRequestException("Invalid Request:: User with username "+passengerId+" not found")));
 	}
 	
-	@Override public List<PassengerResponse> getAllPassengersBy(String flightId) {
-		List<PassengerResponse> passengerResponses = new ArrayList<>();
-		return passengerResponses;
+	public Optional<List<PassengerResponse>> getAllPassengersBy(String flightId) {
+		return Optional.of(new ArrayList<>());
 	}
 	
 	@Override
@@ -162,5 +159,10 @@ public class PassengerServiceImplementation implements PassengerService{
 				throw new RuntimeException(e);
 			}
 		});
+	}
+	
+	@Override
+	public Optional<Passenger> findPassengerByUserNameForAdmin(String passengerUsername) {
+		return Optional.empty();
 	}
 }

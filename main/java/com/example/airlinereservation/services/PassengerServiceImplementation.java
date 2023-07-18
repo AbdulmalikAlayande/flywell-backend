@@ -34,6 +34,7 @@ public class PassengerServiceImplementation implements PassengerService{
 		Field[] declaredFields = passengerRequest.getClass().getDeclaredFields();
 		PassengerResponse passengerResponse = new PassengerResponse();
 		if (userDoesNotExistBy(passengerRequest.getUserName())){
+			System.out.println("HELLO EVERYONE!!!");
 			try {
 				checkForNullFields(declaredFields, passengerRequest);
 				Passenger passenger = new Passenger();
@@ -48,6 +49,7 @@ public class PassengerServiceImplementation implements PassengerService{
 				throwFailedRegistrationException(throwable);
 			}
 		}
+		System.out.println("HELLO TO ME");
 		throw new FailedRegistrationException("Registration Failed:: Seems Like You Already Have An Account With Us");
 	}
 	
@@ -164,5 +166,10 @@ public class PassengerServiceImplementation implements PassengerService{
 	@Override
 	public Optional<Passenger> findPassengerByUserNameForAdmin(String passengerUsername) {
 		return Optional.empty();
+	}
+	
+	@Override
+	public void removeAll() {
+		passengerRepository.deleteAll();
 	}
 }

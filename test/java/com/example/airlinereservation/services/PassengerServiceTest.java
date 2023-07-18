@@ -51,8 +51,29 @@ class PassengerServiceTest {
 		}
 		
 		@Test void testThatPassengerTriesToRegisterUsingDetailsWithIncorrectFormat_RegistrationFailedExceptionIsThrown(){
-			assertThrowsExactly(FailedRegistrationException.class,
+			assertThrows(FailedRegistrationException.class,
 					()-> passengerService.registerNewPassenger(buildPassengerWithIncorrectFormatDetails()), "Please enter a valid email format");
+		}
+		
+		@SneakyThrows
+		@Test void testThatPassengerCanRegisterSuccessfully_IfAllChecksArePassed(){
+			passengerResponse = passengerService.registerNewPassenger(buildPassenger1());
+			assertThat(passengerService.getCountOfPassengers()).isNotZero();
+			assertThat(passengerService.getCountOfPassengers()).isGreaterThan(BigInteger.ZERO.intValue());
+			assertThat(passengerResponse).isNotNull();
+		}
+		
+		@Test void testThatPassengerCanUpdateTheirDetails(){
+		updateRequest.setUserName(buildPassenger1().getUserName());
+		updateRequest.setFirstName("Micheal");
+		PassengerResponse updatedPassenger = passengerService.updateDetailsOfRegisteredPassenger(updateRequest);
+		assertNotNull(updatedPassenger);
+		assertEquals(1, passengerService.getCountOfPassengers());
+		}
+		
+		@AfterEach
+		public void afterAllTest(){
+			passengerService.removeAll();
 		}
 		
 		private PassengerRequest buildIncompletePassenger() {
@@ -64,22 +85,15 @@ class PassengerServiceTest {
 			return PassengerRequest.builder().password("Obim").userName("Obinali G").Email("emailgmail")
 					       .lastName("Obinali").firstName("Goodness").phoneNumber("08045673421").build();
 		}
-		
-		@SneakyThrows
-		@Test void testThatPassengerCanRegisterSuccessfully_IfAllChecksArePassed(){
-			passengerResponse = passengerService.registerNewPassenger(buildPassenger1());
-			assertThat(passengerService.getCountOfPassengers()).isNotZero();
-			assertThat(passengerService.getCountOfPassengers()).isGreaterThan(BigInteger.ZERO.intValue());
-			assertThat(passengerResponse).isNotNull();
-			passengerService.removePassengerByUserName("zen@20");
+		private PassengerRequest buildPassenger1() {
+			return PassengerRequest.builder().password("zala@64").lastName("Alayande").firstName("Zainab")
+					       .phoneNumber("08030669508").Email("alayandezainab64@gmail.com").userName("zen@20").build();
 		}
-		@Test void testThatPassengerCanUpdateTheirDetails(){
-		updateRequest.setUserName(buildPassenger().getUserName());
-		updateRequest.setFirstName(buildPassenger().getFirstName());
-		PassengerResponse updatedPassenger = passengerService.updateDetailsOfRegisteredPassenger(updateRequest);
-		assertNotNull(updatedPassenger);
-		assertEquals(1, passengerService.getCountOfPassengers());
-	}
+		private PassengerRequest buildPassenger() {
+			return PassengerRequest
+					       .builder().password("ayanniyi@20").lastName("Alayande").firstName("Abdulmalik")
+					       .phoneNumber("07036174617").Email("alaabdulmalik03@gmail.com").userName("ayanniyi@20").build();
+		}
 	}
 	@Nested class DataRetrievalTest {
 		
@@ -152,25 +166,4 @@ class PassengerServiceTest {
 //	@Test void getAllPassengersBelongingToAParticularFlightTest(){
 //
 //	}
-//
-	private PassengerRequest buildPassenger() {
-		return PassengerRequest.builder()
-				       .password("ayanniyi@20")
-				       .lastName("Alayande")
-				       .firstName("Abdulmalik")
-				       .phoneNumber("07036174617")
-				       .Email("alaabdulmalik03@gmail.com")
-				       .userName("ayanniyi@20")
-				       .build();
-	}
-	private PassengerRequest buildPassenger1() {
-		return PassengerRequest.builder()
-				       .password("zala@64")
-				       .lastName("Alayande")
-				       .firstName("Zainab")
-				       .phoneNumber("08030669508")
-				       .Email("alayandezainab64@gmail.com")
-				       .userName("zen@20")
-				       .build();
-	}
 }

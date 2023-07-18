@@ -23,4 +23,6 @@ public interface PassengerService {
 	boolean removePassengerByUserName(String userName);
 	
 	Optional<Passenger> findPassengerByUserNameForAdmin(String passengerUsername);
+	
+	void removeAll();
 }

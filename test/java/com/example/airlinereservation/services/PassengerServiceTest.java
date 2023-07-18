@@ -32,14 +32,11 @@ class PassengerServiceTest {
 		public void startAllTestWith() {
 			updateRequest = new UpdateRequest();
 		}
-		@AfterEach void endAllTestWith(){
-		
-		}
 		
 		@SneakyThrows
 		@Test void testThatPassengerTriesToRegisterWithIncompleteDetails_ExceptionIsThrown(){
 			assertThatThrownBy(()->passengerService
-					                       .registerNewPassenger(buildIncompletePassenger()), "Incomplete Details")
+					.registerNewPassenger(buildIncompletePassenger()), "Incomplete Details")
 					.as("")
 					.isInstanceOf(FailedRegistrationException.class).hasMessageContaining("Incomplete Details");
 		}

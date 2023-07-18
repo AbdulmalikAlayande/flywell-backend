@@ -72,7 +72,7 @@ class BookableTest {
 	private PassengerRequest buildPassenger(){
 		return PassengerRequest.builder()
 				       .userName("abdul@20")
-				       .Email("alaabdulmalik03@gmail.com")
+				       .email("alaabdulmalik03@gmail.com")
 				       .phoneNumber("07036174617")
 				       .firstName("Abdulmalik")
 				       .lastName("Alayande")
@@ -83,7 +83,7 @@ class BookableTest {
 	private PassengerRequest buildPassenger1(){
 		return PassengerRequest.builder()
 				       .userName("crayon")
-				       .Email("alaabdulmalik03@gmail.com")
+				       .email("alaabdulmalik03@gmail.com")
 				       .phoneNumber("07036174617")
 				       .firstName("pencil")
 				       .lastName("eraser")

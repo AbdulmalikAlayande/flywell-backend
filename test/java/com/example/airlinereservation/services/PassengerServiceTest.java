@@ -77,22 +77,22 @@ class PassengerServiceTest {
 		}
 		
 		private PassengerRequest buildIncompletePassenger() {
-			return PassengerRequest.builder().Email("theeniolasamuel@gmail.com").firstName("Samuel")
+			return PassengerRequest.builder().email("theeniolasamuel@gmail.com").firstName("Samuel")
 					       .lastName("Eniola").userName("cocolate").password("coco@22").build();
 		}
 		
 		private PassengerRequest buildPassengerWithIncorrectFormatDetails() {
-			return PassengerRequest.builder().password("Obim").userName("Obinali G").Email("emailgmail")
+			return PassengerRequest.builder().password("Obim").userName("Obinali G").email("emailgmail")
 					       .lastName("Obinali").firstName("Goodness").phoneNumber("08045673421").build();
 		}
 		private PassengerRequest buildPassenger1() {
 			return PassengerRequest.builder().password("zala@64").lastName("Alayande").firstName("Zainab")
-					       .phoneNumber("08030669508").Email("alayandezainab64@gmail.com").userName("zen@20").build();
+					       .phoneNumber("08030669508").email("alayandezainab64@gmail.com").userName("zen@20").build();
 		}
 		private PassengerRequest buildPassenger() {
 			return PassengerRequest
 					       .builder().password("ayanniyi@20").lastName("Alayande").firstName("Abdulmalik")
-					       .phoneNumber("07036174617").Email("alaabdulmalik03@gmail.com").userName("ayanniyi@20").build();
+					       .phoneNumber("07036174617").email("alaabdulmalik03@gmail.com").userName("ayanniyi@20").build();
 		}
 	}
 	@Nested class DataRetrievalTest {
@@ -103,7 +103,7 @@ class PassengerServiceTest {
 			passengerService = new PassengerServiceImplementation();
 			passengerService.registerNewPassenger(PassengerRequest
 					        .builder().phoneNumber("567890234").firstName("Alayande")
-					        .lastName("Amirah").Email("ololadeayandunni@gmail.com").userName("mirah")
+					        .lastName("Amirah").email("ololadeayandunni@gmail.com").userName("mirah")
 					        .password("ayandunni#$2008").build());
 		}
 		

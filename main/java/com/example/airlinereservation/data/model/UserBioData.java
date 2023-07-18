@@ -35,7 +35,7 @@ public class UserBioData {
 			regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
 			groups = {ValidEmailDomain.class, ValidationMode.class})
 	@EmailPattern(groups = ValidEmailDomain.class)
-	private String Email;
+	private String email;
 	@NotBlank
 	private String phoneNumber;
 	@NotBlank

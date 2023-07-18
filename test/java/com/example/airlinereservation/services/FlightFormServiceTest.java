@@ -22,7 +22,7 @@ public class FlightFormServiceTest {
 		bookable = new FlightBooking();
 		passengerRequest = PassengerRequest.builder()
 				                   .userName("dende")
-				                   .Email("alaabdulmalik03@gmail.com")
+				                   .email("alaabdulmalik03@gmail.com")
 				                   .firstName("Abdulmalik")
 				                   .lastName("Alayande")
 				                   .password("ayanniyi@20")

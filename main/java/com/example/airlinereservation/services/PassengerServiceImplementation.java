@@ -4,16 +4,18 @@ import com.example.airlinereservation.Mapper.Mapper;
 import com.example.airlinereservation.data.model.*;
 import com.example.airlinereservation.data.repositories.*;
 import com.example.airlinereservation.dtos.Request.*;
-import com.example.airlinereservation.dtos.Response.PassengerResponse;
+import com.example.airlinereservation.dtos.Response.*;
 import com.example.airlinereservation.utils.exceptions.*;
+import com.example.airlinereservation.utils.mycustomannotations.ValidEmailDomain;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.*;
+
 import static com.example.airlinereservation.utils.Exceptions.*;
 
 @Service
@@ -22,6 +24,8 @@ import static com.example.airlinereservation.utils.Exceptions.*;
 @Slf4j
 public class PassengerServiceImplementation implements PassengerService{
 	
+	@Autowired
+	ValidEmailDomain validEmailDomain;
 	@Autowired
 	private PassengerRepository passengerRepository;
 	@Autowired
@@ -34,9 +38,11 @@ public class PassengerServiceImplementation implements PassengerService{
 		Field[] declaredFields = passengerRequest.getClass().getDeclaredFields();
 		PassengerResponse passengerResponse = new PassengerResponse();
 		if (userDoesNotExistBy(passengerRequest.getUserName())){
+			
 			System.out.println("HELLO EVERYONE!!!");
 			try {
 				checkForNullFields(declaredFields, passengerRequest);
+//				validEmailDomain.isValid(passengerRequest.getEmail());
 				Passenger passenger = new Passenger();
 				UserBioData biodata = new UserBioData();
 				mapper.map(passengerRequest, biodata);

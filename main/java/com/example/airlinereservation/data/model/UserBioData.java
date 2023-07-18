@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
-import javax.validation.constraints.Email.List;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
@@ -16,7 +15,7 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserBiodata {
+public class UserBioData {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;

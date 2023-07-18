@@ -13,7 +13,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PassengerServiceTest {
@@ -24,8 +24,10 @@ class PassengerServiceTest {
 	
 	@Nested
 	class DataSavingAndPersistenceTest{
+		UpdateRequest updateRequest;
 		@BeforeEach
 		public void startAllTestWith() {
+			updateRequest = new UpdateRequest();
 		}
 		@AfterEach void endAllTestWith(){
 		
@@ -71,13 +73,20 @@ class PassengerServiceTest {
 			assertThat(passengerResponse).isNotNull();
 			passengerService.removePassengerByUserName("zen@20");
 		}
+		@Test void testThatPassengerCanUpdateTheirDetails(){
+		updateRequest.setUserName(buildPassenger().getUserName());
+		updateRequest.setFirstName(buildPassenger().getFirstName());
+		PassengerResponse updatedPassenger = passengerService.updateDetailsOfRegisteredPassenger(updateRequest);
+		assertNotNull(updatedPassenger);
+		assertEquals(1, passengerService.getCountOfPassengers());
+	}
 	}
 	
-	@Nested class DataRetrievalTest{
+	@Nested class DataRetrievalTest {
+		
 		static PassengerService passengerService;
 		@SneakyThrows
-		@BeforeAll
-		static void startAllDataRetrievalTestWith(){
+		@BeforeAll static void startAllDataRetrievalTestWith(){
 			passengerService = new PassengerServiceImplementation();
 			passengerService.registerNewPassenger(PassengerRequest
 					        .builder().phoneNumber("567890234").firstName("Alayande")
@@ -101,14 +110,15 @@ class PassengerServiceTest {
 			});
 		}
 		
-		@Test void findSavedPassengerWithIdThatDoesExist_InvalidRequestExceptionIsThrown(){
+		@Test
+		void findSavedPassengerWithIdThatDoesExist_InvalidRequestExceptionIsThrown(){
 			assertThrowsExactly(InvalidRequestException.class, ()->passengerService.findPassengerById("892ffr0ilj84aas787t274gf7qsfqwe8"),
 					"Request Failed:: Invalid Id");
-			
 		}
 		    //todo to fail
 		@SneakyThrows
-		@Test void findSavedPassengerWithId_PassengerWithTheSaidIdIsFound(){
+		@Test
+		public void findSavedPassengerWithId_PassengerWithTheSaidIdIsFound(){
 			Optional<PassengerResponse> response = passengerService.findPassengerById("");
 			response.ifPresent(passengerResponse -> {
 				assertThat(passengerResponse).isNotNull();
@@ -118,28 +128,6 @@ class PassengerServiceTest {
 		}
 	}
 	
-	
-//	@Test void testThatPassengerCanUpdateTheirDetails(){
-//		updateRequest.setUserName(buildPassenger().getUserName());
-//		updateRequest.setFirstName(buildPassenger().getFirstName());
-//		PassengerResponse updatedPassenger = passengerService.updateDetailsOfRegisteredPassenger(updateRequest);
-//		assertNotNull(updatedPassenger);
-//		assertEquals(1, passengerService.getCountOfPassengers());
-//	}
-//
-//	@SneakyThrows
-//	@Test void findPassengerByIdTest(){
-//		assertNotNull(passengerService.findPassengerById(passengerResponse.getId()));
-//	}
-//
-//
-//		passengerResponse = passengerService.registerNewPassenger(buildPassenger());
-//		Optional<PassengerResponse> response = passengerService.findPassengerByEmailAndPassword(buildPassenger().getEmail(), buildPassenger().getPassword());
-//		assertNotNull(response);
-//		assertNotNull(response.get().getUserName());
-//		assertNotNull(response.get().getEmail());
-//	}
-//
 //	@SneakyThrows
 //
 //	@SneakyThrows

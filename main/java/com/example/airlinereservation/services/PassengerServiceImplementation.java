@@ -39,7 +39,7 @@ public class PassengerServiceImplementation implements PassengerService{
 			try {
 				checkForNullFields(declaredFields, passengerRequest);
 				Passenger passenger = new Passenger();
-				UserBiodata biodata = new UserBiodata();
+				UserBioData biodata = new UserBioData();
 				mapper.map(passengerRequest, biodata);
 				biodata.setFullName(passengerResponse.getFullName());
 				passenger.setUserBioData(biodata);
@@ -54,10 +54,10 @@ public class PassengerServiceImplementation implements PassengerService{
 	}
 	
 	private boolean userDoesNotExistBy(String userName) {
-		Optional<UserBiodata> foundBio = userBioDataRepository.findByUserName(userName);
-		return foundBio.filter(userBiodata ->
+		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
+		return foundBio.filter(userBioData ->
 				       passengerRepository
-					   .existsByUserBioData(userBiodata))
+					   .existsByUserBioData(userBioData))
 				       .isEmpty();
 	}
 	
@@ -78,42 +78,37 @@ public class PassengerServiceImplementation implements PassengerService{
 	}
 	
 	@Override public PassengerResponse updateDetailsOfRegisteredPassenger(UpdateRequest updateRequest) {
-		return null;
+		PassengerResponse response = new PassengerResponse();
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setSkipNullEnabled(true);
+		Optional<UserBioData> userBio = userBioDataRepository.findByUserName(updateRequest.getUserName());
+		return userBio.map(userBioData -> {
+				   modelMapper.map(updateRequest, userBioData);
+				   Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
+				   foundPassenger.ifPresent(passenger -> {
+					  passenger.setUserBioData(userBioData);
+					  passengerRepository.save(passenger);
+				   });
+				   modelMapper.map(userBioData, response);
+				   return response;
+				}).orElseThrow(()->throwInvalidRequestException("Update could not be completed"));
+		
 	}
 	
 	@Override public Optional<PassengerResponse> findPassengerById(String passengerId) throws InvalidRequestException {
 		PassengerResponse response = new PassengerResponse();
 		Optional<Passenger> foundPassenger = passengerRepository.findById(passengerId);
 		return Optional.of(foundPassenger
-				                   .map(passenger -> {
-									mapper.map(passenger, response);
-									return response;
-									})
-				                   .orElseThrow(()->{
-									   try {
-											throw new InvalidRequestException("");
-									   } catch (InvalidRequestException e) {
-											throw new RuntimeException(e);
-									   }
-									}
-		));
+				       .map(passenger -> {
+						   mapper.map(passenger, response);
+						   return response;
+					   })
+				       .orElseThrow(()-> throwInvalidRequestException("Invalid Request:: User with username "+passengerId+" not found")));
 	}
 	
 	@Override public List<PassengerResponse> getAllPassengersBy(String flightId) {
 		List<PassengerResponse> passengerResponses = new ArrayList<>();
-		for (int i = 0; i < passengerRepository.count(); i++) {
-//			if (passengerRepository.findAll().get(i) != null)
-//				passengerResponses.add(Mapper.map(passengerRepository.findAll().get(i)));
-		}
 		return passengerResponses;
-	}
-	
-	@Override public void removePassengerBId(String passengerId) throws InvalidRequestException {
-		passengerRepository.deleteById(passengerId);
-	}
-	
-	@Override public long getCountOfPassengers() {
-		return passengerRepository.count();
 	}
 	
 	@Override
@@ -131,15 +126,34 @@ public class PassengerServiceImplementation implements PassengerService{
 	}
 	
 	@Override public Optional<PassengerResponse> findPassengerByUserName(String userName) throws InvalidRequestException {
-		return Optional.empty();
+		PassengerResponse passengerResponse = new PassengerResponse();
+		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
+		
+		return Optional.of(foundBio
+				       .flatMap(userBioData -> {
+						   Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
+						   return foundPassenger.map(passenger -> {
+							   mapper.map(foundBio, passengerResponse);
+							   return passengerResponse;
+						   });
+					   })
+				       .orElseThrow(()-> throwInvalidRequestException("Invalid Request:: User with username "+userName+" not found")));
+	}
+	
+	@Override public void removePassengerBId(String passengerId) throws InvalidRequestException {
+		passengerRepository.deleteById(passengerId);
+	}
+	
+	@Override public long getCountOfPassengers() {
+		return passengerRepository.count();
 	}
 	
 	@Override public boolean removePassengerByUserName(String userName){
-		Optional<UserBiodata> foundBio = userBioDataRepository.findByUserName(userName);
+		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
 		String message = "Passenger Not Found Incorrect User name";
-		return foundBio.map(userBiodata -> {
-			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBiodata);
-			foundPassenger.ifPresent(x-> passengerRepository.deleteByUserBioData(userBiodata));
+		return foundBio.map(userBioData -> {
+			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
+			foundPassenger.ifPresent(x-> passengerRepository.deleteByUserBioData(userBioData));
 			return true;
 		}).orElseThrow(()-> {
 			try {
@@ -148,9 +162,5 @@ public class PassengerServiceImplementation implements PassengerService{
 				throw new RuntimeException(e);
 			}
 		});
-	}
-	
-	@Override @AdminMethod() public Optional<Passenger> findPassengerByUserNameForAdmin(String passengerUsername) {
-		return Optional.empty();
 	}
 }

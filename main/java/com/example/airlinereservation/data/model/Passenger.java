@@ -16,7 +16,7 @@ public class Passenger {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
 	@OneToOne(cascade = CascadeType.ALL)
-	private UserBiodata userBioData;
+	private UserBioData userBioData;
 //	private String firstName;
 //	private String lastName;
 //	private String fullName = firstName + lastName;

@@ -1,12 +1,10 @@
 package com.example.airlinereservation.services;
 
-import com.example.airlinereservation.data.model.Passenger;
 import com.example.airlinereservation.dtos.Request.PassengerRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
-import com.example.airlinereservation.utils.mycustomannotations.AdminMethod;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +21,4 @@ public interface PassengerService {
 	
 	Optional<PassengerResponse> findPassengerByUserName(String userName) throws InvalidRequestException;
 	boolean removePassengerByUserName(String userName);
-	
-	@AdminMethod Optional<Passenger> findPassengerByUserNameForAdmin(String passengerUsername);
 }

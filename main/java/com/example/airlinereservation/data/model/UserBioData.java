@@ -2,6 +2,7 @@ package com.example.airlinereservation.data.model;
 
 import com.example.airlinereservation.utils.mycustomannotations.EmailPattern;
 import com.example.airlinereservation.utils.mycustomannotations.ValidEmailDomain;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

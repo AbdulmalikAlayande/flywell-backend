@@ -31,14 +31,7 @@ public class ValidEmailDomain implements ConstraintValidator<EmailPattern, Strin
 		context.disableDefaultConstraintViolation();
 		String[] emailSplit = email.split("@");
 		return Arrays.stream(validDomain)
-				     .anyMatch(domain-> {
-					     if (Objects.equals(domain, emailSplit[1]))
-							 return true;
-						 else {
-						     throwInvalidRequestException(constraintViolationBuilder.toString());
-						     return false;
-					     }
-				     });
+				     .anyMatch(domain-> Objects.equals(domain, emailSplit[1]));
 	}
 }
 //Stream<Boolean> result = Arrays.stream(validDomain).map(x -> {

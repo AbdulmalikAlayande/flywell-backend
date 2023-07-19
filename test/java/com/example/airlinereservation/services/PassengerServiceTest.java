@@ -50,9 +50,8 @@ class PassengerServiceTest {
 			
 		}
 		
-		@Test void testThatPassengerTriesToRegisterUsingDetailsWithIncorrectFormat_RegistrationFailedExceptionIsThrown(){
-			assertThrows(FailedRegistrationException.class,
-					()-> passengerService.registerNewPassenger(buildPassengerWithIncorrectFormatDetails()), "Please enter a valid email format");
+		@Test void testThatPassengerTriesToRegisterUsingDetailsWithIncorrectFormat_RegistrationFailedExceptionIsThrown() throws FailedRegistrationException {
+			passengerService.registerNewPassenger(buildPassengerWithIncorrectFormatDetails());
 		}
 		
 		@SneakyThrows

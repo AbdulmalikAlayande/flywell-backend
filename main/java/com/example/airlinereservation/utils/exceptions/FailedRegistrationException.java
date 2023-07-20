@@ -6,4 +6,5 @@ public class FailedRegistrationException extends LoginException {
 	public FailedRegistrationException(String message){
 		super(message);
 	}
+	
 }

@@ -45,10 +45,10 @@ public class FieldValidator implements Validator{
 	@Override
 	public void validatePassword(String password) {
 		Formatter formatter = new Formatter();
-		Formatter formatMessage = formatter.format("Password %s lenght is invalid it should be between 8 and 15 characters", password);
-		String invalidLenghtMessage = formatMessage.toString();
+		Formatter formatMessage = formatter.format("Password %s length is invalid it should be between 8 and 15 characters", password);
+		String invalidLengthMessage = formatMessage.toString();
 		if (!fieldLengthIsValid(password, 8, 15))
-			throwFieldInvalidException(invalidLenghtMessage);
+			throwFieldInvalidException(invalidLengthMessage);
 		boolean passWordContainsSpecialCharacter = false;
 		for (int index = 0; index < validSpecialCharacters.length; index++) {
 			if (validSpecialCharacters[index] == password.charAt(index)) {

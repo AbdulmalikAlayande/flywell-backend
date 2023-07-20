@@ -24,6 +24,8 @@ public class Exceptions {
 	}
 	
 	public static void throwFieldInvalidException(String message) {
-		throw new FieldInvalidException(message);
+		FieldInvalidException exception = new FieldInvalidException(message);
+		exception.setCause(message);
+		throw exception;
 	}
 }

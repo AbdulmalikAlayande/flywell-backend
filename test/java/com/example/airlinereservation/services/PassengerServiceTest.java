@@ -34,6 +34,7 @@ class PassengerServiceTest {
 			updateRequest = new UpdateRequest();
 		}
 		
+		
 		@SneakyThrows
 		@Test void testThatPassengerTriesToRegisterWithIncompleteDetails_ExceptionIsThrown(){
 			assertThatThrownBy(()->passengerService
@@ -44,6 +45,7 @@ class PassengerServiceTest {
 		
 		@SneakyThrows
 		@Test void whenPassengerTriesToRegisterTwice_RegistrationFailedExceptionIsThrown() {
+			passengerService.registerNewPassenger(buildPassenger());
 			assertThatThrownBy(() -> passengerService
 					                         .registerNewPassenger(buildPassenger()), "Seems Like You Already Have An Account With Us")
 					.as("Seems Like You Already Have An Account With Us")
@@ -66,12 +68,14 @@ class PassengerServiceTest {
 			assertThat(passengerResponse).isNotNull();
 		}
 		
+		@SneakyThrows
 		@Test void testThatPassengerCanUpdateTheirDetails(){
-		updateRequest.setUserName(buildPassenger1().getUserName());
-		updateRequest.setFirstName("Micheal");
-		PassengerResponse updatedPassenger = passengerService.updateDetailsOfRegisteredPassenger(updateRequest);
-		assertNotNull(updatedPassenger);
-		assertEquals(1, passengerService.getCountOfPassengers());
+			passengerService.registerNewPassenger(buildPassenger1());
+			updateRequest.setUserName(buildPassenger1().getUserName());
+			updateRequest.setFirstName("Micheal");
+			PassengerResponse updatedPassenger = passengerService.updateDetailsOfRegisteredPassenger(updateRequest);
+			assertNotNull(updatedPassenger);
+			assertEquals(1, passengerService.getCountOfPassengers());
 		}
 		
 		@AfterEach
@@ -98,6 +102,8 @@ class PassengerServiceTest {
 					       .phoneNumber("07036174617").email("alaabdulmalik03@gmail.com").userName("ayanniyi@20").build();
 		}
 	}
+	
+	
 	@Nested class DataRetrievalTest {
 		
 		static PassengerService passengerService;

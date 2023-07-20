@@ -89,7 +89,7 @@ class PassengerServiceTest {
 					       .lastName("Obinali").firstName("Goodness").phoneNumber("08045673421").build();
 		}
 		private PassengerRequest buildPassenger1() {
-			return PassengerRequest.builder().password("zala@64").lastName("Alayande").firstName("Zainab")
+			return PassengerRequest.builder().password("zainab@64").lastName("Alayande").firstName("Zainab")
 					       .phoneNumber("08030669508").email("alayandezainab64@gmail.com").userName("zen@20").build();
 		}
 		private PassengerRequest buildPassenger() {

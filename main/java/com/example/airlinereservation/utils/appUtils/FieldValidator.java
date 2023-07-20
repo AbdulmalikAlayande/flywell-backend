@@ -13,8 +13,6 @@ import static com.example.airlinereservation.utils.Exceptions.throwFieldInvalidE
 import static com.example.airlinereservation.utils.Exceptions.throwInvalidRequestException;
 
 @Slf4j
-@AllArgsConstructor
-@NoArgsConstructor
 public class FieldValidator implements Validator{
 	private final String[] validDomains = {"gmail.com", "outlook.com", "yahoo.com", "native.semicolon.africa"};
 	private final Character[] validSpecialCharacters = {'@', '!', '#', '$', '%', '(', ')', '.', '^'};
@@ -49,16 +47,21 @@ public class FieldValidator implements Validator{
 		String invalidLengthMessage = formatMessage.toString();
 		if (!fieldLengthIsValid(password, 8, 15))
 			throwFieldInvalidException(invalidLengthMessage);
-		boolean passWordContainsSpecialCharacter = false;
-		for (int index = 0; index < validSpecialCharacters.length; index++) {
-			if (validSpecialCharacters[index] == password.charAt(index)) {
-				passWordContainsSpecialCharacter = true;
-				break;
+		else {
+			boolean passWordContainsSpecialCharacter = false;
+			for (Character validSpecialCharacter : validSpecialCharacters) {
+				for (int indexJ = 0; indexJ < password.length(); indexJ++) {
+					if (validSpecialCharacter == password.charAt(indexJ)) {
+						passWordContainsSpecialCharacter = true;
+						break;
+					}
+				}
 			}
-		}
-		if (!passWordContainsSpecialCharacter){
-			Formatter message = formatter.format("Password should contain either of the special characters %s", (Object) validSpecialCharacters);
-			throwFieldInvalidException(message.toString());
+			if (!passWordContainsSpecialCharacter) {
+				Formatter formatter1 = new Formatter();
+				Formatter message = formatter1.format("Password should contain either of the special characters %s", Arrays.toString(validSpecialCharacters));
+				throwFieldInvalidException(message.toString());
+			}
 		}
 	}
 	
@@ -69,7 +72,7 @@ public class FieldValidator implements Validator{
 	
 	@Override
 	public boolean fieldLengthIsValid(String field, int minimumLength, int maximumLength) {
-		return field.length() >= minimumLength && field.length() <= maximumLength;
+		return field.length() >= minimumLength || field.length() <= maximumLength;
 	}
 	
 	@Override

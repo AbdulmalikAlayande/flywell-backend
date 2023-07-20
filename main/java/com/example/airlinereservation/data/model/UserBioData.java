@@ -35,7 +35,7 @@ public class UserBioData {
 	@Column(unique = true)
 	@Email(message = "Please enter a valid email format",
 			regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-			groups = {ValidEmailDomain.class, ValidationMode.class})
+			groups = {ValidEmailDomain.class})
 	@EmailPattern(groups = ValidEmailDomain.class)
 	private String email;
 	@NotBlank

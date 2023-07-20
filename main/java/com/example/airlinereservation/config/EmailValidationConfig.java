@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages = "com.example.airlinereservation.utils.mycustomannotations",
+@ComponentScan(basePackages = "com.example.airlinereservation.config.mycustomannotations",
 				basePackageClasses = {
 					EmailPattern.class,
 					ValidEmailDomain.class

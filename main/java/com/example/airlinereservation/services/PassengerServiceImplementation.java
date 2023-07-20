@@ -5,6 +5,7 @@ import com.example.airlinereservation.data.model.*;
 import com.example.airlinereservation.data.repositories.*;
 import com.example.airlinereservation.dtos.Request.*;
 import com.example.airlinereservation.dtos.Response.*;
+import com.example.airlinereservation.utils.appUtils.Validator;
 import com.example.airlinereservation.utils.exceptions.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
@@ -24,6 +25,8 @@ import static com.example.airlinereservation.utils.Exceptions.*;
 public class PassengerServiceImplementation implements PassengerService{
 	
 	@Autowired
+	Validator validator;
+	@Autowired
 	private PassengerRepository passengerRepository;
 	@Autowired
 	private UserBioDataRepository userBioDataRepository;
@@ -36,8 +39,8 @@ public class PassengerServiceImplementation implements PassengerService{
 		PassengerResponse passengerResponse = new PassengerResponse();
 		if (userDoesNotExistBy(passengerRequest.getUserName())){
 			try {
-
 				checkForNullFields(declaredFields, passengerRequest);
+				validateEmailAndPassword(passengerRequest.getEmail(), passengerRequest.getPassword());
 				Passenger passenger = new Passenger();
 				UserBioData biodata = new UserBioData();
 				mapper.map(passengerRequest, biodata);
@@ -50,8 +53,12 @@ public class PassengerServiceImplementation implements PassengerService{
 				throwFailedRegistrationException(throwable);
 			}
 		}
-		System.out.println("HELLO TO ME");
 		throw new FailedRegistrationException("Registration Failed:: Seems Like You Already Have An Account With Us");
+	}
+	
+	private void validateEmailAndPassword(String email, String password) {
+		validator.validateEmail(email);
+		validator.validatePassword(password);
 	}
 	
 	private boolean userDoesNotExistBy(String userName) {

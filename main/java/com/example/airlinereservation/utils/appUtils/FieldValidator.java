@@ -1,5 +1,7 @@
 package com.example.airlinereservation.utils.appUtils;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -10,7 +12,9 @@ import java.util.regex.Pattern;
 import static com.example.airlinereservation.utils.Exceptions.throwFieldInvalidException;
 import static com.example.airlinereservation.utils.Exceptions.throwInvalidRequestException;
 
- @Slf4j
+@Slf4j
+@AllArgsConstructor
+@NoArgsConstructor
 public class FieldValidator implements Validator{
 	private final String[] validDomains = {"gmail.com", "outlook.com", "yahoo.com", "native.semicolon.africa"};
 	private final Character[] validSpecialCharacters = {'@', '!', '#', '$', '%', '(', ')', '.', '^'};
@@ -20,10 +24,10 @@ public class FieldValidator implements Validator{
 	public void validateEmail(String email) {
 		this.email = email;
 		List<String> domains = Arrays.stream(validDomains).toList();
-		String regexPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}$";
+		String regexPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 		Pattern compiledPattern = Pattern.compile(regexPattern);
 		if (!compiledPattern.matcher(email).matches())
-			throwInvalidRequestException("Email pattern is not valid");
+			throwInvalidRequestException("Email pattern is not valid:: Please enter a valid email format");
 		String part = splitEmailToObtainDomain();
 		boolean emailMatchesADomain = domains.stream().anyMatch(domain -> domain.equals(part));
 		if (!emailMatchesADomain) {

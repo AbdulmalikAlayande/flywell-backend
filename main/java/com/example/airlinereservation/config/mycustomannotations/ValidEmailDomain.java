@@ -1,12 +1,10 @@
-package com.example.airlinereservation.utils.mycustomannotations;
+package com.example.airlinereservation.config.mycustomannotations;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Pattern;
-
-import static com.example.airlinereservation.utils.Exceptions.throwInvalidRequestException;
 
 public class ValidEmailDomain implements ConstraintValidator<EmailPattern, String> {
 	String invalidDomainErrorMessage;
@@ -27,8 +25,10 @@ public class ValidEmailDomain implements ConstraintValidator<EmailPattern, Strin
 			context.buildConstraintViolationWithTemplate("Please enter a valid email format").addConstraintViolation();
 			return false;
 		}
+		System.out.println("I have been felling low");
 		ConstraintValidatorContext.ConstraintViolationBuilder constraintViolationBuilder = context.buildConstraintViolationWithTemplate("Invalid Domain");
 		context.disableDefaultConstraintViolation();
+		System.out.println("i don't wanna be low");
 		String[] emailSplit = email.split("@");
 		return Arrays.stream(validDomain)
 				     .anyMatch(domain-> Objects.equals(domain, emailSplit[1]));

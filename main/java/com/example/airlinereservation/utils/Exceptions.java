@@ -14,6 +14,9 @@ public class Exceptions {
 		Throwable cause = throwable.getCause();
 		FailedRegistrationException exception = new FailedRegistrationException(message);
 		exception.initCause(cause);
+		StackTraceElement[] element = new StackTraceElement[]{
+				new StackTraceElement("Exceptions", "throwFailedRegistrationException", "", 21)
+		};
 		exception.setStackTrace(throwable.getStackTrace());
 		throw exception;
 	}

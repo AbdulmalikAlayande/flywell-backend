@@ -1,4 +1,4 @@
-package com.example.airlinereservation.utils.mycustomannotations;
+package com.example.airlinereservation.config.mycustomannotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

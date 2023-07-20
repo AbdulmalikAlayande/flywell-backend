@@ -5,7 +5,7 @@ import com.example.airlinereservation.data.model.Flight;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
-import com.example.airlinereservation.utils.mycustomannotations.AdminMethod;
+import com.example.airlinereservation.config.mycustomannotations.AdminMethod;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

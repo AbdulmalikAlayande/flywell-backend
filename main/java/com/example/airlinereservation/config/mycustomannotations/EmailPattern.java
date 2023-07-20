@@ -1,4 +1,4 @@
-package com.example.airlinereservation.utils.mycustomannotations;
+package com.example.airlinereservation.config.mycustomannotations;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

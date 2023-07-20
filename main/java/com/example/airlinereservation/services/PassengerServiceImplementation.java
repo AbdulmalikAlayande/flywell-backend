@@ -6,11 +6,13 @@ import com.example.airlinereservation.data.repositories.*;
 import com.example.airlinereservation.dtos.Request.*;
 import com.example.airlinereservation.dtos.Response.*;
 import com.example.airlinereservation.utils.exceptions.*;
-import com.example.airlinereservation.utils.mycustomannotations.ValidEmailDomain;
+import com.example.airlinereservation.config.mycustomannotations.ValidEmailDomain;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -25,8 +27,6 @@ import static com.example.airlinereservation.utils.Exceptions.*;
 public class PassengerServiceImplementation implements PassengerService{
 	
 	@Autowired
-	ValidEmailDomain validEmailDomain;
-	@Autowired
 	private PassengerRepository passengerRepository;
 	@Autowired
 	private UserBioDataRepository userBioDataRepository;
@@ -34,15 +34,16 @@ public class PassengerServiceImplementation implements PassengerService{
 	private ModelMapper mapper;
 	
 	@Override
-	public PassengerResponse registerNewPassenger(PassengerRequest passengerRequest)throws FailedRegistrationException {
+	public PassengerResponse registerNewPassenger(PassengerRequest passengerRequest) throws FailedRegistrationException {
+		ApplicationContext context = new AnnotationConfigApplicationContext();
+		System.out.println("The context class:: "+context.getBean(ValidEmailDomain.class));
+		System.out.println("The context class:: "+context.getBean(ModelMapper.class));
+//		System.out.println("The context class:: "+context.getBean(EmailPattern.class));
 		Field[] declaredFields = passengerRequest.getClass().getDeclaredFields();
 		PassengerResponse passengerResponse = new PassengerResponse();
 		if (userDoesNotExistBy(passengerRequest.getUserName())){
-			
-			System.out.println("HELLO EVERYONE!!!");
 			try {
 				checkForNullFields(declaredFields, passengerRequest);
-//				validEmailDomain.isValid(passengerRequest.getEmail());
 				Passenger passenger = new Passenger();
 				UserBioData biodata = new UserBioData();
 				mapper.map(passengerRequest, biodata);

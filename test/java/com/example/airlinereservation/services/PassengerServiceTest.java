@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigInteger;
 import java.util.Optional;
@@ -20,7 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {TestConfigurations.class})
 class PassengerServiceTest {
-	
+
+//	@Autowired
+//	MockMvc mockMvc;
 	@Autowired
 	PassengerService passengerService;
 	PassengerResponse passengerResponse;
@@ -43,6 +46,7 @@ class PassengerServiceTest {
 		
 		@SneakyThrows
 		@Test void whenPassengerTriesToRegisterTwice_RegistrationFailedExceptionIsThrown() {
+//			mockMvc.perform().andDo().andExpect()
 			assertThatThrownBy(() -> passengerService
 					                         .registerNewPassenger(buildPassenger()), "Seems Like You Already Have An Account With Us")
 					.as("Seems Like You Already Have An Account With Us")
@@ -50,7 +54,7 @@ class PassengerServiceTest {
 			
 		}
 		
-		@Test void testThatPassengerTriesToRegisterUsingDetailsWithIncorrectFormat_RegistrationFailedExceptionIsThrown() throws FailedRegistrationException {
+		@Test void testThatPassengerTriesToRegisterUsingDetailsWithIncorrectFormat_RegistrationFailedExceptionIsThrown() throws FailedRegistrationException, NoSuchFieldException {
 			passengerService.registerNewPassenger(buildPassengerWithIncorrectFormatDetails());
 		}
 		

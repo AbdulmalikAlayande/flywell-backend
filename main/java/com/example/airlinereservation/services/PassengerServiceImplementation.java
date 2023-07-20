@@ -6,14 +6,12 @@ import com.example.airlinereservation.data.repositories.*;
 import com.example.airlinereservation.dtos.Request.*;
 import com.example.airlinereservation.dtos.Response.*;
 import com.example.airlinereservation.utils.exceptions.*;
-import com.example.airlinereservation.config.mycustomannotations.ValidEmailDomain;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -24,6 +22,7 @@ import static com.example.airlinereservation.utils.Exceptions.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Slf4j
+@Validated
 public class PassengerServiceImplementation implements PassengerService{
 	
 	@Autowired
@@ -35,10 +34,6 @@ public class PassengerServiceImplementation implements PassengerService{
 	
 	@Override
 	public PassengerResponse registerNewPassenger(PassengerRequest passengerRequest) throws FailedRegistrationException {
-		ApplicationContext context = new AnnotationConfigApplicationContext();
-		System.out.println("The context class:: "+context.getBean(ValidEmailDomain.class));
-		System.out.println("The context class:: "+context.getBean(ModelMapper.class));
-//		System.out.println("The context class:: "+context.getBean(EmailPattern.class));
 		Field[] declaredFields = passengerRequest.getClass().getDeclaredFields();
 		PassengerResponse passengerResponse = new PassengerResponse();
 		if (userDoesNotExistBy(passengerRequest.getUserName())){

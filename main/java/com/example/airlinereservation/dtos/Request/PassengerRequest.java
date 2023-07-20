@@ -1,7 +1,6 @@
 package com.example.airlinereservation.dtos.Request;
 
 import com.example.airlinereservation.config.mycustomannotations.EmailPattern;
-import com.example.airlinereservation.utils.mycustomannotations.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 
 
 import javax.validation.constraints.Email;
@@ -18,6 +19,7 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Validated
 public class UserBioData {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)

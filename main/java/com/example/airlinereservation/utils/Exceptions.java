@@ -1,6 +1,7 @@
 package com.example.airlinereservation.utils;
 
 import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
+import com.example.airlinereservation.utils.exceptions.FieldInvalidException;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 
 public class Exceptions {
@@ -14,14 +15,15 @@ public class Exceptions {
 		Throwable cause = throwable.getCause();
 		FailedRegistrationException exception = new FailedRegistrationException(message);
 		exception.initCause(cause);
-		StackTraceElement[] element = new StackTraceElement[]{
-				new StackTraceElement("Exceptions", "throwFailedRegistrationException", "", 21)
-		};
 		exception.setStackTrace(throwable.getStackTrace());
 		throw exception;
 	}
 	
 	public static void throwFailedRegistrationException(String message) throws FailedRegistrationException {
 		throw new FailedRegistrationException(message);
+	}
+	
+	public static void throwFieldInvalidException(String message) {
+		throw new FieldInvalidException(message);
 	}
 }

@@ -1,16 +1,11 @@
 package com.example.airlinereservation.data.model;
 
-import com.example.airlinereservation.config.mycustomannotations.EmailPattern;
-import com.example.airlinereservation.config.mycustomannotations.ValidEmailDomain;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 
-
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
@@ -19,7 +14,6 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Validated
 public class UserBioData {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
@@ -35,10 +29,6 @@ public class UserBioData {
 	private String userName;
 	@NotBlank
 	@Column(unique = true)
-	@Email(message = "Please enter a valid email format",
-			regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-			groups = {ValidEmailDomain.class})
-	@EmailPattern(groups = ValidEmailDomain.class)
 	private String email;
 	@NotBlank
 	private String phoneNumber;

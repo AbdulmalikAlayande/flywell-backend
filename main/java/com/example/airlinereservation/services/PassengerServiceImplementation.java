@@ -11,7 +11,6 @@ import lombok.extern.slf4j.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -22,7 +21,6 @@ import static com.example.airlinereservation.utils.Exceptions.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Slf4j
-@Validated
 public class PassengerServiceImplementation implements PassengerService{
 	
 	@Autowired
@@ -38,6 +36,7 @@ public class PassengerServiceImplementation implements PassengerService{
 		PassengerResponse passengerResponse = new PassengerResponse();
 		if (userDoesNotExistBy(passengerRequest.getUserName())){
 			try {
+
 				checkForNullFields(declaredFields, passengerRequest);
 				Passenger passenger = new Passenger();
 				UserBioData biodata = new UserBioData();

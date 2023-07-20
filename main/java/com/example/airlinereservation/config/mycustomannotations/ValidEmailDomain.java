@@ -1,5 +1,7 @@
 package com.example.airlinereservation.config.mycustomannotations;
 
+import com.example.airlinereservation.utils.Exceptions;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
@@ -30,8 +32,10 @@ public class ValidEmailDomain implements ConstraintValidator<EmailPattern, Strin
 		context.disableDefaultConstraintViolation();
 		System.out.println("i don't wanna be low");
 		String[] emailSplit = email.split("@");
-		return Arrays.stream(validDomain)
-				     .anyMatch(domain-> Objects.equals(domain, emailSplit[1]));
+		 if (Arrays.stream(validDomain).noneMatch(domain -> Objects.equals(domain, emailSplit[1]))){
+			 Exceptions.throwInvalidRequestException(constraintViolationBuilder.toString());
+		 }
+		 return false;
 	}
 }
 //Stream<Boolean> result = Arrays.stream(validDomain).map(x -> {

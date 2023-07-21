@@ -19,8 +19,7 @@ import java.util.*;
 import static com.example.airlinereservation.utils.Exceptions.*;
 
 @Service
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class PassengerServiceImplementation implements PassengerService{
 	

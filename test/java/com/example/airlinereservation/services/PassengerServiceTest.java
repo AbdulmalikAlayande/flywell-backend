@@ -104,13 +104,12 @@ class PassengerServiceTest {
 	}
 	
 	
-	@Nested class DataRetrievalTest {
 		
-		static PassengerService passengerService;
+		PassengerService passengerService1;
 		@SneakyThrows
-		@BeforeAll static void startAllDataRetrievalTestWith(){
-			passengerService = new PassengerServiceImplementation();
-			passengerService.registerNewPassenger(PassengerRequest
+		@BeforeEach void startAllDataRetrievalTestWith(){
+			passengerService1 = new PassengerServiceImplementation();
+			passengerService1.registerNewPassenger(PassengerRequest
 					        .builder().phoneNumber("567890234").firstName("Alayande")
 					        .lastName("Amirah").email("ololadeayandunni@gmail.com").userName("mirah")
 					        .password("ayandunni#$2008").build());
@@ -175,4 +174,3 @@ class PassengerServiceTest {
 //	@Test void getAllPassengersBelongingToAParticularFlightTest(){
 //
 //	}
-}

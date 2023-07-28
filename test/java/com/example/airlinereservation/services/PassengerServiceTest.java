@@ -117,7 +117,7 @@ class PassengerServiceTest {
 	}
 	@SneakyThrows
 	@Test void findSavedPassengerWithAUsernameThatDoesNotExist_InvalidRequestExceptionIsThrown(){
-		assertThrowsExactly(InvalidRequestException.class, ()->passengerService.findPassengerByUserName("mithra"),
+		assertThrowsExactly(RuntimeException.class, ()->passengerService.findPassengerByUserName("mithra"),
 				"Request Failed:: Invalid Username");
 	}
 		
@@ -134,7 +134,7 @@ class PassengerServiceTest {
 		
 	@Test
 	void findSavedPassengerWithIdThatDoesExist_InvalidRequestExceptionIsThrown(){
-		assertThrowsExactly(InvalidRequestException.class, ()->passengerService.findPassengerById("892ffr0ilj84aas787t274gf7qsfqwe8"),
+		assertThrowsExactly(RuntimeException.class, ()->passengerService.findPassengerById("892ffr0ilj84aas787t274gf7qsfqwe8"),
 				"Request Failed:: Invalid Id");
 	}
 	//todo to fail

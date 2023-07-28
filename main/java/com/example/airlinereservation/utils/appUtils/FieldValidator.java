@@ -1,7 +1,7 @@
 package com.example.airlinereservation.utils.appUtils;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.example.airlinereservation.utils.exceptions.FieldInvalidException;
+import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -19,7 +19,7 @@ public class FieldValidator implements Validator{
 	private String email;
 	
 	@Override
-	public void validateEmail(String email) {
+	public void validateEmail(String email) throws InvalidRequestException, FieldInvalidException {
 		this.email = email;
 		List<String> domains = Arrays.stream(validDomains).toList();
 		String regexPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
@@ -41,7 +41,7 @@ public class FieldValidator implements Validator{
 	}
 	
 	@Override
-	public void validatePassword(String password) {
+	public void validatePassword(String password) throws FieldInvalidException {
 		Formatter formatter = new Formatter();
 		Formatter formatMessage = formatter.format("Password %s length is invalid it should be between 8 and 15 characters", password);
 		String invalidLengthMessage = formatMessage.toString();

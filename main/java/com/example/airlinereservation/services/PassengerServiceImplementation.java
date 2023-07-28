@@ -10,11 +10,11 @@ import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import com.example.airlinereservation.utils.appUtils.Validator;
 import com.example.airlinereservation.utils.exceptions.EmptyFieldException;
 import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
+import com.example.airlinereservation.utils.exceptions.FieldInvalidException;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -31,12 +31,9 @@ import static com.example.airlinereservation.utils.Exceptions.throwInvalidReques
 @Slf4j
 public class PassengerServiceImplementation implements PassengerService{
 	
-	@Autowired
 	Validator validator;
 	private PassengerRepository passengerRepository;
-	@Autowired
 	private UserBioDataRepository userBioDataRepository;
-	@Autowired
 	private ModelMapper mapper;
 	
 	
@@ -63,7 +60,7 @@ public class PassengerServiceImplementation implements PassengerService{
 		throw new FailedRegistrationException("Registration Failed:: Seems Like You Already Have An Account With Us");
 	}
 	
-	private void validateEmailAndPassword(String email, String password) {
+	private void validateEmailAndPassword(String email, String password) throws FieldInvalidException, InvalidRequestException {
 		validator.validateEmail(email);
 		validator.validatePassword(password);
 	}
@@ -136,10 +133,6 @@ public class PassengerServiceImplementation implements PassengerService{
 				       }));
 	}
 	
-	public Optional<List<PassengerResponse>> getAllPassengersBy(String flightId) {
-		return Optional.of(new ArrayList<>());
-	}
-	
 	@Override
 	public List<PassengerResponse> getAllPassengers() {
 		List<PassengerResponse> responses = new ArrayList<>();
@@ -176,6 +169,7 @@ public class PassengerServiceImplementation implements PassengerService{
 	}
 	
 	@Override public void removePassengerBId(String passengerId) throws InvalidRequestException {
+		
 		passengerRepository.deleteById(passengerId);
 	}
 	

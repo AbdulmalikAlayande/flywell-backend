@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.validation.annotation.Validated;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -88,10 +89,10 @@ class PassengerServiceTest {
 		PassengerResponse updateResponse = passengerService.updateDetailsOfRegisteredPassenger(updateRequest);
 		assertThat(updateResponse).isNotNull();
 		assertThat(updateResponse.getEmail()).isEqualTo(updateRequest.getEmail());
-		Optional<PassengerResponse> foundPassenger = passengerService.findPassengerByUserName(updateRequest.getUserName());
+		Optional<PassengerResponse> foundPassenger = passengerService.findPassengerByUserName(updateRequest.getNewUserName());
 		assertThat(foundPassenger.isPresent()).isTrue();
 		foundPassenger.ifPresent(passenger->{
-			assertThat(passenger.getUserName()).isEqualTo(updateRequest.getUserName());
+			assertThat(passenger.getUserName()).isEqualTo(updateRequest.getNewUserName());
 			assertThat(passenger.getEmail()).isEqualTo(updateRequest.getEmail());
 		});
 	}
@@ -147,6 +148,23 @@ class PassengerServiceTest {
 			assertThat(passengerResponse.getUserName()).isNotEmpty();
 		});
 	}
+	
+		@SneakyThrows
+	@Test void removePassengerByUserNameTest(){
+		boolean isDeleted = passengerService.removePassengerByUserName(buildPassenger().getUserName());
+		assertTrue(isDeleted);
+	}
+
+	@SneakyThrows
+	@Test void getAllPassengersTest(){
+		List<PassengerResponse> allPassengersPresent = passengerService.getAllPassengers();
+		allPassengersPresent.forEach(passengerResponse->{
+			assertThat(passengerResponse).isNotNull();
+			assertThat(passengerResponse.getUserName()).isNotNull();
+			assertThat(passengerResponse.getUserName()).isNotEmpty();
+		});
+		assertThat(allPassengersPresent.size()).isEqualTo(passengerService.getCountOfPassengers());
+	}
 }
 	
 
@@ -156,20 +174,6 @@ class PassengerServiceTest {
 //		assertEquals(BigInteger.TWO.intValue(), passengerService.getCountOfPassengers());
 //	}
 //
-//	@SneakyThrows
-//	@Test void removePassengerByUserNameTest(){
-//		boolean isDeleted = passengerService.removePassengerByUserName(buildPassenger().getUserName());
-//		assertTrue(isDeleted);
-//	}
-//
-//	@SneakyThrows
-//	@Test void getAllPassengersTest(){
-//		List<PassengerResponse> responses = passengerService.getAllPassengers();
-//		for (int i = 0; i < passengerService.getAllPassengers().size(); i++) {
-//			assertNotNull(passengerService.getAllPassengers().get(i));
-//		}
-//		assertNotNull(responses);
-//	}
 //
 //	@Test void getAllPassengersBelongingToAParticularFlightTest(){
 //

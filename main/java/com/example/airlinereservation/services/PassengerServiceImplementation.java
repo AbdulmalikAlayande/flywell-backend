@@ -1,22 +1,31 @@
 package com.example.airlinereservation.services;
 
-import com.example.airlinereservation.Mapper.Mapper;
-import com.example.airlinereservation.data.model.*;
-import com.example.airlinereservation.data.repositories.*;
-import com.example.airlinereservation.dtos.Request.*;
-import com.example.airlinereservation.dtos.Response.*;
+import com.example.airlinereservation.data.model.Passenger;
+import com.example.airlinereservation.data.model.UserBioData;
+import com.example.airlinereservation.data.repositories.PassengerRepository;
+import com.example.airlinereservation.data.repositories.UserBioDataRepository;
+import com.example.airlinereservation.dtos.Request.PassengerRequest;
+import com.example.airlinereservation.dtos.Request.UpdateRequest;
+import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import com.example.airlinereservation.utils.appUtils.Validator;
-import com.example.airlinereservation.utils.exceptions.*;
-import lombok.*;
-import lombok.extern.slf4j.*;
+import com.example.airlinereservation.utils.exceptions.EmptyFieldException;
+import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
+import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
-import static com.example.airlinereservation.utils.Exceptions.*;
+import static com.example.airlinereservation.utils.Exceptions.throwFailedRegistrationException;
+import static com.example.airlinereservation.utils.Exceptions.throwInvalidRequestException;
 
 @Service
 @AllArgsConstructor
@@ -91,14 +100,17 @@ public class PassengerServiceImplementation implements PassengerService{
 		Optional<UserBioData> userBio = userBioDataRepository.findByUserName(updateRequest.getUserName());
 		return userBio.map(userBioData -> {
 				   modelMapper.map(updateRequest, userBioData);
-			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
-			foundPassenger.ifPresent(passenger -> {
-				passenger.setUserBioData(userBioData);
-				passengerRepository.save(passenger);
+				   if (updateRequest.getNewUserName() != null){
+					   userBioData.setUserName(updateRequest.getNewUserName());
+				   }
+				   Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
+				   foundPassenger.ifPresent(passenger -> {
+					   passenger.setUserBioData(userBioData);
+					   passengerRepository.save(passenger);
 				   });
 				   modelMapper.map(userBioData, response);
 				   return response;
-				}).orElseThrow(()->throwInvalidRequestException("Update could not be completed"));
+		}).orElseThrow(()->throwInvalidRequestException("Update could not be completed"));
 		
 	}
 	
@@ -120,10 +132,23 @@ public class PassengerServiceImplementation implements PassengerService{
 	@Override
 	public List<PassengerResponse> getAllPassengers() {
 		List<PassengerResponse> responses = new ArrayList<>();
-		for (int i = 0; i < passengerRepository.count(); i++) {
-			if (passengerRepository.findAll().get(i) != null)
-				responses.add(Mapper.map(passengerRepository.findAll().get(i)));
-		}
+		List<Passenger> allPassengers = passengerRepository.findAll();
+		mapper.addMappings(new PropertyMap<Passenger, PassengerResponse>() {
+			@Override
+			protected void configure() {
+				map().setFirstName(source.getUserBioData().getFirstName());
+				map().setLastName(source.getUserBioData().getLastName());
+				map().setEmail(source.getUserBioData().getEmail());
+				map().setEmail(source.getUserBioData().getEmail());
+			}
+		});
+		allPassengers.forEach(passenger -> {
+			PassengerResponse response = new PassengerResponse();
+			mapper.map(passenger, response);
+			log.info("Response s:: {}", response);
+			log.info("Response username is:: {}", response.getUserName());
+			responses.add(response);
+		});
 		return responses;
 	}
 	

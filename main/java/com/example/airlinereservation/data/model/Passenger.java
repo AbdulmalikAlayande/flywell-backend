@@ -17,11 +17,4 @@ public class Passenger {
 	private String id;
 	@OneToOne(cascade = CascadeType.ALL)
 	private UserBioData userBioData;
-//	private String firstName;
-//	private String lastName;
-//	private String fullName = firstName + lastName;
-//	private String username;
-//	private String Email;
-//	private String phoneNumber;
-//	private String password;
 }

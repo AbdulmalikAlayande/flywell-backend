@@ -139,7 +139,6 @@ public class PassengerServiceImplementation implements PassengerService{
 				map().setFirstName(source.getUserBioData().getFirstName());
 				map().setLastName(source.getUserBioData().getLastName());
 				map().setEmail(source.getUserBioData().getEmail());
-				map().setEmail(source.getUserBioData().getEmail());
 			}
 		});
 		allPassengers.forEach(passenger -> {

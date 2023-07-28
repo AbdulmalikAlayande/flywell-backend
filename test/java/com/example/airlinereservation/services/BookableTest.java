@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.example.airlinereservation.data.model.Flight;
 import com.example.airlinereservation.data.model.Payment;
@@ -21,12 +22,12 @@ class BookableTest {
 	BookingRequest bookingRequest;
 	Payment payment;
 	PassengerRequest passengerRequest;
+	@Autowired
 	PassengerService passengerService;
 	Flight booked;
 	
 	@BeforeEach void startAllTestWith(){
 		payment = new Payment();
-		passengerService = new PassengerServiceImplementation();
 		bookable = new FlightBooking();
 		bookingRequest = new BookingRequest();
 		passengerRequest = new PassengerRequest();

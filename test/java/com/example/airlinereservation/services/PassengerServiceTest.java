@@ -29,12 +29,13 @@ class PassengerServiceTest {
 	
 	@BeforeEach
 	public void startAllTestWith() {
+//		passengerService.removeAll();
 		updateRequest = new UpdateRequest();
 	}
 	
 	@AfterEach
 	public void endEachTestWith(){
-		passengerService.removePassengerByUserName("mirah");
+//		passengerService.removeAll();
 	}
 	@SneakyThrows
 	@BeforeEach void startAllDataRetrievalTestWith(){
@@ -42,12 +43,7 @@ class PassengerServiceTest {
 				         .builder().phoneNumber("567890234").firstName("Alayande")
 				         .lastName("Amirah").email("ololadeayandunni@gmail.com").userName("mirah")
 				         .password("ayandunni#$2008").build());
-	}
-	
-	@AfterAll
-	public static void afterAllTest(){
-		PassengerService service = new PassengerServiceImplementation();
-		service.removeAll();
+		passengerService.removePassengerByUserName("mirah");
 	}
 	
 	@SneakyThrows
@@ -58,6 +54,7 @@ class PassengerServiceTest {
 				.isInstanceOf(FailedRegistrationException.class)
 				.hasMessageContaining("Incomplete Details");
 	}
+	
 	@SneakyThrows
 	@Test void whenPassengerTriesToRegisterTwice_RegistrationFailedExceptionIsThrown() {
 		passengerService.registerNewPassenger(buildPassenger());
@@ -66,7 +63,6 @@ class PassengerServiceTest {
 				.as("Seems Like You Already Have An Account With Us")
 				.isInstanceOf(FailedRegistrationException.class)
 				.hasMessageContaining("Seems Like You Already Have An Account With Us");
-			
 	}
 	
 	@Test void testThatPassengerTriesToRegisterUsingDetailsWithIncorrectFormat_RegistrationFailedExceptionIsThrown() throws FailedRegistrationException, NoSuchFieldException {
@@ -92,6 +88,10 @@ class PassengerServiceTest {
 		updateRequest.setFirstName("Micheal");
 		PassengerResponse updatedPassenger = passengerService.updateDetailsOfRegisteredPassenger(updateRequest);
 		assertNotNull(updatedPassenger);
+		Optional<PassengerResponse> foundPassenger = passengerService.findPassengerByUserName("zen@20");
+		foundPassenger.ifPresent(passengerResponse1 -> {
+			assertThat(updateRequest.getFirstName()).isEqualTo(passengerResponse1.getFirstName());
+		});
 		assertEquals( BigInteger.TWO.longValue(), passengerService.getCountOfPassengers());
 	}
 	

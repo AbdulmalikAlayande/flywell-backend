@@ -9,6 +9,8 @@ import com.example.airlinereservation.dtos.Request.BookingRequest;
 import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
 import com.example.airlinereservation.dtos.Response.PassengerResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDate;
@@ -19,9 +21,11 @@ import java.util.List;
 import java.util.Optional;
 
 
+@Service
 public class FlightBooking implements Bookable {
 	FlightService flightService = new FlightServiceImpl();
-	PassengerService passengerService = new PassengerServiceImplementation();
+	@Autowired
+	PassengerService passengerService;
 	
 	private final List<BookingCategory> bookingCategories = List.of(
 			FirstClassBookingCategory.getInstance(),

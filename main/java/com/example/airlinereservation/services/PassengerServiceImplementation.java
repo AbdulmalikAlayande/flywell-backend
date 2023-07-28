@@ -19,18 +19,18 @@ import java.util.*;
 import static com.example.airlinereservation.utils.Exceptions.*;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Slf4j
 public class PassengerServiceImplementation implements PassengerService{
 	
 	@Autowired
 	Validator validator;
-	@Autowired
 	private PassengerRepository passengerRepository;
 	@Autowired
 	private UserBioDataRepository userBioDataRepository;
 	@Autowired
 	private ModelMapper mapper;
+	
 	
 	@Override
 	public PassengerResponse registerNewPassenger(PassengerRequest passengerRequest) throws FailedRegistrationException {

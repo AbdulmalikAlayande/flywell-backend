@@ -16,4 +16,6 @@ public class PassengerResponse {
 	private String Email;
 	private String phoneNumber;
 	private String userName;
+	private String firstName;
+	private String lastName;
 }

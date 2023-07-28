@@ -28,22 +28,19 @@ class PassengerServiceTest {
 	UpdateRequest updateRequest;
 	
 	@BeforeEach
+	@SneakyThrows
 	public void startAllTestWith() {
-//		passengerService.removeAll();
+		passengerService.removeAll();
 		updateRequest = new UpdateRequest();
+		passengerService.registerNewPassenger(PassengerRequest
+				        .builder().phoneNumber("567890234").firstName("Alayande")
+				        .lastName("Amirah").email("ololadeayandunni@gmail.com").userName("mirah")
+				        .password("ayandunni#$2008").build());
 	}
 	
 	@AfterEach
-	public void endEachTestWith(){
+	public void endEachTestWith() {
 //		passengerService.removeAll();
-	}
-	@SneakyThrows
-	@BeforeEach void startAllDataRetrievalTestWith(){
-		passengerService.registerNewPassenger(PassengerRequest
-				         .builder().phoneNumber("567890234").firstName("Alayande")
-				         .lastName("Amirah").email("ololadeayandunni@gmail.com").userName("mirah")
-				         .password("ayandunni#$2008").build());
-		passengerService.removePassengerByUserName("mirah");
 	}
 	
 	@SneakyThrows
@@ -83,16 +80,20 @@ class PassengerServiceTest {
 	
 	@SneakyThrows
 	@Test void testThatPassengerCanUpdateTheirDetails(){
-		passengerService.registerNewPassenger(buildPassenger1());
-		updateRequest.setUserName(buildPassenger1().getUserName());
-		updateRequest.setFirstName("Micheal");
-		PassengerResponse updatedPassenger = passengerService.updateDetailsOfRegisteredPassenger(updateRequest);
-		assertNotNull(updatedPassenger);
-		Optional<PassengerResponse> foundPassenger = passengerService.findPassengerByUserName("zen@20");
-		foundPassenger.ifPresent(passengerResponse1 -> {
-			assertThat(updateRequest.getFirstName()).isEqualTo(passengerResponse1.getFirstName());
+		updateRequest.setFirstName("Alibaba");
+		updateRequest.setEmail("alibaba@gmail.com");
+		updateRequest.setPhoneNumber("08056472356");
+		updateRequest.setUserName("mirah");
+		updateRequest.setNewUserName("mithra");
+		PassengerResponse updateResponse = passengerService.updateDetailsOfRegisteredPassenger(updateRequest);
+		assertThat(updateResponse).isNotNull();
+		assertThat(updateResponse.getEmail()).isEqualTo(updateRequest.getEmail());
+		Optional<PassengerResponse> foundPassenger = passengerService.findPassengerByUserName(updateRequest.getUserName());
+		assertThat(foundPassenger.isPresent()).isTrue();
+		foundPassenger.ifPresent(passenger->{
+			assertThat(passenger.getUserName()).isEqualTo(updateRequest.getUserName());
+			assertThat(passenger.getEmail()).isEqualTo(updateRequest.getEmail());
 		});
-		assertEquals( BigInteger.TWO.longValue(), passengerService.getCountOfPassengers());
 	}
 	
 	private PassengerRequest buildIncompletePassenger() {
@@ -122,10 +123,11 @@ class PassengerServiceTest {
 	@SneakyThrows
 	@Test void findSavedPassengerWithUsername_PassengerWithTheSaidUsernameIsFound(){
 		Optional<PassengerResponse> response = passengerService.findPassengerByUserName("mirah");
+		assertThat(response.isPresent()).isTrue();
 		response.ifPresent(passengerResponse -> {
-				assertThat(passengerResponse).isNotNull();
-				assertThat(passengerResponse).isInstanceOf(PassengerResponse.class);
-				assertThat(passengerResponse.getUserName()).isNotEmpty(); 
+			assertThat(passengerResponse).isNotNull();
+			assertThat(passengerResponse).isInstanceOf(PassengerResponse.class);
+			assertThat(passengerResponse.getUserName()).isNotEmpty();
 		});
 	}
 		

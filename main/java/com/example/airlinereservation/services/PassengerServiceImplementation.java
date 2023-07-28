@@ -110,7 +110,7 @@ public class PassengerServiceImplementation implements PassengerService{
 						   mapper.map(passenger, response);
 						   return response;
 					   })
-				       .orElseThrow(()-> throwInvalidRequestException("Invalid Request:: User with username "+passengerId+" not found")));
+				       .orElseThrow(()-> throwInvalidRequestException("Invalid Request:: User with id "+passengerId+" not found")));
 	}
 	
 	public Optional<List<PassengerResponse>> getAllPassengersBy(String flightId) {
@@ -134,16 +134,14 @@ public class PassengerServiceImplementation implements PassengerService{
 	@Override public Optional<PassengerResponse> findPassengerByUserName(String userName) throws InvalidRequestException {
 		PassengerResponse passengerResponse = new PassengerResponse();
 		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
-		
-		return Optional.of(foundBio
-				       .flatMap(userBioData -> {
+		return foundBio.map(userBioData -> {
 						   Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
 						   return foundPassenger.map(passenger -> {
-							   mapper.map(foundBio, passengerResponse);
+							   System.out.println("User bio data is:: "+userBioData.getUserName());
+							   mapper.map(userBioData, passengerResponse);
 							   return passengerResponse;
 						   });
-					   })
-				       .orElseThrow(()-> throwInvalidRequestException("Invalid Request:: User with username "+userName+" not found")));
+					   }).orElseThrow(() -> throwInvalidRequestException("Invalid Request:: User with username "+userName+" not found"));
 	}
 	
 	@Override public void removePassengerBId(String passengerId) throws InvalidRequestException {

@@ -14,7 +14,6 @@ import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,9 +86,9 @@ public class PassengerServiceImplementation implements PassengerService{
 					  if (accessesField == null || (accessesField instanceof String && accessesField.toString().isEmpty()))
 						  throw new EmptyFieldException("Incomplete Details\n" + errorMessage);
 				  }
-				  catch (Throwable e) {
-					throw new EmptyFieldException(e.getMessage());
-				}
+				  catch (Exception e) {
+					  throw new RuntimeException(e);
+				  }
 			  });
 	}
 	
@@ -110,11 +109,17 @@ public class PassengerServiceImplementation implements PassengerService{
 				   });
 				   modelMapper.map(userBioData, response);
 				   return response;
-		}).orElseThrow(()->throwInvalidRequestException("Update could not be completed"));
+		}).orElseThrow(()-> {
+			try {
+				return throwInvalidRequestException("Update could not be completed");
+			} catch (InvalidRequestException e) {
+				throw new RuntimeException(e);
+			}
+		});
 		
 	}
 	
-	@Override public Optional<PassengerResponse> findPassengerById(String passengerId) throws InvalidRequestException {
+	@Override public Optional<PassengerResponse> findPassengerById(String passengerId) {
 		PassengerResponse response = new PassengerResponse();
 		Optional<Passenger> foundPassenger = passengerRepository.findById(passengerId);
 		return Optional.of(foundPassenger
@@ -122,7 +127,13 @@ public class PassengerServiceImplementation implements PassengerService{
 						   mapper.map(passenger, response);
 						   return response;
 					   })
-				       .orElseThrow(()-> throwInvalidRequestException("Invalid Request:: User with id "+passengerId+" not found")));
+				       .orElseThrow(()-> {
+					       try {
+						       return throwInvalidRequestException("Invalid Request:: User with id "+passengerId+" not found");
+					       } catch (InvalidRequestException e) {
+						       throw new RuntimeException(e);
+					       }
+				       }));
 	}
 	
 	public Optional<List<PassengerResponse>> getAllPassengersBy(String flightId) {
@@ -133,29 +144,19 @@ public class PassengerServiceImplementation implements PassengerService{
 	public List<PassengerResponse> getAllPassengers() {
 		List<PassengerResponse> responses = new ArrayList<>();
 		List<Passenger> allPassengers = passengerRepository.findAll();
-		mapper.addMappings(new PropertyMap<Passenger, PassengerResponse>() {
-			@Override
-			protected void configure() {
-				map().setFirstName(source.getUserBioData().getFirstName());
-				map().setLastName(source.getUserBioData().getLastName());
-				map().setEmail(source.getUserBioData().getEmail());
-			}
-		});
 		allPassengers.forEach(passenger -> {
 			PassengerResponse response = new PassengerResponse();
-			mapper.map(passenger, response);
-			log.info("Response s:: {}", response);
-			log.info("Response username is:: {}", response.getUserName());
+			mapper.map(passenger.getUserBioData(), response);
 			responses.add(response);
 		});
 		return responses;
 	}
 	
-	@Override public Optional<PassengerResponse> findPassengerByEmailAndPassword(String email, String password) throws InvalidRequestException {
+	@Override public Optional<PassengerResponse> findPassengerByEmailAndPassword(String email, String password) {
 		return Optional.empty();
 	}
 	
-	@Override public Optional<PassengerResponse> findPassengerByUserName(String userName) throws InvalidRequestException {
+	@Override public Optional<PassengerResponse> findPassengerByUserName(String userName) {
 		PassengerResponse passengerResponse = new PassengerResponse();
 		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
 		return foundBio.map(userBioData -> {
@@ -165,7 +166,13 @@ public class PassengerServiceImplementation implements PassengerService{
 							   mapper.map(userBioData, passengerResponse);
 							   return passengerResponse;
 						   });
-					   }).orElseThrow(() -> throwInvalidRequestException("Invalid Request:: User with username "+userName+" not found"));
+					   }).orElseThrow(() -> {
+			try {
+				return throwInvalidRequestException("Invalid Request:: User with username "+userName+" not found");
+			} catch (InvalidRequestException e) {
+				throw new RuntimeException(e);
+			}
+		});
 	}
 	
 	@Override public void removePassengerBId(String passengerId) throws InvalidRequestException {
@@ -181,7 +188,7 @@ public class PassengerServiceImplementation implements PassengerService{
 		String message = "Passenger Not Found Incorrect User name";
 		return foundBio.map(userBioData -> {
 			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
-			foundPassenger.ifPresent(x-> passengerRepository.deleteByUserBioData(userBioData));
+			foundPassenger.ifPresent(passenger-> passengerRepository.deleteByUserBioData(userBioData));
 			return true;
 		}).orElseThrow(()-> {
 			try {

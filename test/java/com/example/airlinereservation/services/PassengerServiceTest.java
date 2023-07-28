@@ -151,6 +151,7 @@ class PassengerServiceTest {
 	
 		@SneakyThrows
 	@Test void removePassengerByUserNameTest(){
+		passengerService.registerNewPassenger(buildPassenger());
 		boolean isDeleted = passengerService.removePassengerByUserName(buildPassenger().getUserName());
 		assertTrue(isDeleted);
 	}

@@ -1,6 +1,6 @@
 package com.example.airlinereservation.utils.exceptions;
 
-public class FieldInvalidException extends RuntimeException{
+public class FieldInvalidException extends Exception{
 	private String exceptionCause;
 	private Throwable cause;
 	

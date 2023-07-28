@@ -1,6 +1,6 @@
 package com.example.airlinereservation.utils.exceptions;
 
-public class EmptyFieldException extends RuntimeException{
+public class EmptyFieldException extends Exception{
 	private String cause;
 	
 	public EmptyFieldException(String message){

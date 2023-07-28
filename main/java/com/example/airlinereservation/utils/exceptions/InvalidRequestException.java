@@ -1,6 +1,6 @@
 package com.example.airlinereservation.utils.exceptions;
 
-public class InvalidRequestException extends RuntimeException {
+public class InvalidRequestException extends Exception {
 	private String message;
 	
 	public InvalidRequestException(String message){

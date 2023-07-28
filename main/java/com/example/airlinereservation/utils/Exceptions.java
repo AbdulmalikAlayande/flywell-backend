@@ -23,7 +23,7 @@ public class Exceptions {
 		throw new FailedRegistrationException(message);
 	}
 	
-	public static void throwFieldInvalidException(String message) {
+	public static void throwFieldInvalidException(String message) throws FieldInvalidException {
 		FieldInvalidException exception = new FieldInvalidException(message);
 		exception.setCause(message);
 		throw exception;

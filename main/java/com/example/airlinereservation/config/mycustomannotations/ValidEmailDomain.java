@@ -1,6 +1,7 @@
 package com.example.airlinereservation.config.mycustomannotations;
 
 import com.example.airlinereservation.utils.Exceptions;
+import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -33,7 +34,11 @@ public class ValidEmailDomain implements ConstraintValidator<EmailPattern, Strin
 		System.out.println("i don't wanna be low");
 		String[] emailSplit = email.split("@");
 		 if (Arrays.stream(validDomain).noneMatch(domain -> Objects.equals(domain, emailSplit[1]))){
-			 Exceptions.throwInvalidRequestException(constraintViolationBuilder.toString());
+			 try {
+				 Exceptions.throwInvalidRequestException(constraintViolationBuilder.toString());
+			 } catch (InvalidRequestException e) {
+				 throw new RuntimeException(e);
+			 }
 		 }
 		 return false;
 	}

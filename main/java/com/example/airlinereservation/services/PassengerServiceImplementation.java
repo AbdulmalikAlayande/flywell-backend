@@ -13,9 +13,11 @@ import com.example.airlinereservation.utils.appUtils.Validator;
 import com.example.airlinereservation.utils.exceptions.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +39,7 @@ public class PassengerServiceImplementation implements PassengerService{
 	
 	
 	@Override
-	public PassengerResponse registerNewPassenger(PassengerRequest passengerRequest) throws FailedRegistrationException {
+	public PassengerResponse registerNewPassenger(@NotNull PassengerRequest passengerRequest) throws FailedRegistrationException {
 		Field[] declaredFields = passengerRequest.getClass().getDeclaredFields();
 		PassengerResponse passengerResponse = new PassengerResponse();
 		if (userDoesNotExistBy(passengerRequest.getUserName())){
@@ -88,7 +90,8 @@ public class PassengerServiceImplementation implements PassengerService{
 			  });
 	}
 	
-	@Override public PassengerResponse updateDetailsOfRegisteredPassenger(UpdateRequest updateRequest) {
+	@Override
+	public PassengerResponse updateDetailsOfRegisteredPassenger(@NotNull UpdateRequest updateRequest) {
 		PassengerResponse response = new PassengerResponse();
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setSkipNullEnabled(true);
@@ -117,14 +120,31 @@ public class PassengerServiceImplementation implements PassengerService{
 	
 	@Override
 	public LoginResponse login(LoginRequest loginRequest) throws LoginFailedException {
+		validateLoginCredentialsIntegrity(loginRequest);
 		checkIfUserExists(loginRequest);
+		if (loginRequest.getUsername() == null)
+			return logInViaEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
+		return loginViaUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+	}
+	
+	private LoginResponse loginViaUsernameAndPassword(String username, String password) {
 		return null;
 	}
 	
-	private void checkIfUserExists(LoginRequest loginRequest) {
+	private LoginResponse logInViaEmailAndPassword(String email, String password) {
+		return null;
+	}
+	
+	private void validateLoginCredentialsIntegrity(@NotNull LoginRequest loginRequest) throws LoginFailedException {
+		if (loginRequest.getUsername() == null && loginRequest.getEmail() == null)
+			throw new LoginFailedException("Login Failed:: Please provide the full details requested in the correct format");
+	}
+	
+	private void checkIfUserExists(@NotNull LoginRequest loginRequest) throws LoginFailedException {
 		boolean userDoesNotExistsByUsername = userDoesNotExistBy(loginRequest.getUsername());
 		boolean userDoesNotExistsByEmailAndPassword = userDoesNotExistBy(loginRequest.getEmail(), loginRequest.getPassword());
-		
+		if (userDoesNotExistsByEmailAndPassword && userDoesNotExistsByUsername)
+			throw new LoginFailedException("Login Failed:: You do not have an account with us, Please register to create one");
 	}
 	
 	private boolean userDoesNotExistBy(String email, String password) {
@@ -165,9 +185,12 @@ public class PassengerServiceImplementation implements PassengerService{
 		Optional<UserBioData> foundBio = userBioDataRepository.findByEmailAndPassword(email, password);
 		PassengerResponse response = new PassengerResponse();
 		foundBio.ifPresent(bioData -> {
-			passengerRepository.findByUserBioData(bioData);
+			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(bioData);
+			foundPassenger.ifPresent(passenger -> {
+				mapper.map(bioData, response);
+			});
 		});
-		return Optional.empty();
+		return Optional.of(response);
 	}
 	
 	@Override public Optional<PassengerResponse> findPassengerByUserName(String userName) {

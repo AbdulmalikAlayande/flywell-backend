@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface PassengerService {
 	
 	/*
-	* @@return PassengerResponse
+	* {@return} PassengerResponse
 	* @@param PassengerRequest
 	* */
 	PassengerResponse registerNewPassenger(PassengerRequest passengerRequest) throws FailedRegistrationException;

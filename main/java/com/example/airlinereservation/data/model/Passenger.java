@@ -20,6 +20,7 @@ public class Passenger {
 	private String token;
 	private LocalDate lastLoggedIn;
 	private boolean expiredToken;
+	private boolean loggedIn;
 	@OneToOne(cascade = CascadeType.ALL)
 	private UserBioData userBioData;
 }

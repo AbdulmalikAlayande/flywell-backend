@@ -9,8 +9,10 @@ import com.example.airlinereservation.dtos.Request.PassengerRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.LoginResponse;
 import com.example.airlinereservation.dtos.Response.PassengerResponse;
+import com.example.airlinereservation.utils.appUtils.TokenGenerator;
 import com.example.airlinereservation.utils.appUtils.Validator;
 import com.example.airlinereservation.utils.exceptions.*;
+import com.mysql.cj.log.Log;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +29,7 @@ import java.util.Optional;
 
 import static com.example.airlinereservation.utils.Exceptions.throwFailedRegistrationException;
 import static com.example.airlinereservation.utils.Exceptions.throwInvalidRequestException;
+import static com.example.airlinereservation.utils.appUtils.AppUtilities.LOGIN_SUCCESS_MESSAGE;
 
 @Service
 @AllArgsConstructor
@@ -128,7 +132,19 @@ public class PassengerServiceImplementation implements PassengerService{
 	}
 	
 	private LoginResponse loginViaUsernameAndPassword(String username, String password) {
-		return null;
+		Optional<UserBioData> foundUser = userBioDataRepository.findByUserName(username);
+		Optional<Optional<LoginResponse>> response = foundUser.map(bioData -> {
+			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(bioData);
+			return foundPassenger.map(passenger -> {
+				if (passenger.isLoggedIn())
+					return new LoginResponse();
+				passenger.setLastLoggedIn(LocalDate.now());
+				passenger.setLoggedIn(true);
+				passenger.setToken(TokenGenerator.generateSessionToken());
+				return loginResponse(LOGIN_SUCCESS_MESSAGE, username);
+			});
+		});
+		return response.get().get();
 	}
 	
 	private LoginResponse logInViaEmailAndPassword(String email, String password) {
@@ -145,6 +161,10 @@ public class PassengerServiceImplementation implements PassengerService{
 		boolean userDoesNotExistsByEmailAndPassword = userDoesNotExistBy(loginRequest.getEmail(), loginRequest.getPassword());
 		if (userDoesNotExistsByEmailAndPassword && userDoesNotExistsByUsername)
 			throw new LoginFailedException("Login Failed:: You do not have an account with us, Please register to create one");
+	}
+	
+	private LoginResponse loginResponse(String message, String username) {
+		return LoginResponse.builder().message(message).username(username).build();
 	}
 	
 	private boolean userDoesNotExistBy(String email, String password) {

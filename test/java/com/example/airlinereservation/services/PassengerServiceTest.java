@@ -1,13 +1,18 @@
 package com.example.airlinereservation.services;
 
 import com.example.airlinereservation.config.TestConfigurations;
+import com.example.airlinereservation.dtos.Request.LoginRequest;
 import com.example.airlinereservation.dtos.Request.PassengerRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
+import com.example.airlinereservation.dtos.Response.LoginResponse;
 import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
-import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import com.example.airlinereservation.utils.exceptions.LoginFailedException;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.validation.annotation.Validated;
@@ -63,7 +68,7 @@ class PassengerServiceTest {
 				.hasMessageContaining("Seems Like You Already Have An Account With Us");
 	}
 	
-	@Test void testThatPassengerTriesToRegisterUsingDetailsWithIncorrectFormat_RegistrationFailedExceptionIsThrown() throws FailedRegistrationException, NoSuchFieldException {
+	@Test void testThatPassengerTriesToRegisterUsingDetailsWithIncorrectFormat_RegistrationFailedExceptionIsThrown() {
 		assertThatThrownBy(() ->passengerService
 				.registerNewPassenger(buildPassengerWithIncorrectFormatDetails()), "Invalid Email Format")
 				.as("Please enter a valid email format", "")
@@ -137,16 +142,28 @@ class PassengerServiceTest {
 	}
 	
 	@Test void testThatUserTriesToLoginWithoutSigningUpLoginFailedExceptionIsThrown(){
-	
+		LoginRequest request = LoginRequest.builder().email("alamala@gmail.com")
+				                       .password("alamala@42").username("alamala1").build();
+		assertThrows(LoginFailedException.class, ()-> passengerService.login(request), "Login Failed:: You do not have an account with us, Please register to create one");
 	}
 	
-	@Test void testThatUserLoginWithoutValidCredentialsLoginFailedExceptionIsThrown(){
-	
+	@Test void testThatUserTriesToLoginWithoutValidOrIncompleteCredentialsLoginFailedExceptionIsThrown(){
+		LoginRequest request = LoginRequest.builder()
+				                       .username("mirah").email("ololadeayandunni@gmail.com")
+				                       .build();
+		assertThrows(LoginFailedException.class, ()-> passengerService.login(request), "Login Failed:: Please provide the full details requested in the correct format");
 	}
 
+	@SneakyThrows
 	@DisplayName("Login is successful when all credentials are valid")
 	@Test void loginTest(){
-	
+		LoginRequest request = LoginRequest.builder()
+				                       .username("mirah").email("ololadeayandunni@gmail.com")
+				                       .password("ayandunni#$2008")
+				                       .build();
+		LoginResponse response = passengerService.login(request);
+		assertThat(response.getMessage()).isNotEmpty();
+		assertThat(response.getUsername()).isEqualTo("ayandunni#$2008");
 	}
 	
 	@Test

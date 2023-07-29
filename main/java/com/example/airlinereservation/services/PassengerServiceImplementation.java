@@ -117,8 +117,19 @@ public class PassengerServiceImplementation implements PassengerService{
 	
 	@Override
 	public LoginResponse login(LoginRequest loginRequest) throws LoginFailedException {
-		
+		checkIfUserExists(loginRequest);
 		return null;
+	}
+	
+	private void checkIfUserExists(LoginRequest loginRequest) {
+		boolean userDoesNotExistsByUsername = userDoesNotExistBy(loginRequest.getUsername());
+		boolean userDoesNotExistsByEmailAndPassword = userDoesNotExistBy(loginRequest.getEmail(), loginRequest.getPassword());
+		
+	}
+	
+	private boolean userDoesNotExistBy(String email, String password) {
+		Optional<PassengerResponse> response = findPassengerByEmailAndPassword(email, password);
+		return response.isEmpty();
 	}
 	
 	@Override public Optional<PassengerResponse> findPassengerById(String passengerId) {

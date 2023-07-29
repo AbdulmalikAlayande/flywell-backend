@@ -166,16 +166,11 @@ class PassengerServiceTest {
 		});
 		assertThat(allPassengersPresent.size()).isEqualTo(passengerService.getCountOfPassengers());
 	}
-}
 	
+	@SneakyThrows
+	@Test void removePassengerByIdTest(){
+		passengerService.removePassengerBId(passengerResponse.getId());
+		assertEquals(BigInteger.TWO.intValue(), passengerService.getCountOfPassengers());
+	}
+}
 
-//	@SneakyThrows
-//	@Test void removePassengerByIdTest(){
-//		passengerService.removePassengerBId(passengerResponse.getId());
-//		assertEquals(BigInteger.TWO.intValue(), passengerService.getCountOfPassengers());
-//	}
-//
-//
-//	@Test void getAllPassengersBelongingToAParticularFlightTest(){
-//
-//	}

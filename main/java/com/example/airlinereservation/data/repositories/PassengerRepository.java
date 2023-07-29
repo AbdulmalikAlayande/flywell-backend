@@ -14,4 +14,5 @@ public interface PassengerRepository extends JpaRepository<Passenger, String > {
 	void deleteByUserBioData(UserBioData userBiodata);
 	
 	boolean existsByUserBioData(UserBioData foundBio);
+	
 }

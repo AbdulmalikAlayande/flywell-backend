@@ -4,14 +4,13 @@ import com.example.airlinereservation.data.model.Passenger;
 import com.example.airlinereservation.data.model.UserBioData;
 import com.example.airlinereservation.data.repositories.PassengerRepository;
 import com.example.airlinereservation.data.repositories.UserBioDataRepository;
+import com.example.airlinereservation.dtos.Request.LoginRequest;
 import com.example.airlinereservation.dtos.Request.PassengerRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
+import com.example.airlinereservation.dtos.Response.LoginResponse;
 import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import com.example.airlinereservation.utils.appUtils.Validator;
-import com.example.airlinereservation.utils.exceptions.EmptyFieldException;
-import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
-import com.example.airlinereservation.utils.exceptions.FieldInvalidException;
-import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import com.example.airlinereservation.utils.exceptions.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -116,6 +115,12 @@ public class PassengerServiceImplementation implements PassengerService{
 		
 	}
 	
+	@Override
+	public LoginResponse login(LoginRequest loginRequest) throws LoginFailedException {
+		
+		return null;
+	}
+	
 	@Override public Optional<PassengerResponse> findPassengerById(String passengerId) {
 		PassengerResponse response = new PassengerResponse();
 		Optional<Passenger> foundPassenger = passengerRepository.findById(passengerId);
@@ -146,6 +151,11 @@ public class PassengerServiceImplementation implements PassengerService{
 	}
 	
 	@Override public Optional<PassengerResponse> findPassengerByEmailAndPassword(String email, String password) {
+		Optional<UserBioData> foundBio = userBioDataRepository.findByEmailAndPassword(email, password);
+		PassengerResponse response = new PassengerResponse();
+		foundBio.ifPresent(bioData -> {
+			passengerRepository.findByUserBioData(bioData);
+		});
 		return Optional.empty();
 	}
 	
@@ -169,7 +179,9 @@ public class PassengerServiceImplementation implements PassengerService{
 	}
 	
 	@Override public void removePassengerBId(String passengerId) throws InvalidRequestException {
-		
+		Optional<Passenger> foundPassenger = passengerRepository.findById(passengerId);
+		if (foundPassenger.isEmpty())
+			throw new InvalidRequestException("Passenger with id: "+passengerId+" does not exists");
 		passengerRepository.deleteById(passengerId);
 	}
 	

@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.Optional;
 public interface PassengerService {
 	
+	/*
+	* @@return PassengerResponse
+	* @@param PassengerRequest
+	* */
 	PassengerResponse registerNewPassenger(PassengerRequest passengerRequest) throws FailedRegistrationException;
 	PassengerResponse updateDetailsOfRegisteredPassenger(UpdateRequest updateRequest);
 	LoginResponse login(LoginRequest loginRequest) throws LoginFailedException;

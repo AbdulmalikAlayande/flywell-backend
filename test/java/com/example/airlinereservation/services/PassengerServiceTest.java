@@ -131,7 +131,24 @@ class PassengerServiceTest {
 			assertThat(passengerResponse.getUserName()).isNotEmpty();
 		});
 	}
-		
+	
+	@Test void testThatWhenTokenHasExpiredAnotherOneIsGenerated(){
+	
+	}
+	
+	@Test void testThatUserTriesToLoginWithoutSigningUpLoginFailedExceptionIsThrown(){
+	
+	}
+	
+	@Test void testThatUserLoginWithoutValidCredentialsLoginFailedExceptionIsThrown(){
+	
+	}
+
+	@DisplayName("Login is successful when all credentials are valid")
+	@Test void loginTest(){
+	
+	}
+	
 	@Test
 	void findSavedPassengerWithIdThatDoesExist_InvalidRequestExceptionIsThrown(){
 		assertThrowsExactly(RuntimeException.class, ()->passengerService.findPassengerById("892ffr0ilj84aas787t274gf7qsfqwe8"),

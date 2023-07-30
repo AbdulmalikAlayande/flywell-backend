@@ -33,6 +33,30 @@ class FlightServiceTest {
 		response = flightService.saveFlight(buildFlight());
 	}
 	
+	@Test void testThatNewFlightIsNotCreatedIfThePreviousFlightIsNotFilledOrFullyBooked(){
+	
+	}
+	
+	@Test void testThatNewFlightIsCreatedIfPreviousFlightIsFullyBooked(){
+	
+	}
+	
+	@Test void checkAvailableFlightFlightWhichIsNotFullyBookedIsAvailableFlightReturnedReturned(){
+	
+	}
+	
+	@Test void testThat(){
+	
+	}
+	
+	@Test void testThatANewFlightIsCreatedIfAndOnlyIfThePreviousFlightHasDeparted(){
+	
+	}
+	
+	@Test void testThatIfASectionIsFullyBookedTheSystemThrowsAnExceptionAndTheUserIsPromptedToBookAnotherSection(){
+	
+	}
+	
 	@Test void saveNewFlightTest(){
 		assertNotNull(response);
 		assertEquals(1, flightService.getCountOfAllFlights());

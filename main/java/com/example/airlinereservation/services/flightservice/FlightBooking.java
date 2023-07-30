@@ -150,20 +150,6 @@ public class FlightBooking implements Bookable {
 		return flightService.saveFlightForAdminUsage(buildFlightRequest(departureTime, arrivalTime, arrivalDate));
 	}
 	
-	@Override
-	public FlightResponse saveFlight(FlightRequest flightRequest) throws InvalidRequestException {
-		return flightService.saveFlight(flightRequest);
-	}
-	
-	@Override
-	public void getAvailableSeatsByFlightId(String flightId) {
-	
-	}
-	
-	@Override
-	public String cancelFlight(String passengerUsername) {
-		return null;
-	}
 	
 	private FlightRequest buildFlightRequest(LocalTime departureTime, LocalTime arrivalTime, LocalDate arrivaldate) {
 		return FlightRequest.builder()

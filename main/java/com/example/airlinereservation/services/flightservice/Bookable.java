@@ -9,7 +9,4 @@ import com.example.airlinereservation.dtos.Response.FlightResponse;
 public interface Bookable {
 	Flight bookFlight(BookingRequest bookingRequest) throws InvalidRequestException;
 	Flight checkAvailableFlight() throws InvalidRequestException;
-	FlightResponse saveFlight(FlightRequest flightRequest) throws InvalidRequestException;
-	void getAvailableSeatsByFlightId(String flightId);
-	String cancelFlight(String passengerUsername);
 }

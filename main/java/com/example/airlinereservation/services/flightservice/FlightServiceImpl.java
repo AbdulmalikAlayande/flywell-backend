@@ -4,6 +4,7 @@ import com.example.airlinereservation.Mapper.FlightMapper;
 import com.example.airlinereservation.data.model.Flight;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
+import com.example.airlinereservation.services.categories.*;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import com.example.airlinereservation.config.mycustomannotations.AdminMethod;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,13 @@ then save the form
 public class FlightServiceImpl implements FlightService {
 	private FlightRepository flightRepo;
 	String flightId = null;
+	
+	private final List<BookingCategory> bookingCategories = List.of(
+			FirstClassBookingCategory.getInstance(),
+			BusinessClassBookingCategory.getInstance(),
+			PremiumEconomyClassBookingCategory.getInstance(),
+			EconomyClassBookingCategory.getInstance()
+	);
 	@Override
 	public FlightResponse saveFlight(FlightRequest flightRequest) throws InvalidRequestException {
 		Flight mappedFlight = FlightMapper.map(flightRequest);
@@ -61,6 +69,16 @@ public class FlightServiceImpl implements FlightService {
 	public FlightResponse updateFlight(FlightUpdateRequest flightRequest) {
 		Optional<Flight> foundFlight = flightRepo.findById(flightRequest.getFlightId());
 		return FlightMapper.map(foundFlight.get());
+	}
+	
+	@Override
+	public FlightResponse getAvailableSeatsByFlightId(String flightId) {
+		return null;
+	}
+	
+	@Override
+	public String cancelFlight(String passengerUsername) {
+		return null;
 	}
 	
 	@Override
@@ -90,8 +108,8 @@ public class FlightServiceImpl implements FlightService {
 	}
 	
 	@Override
-	public void bookFLight(BookingRequest bookingRequest) {
-	
+	public FlightResponse bookFLight(BookingRequest bookingRequest) {
+		return null;
 	}
 	
 	private void validateThatEachFieldOfTheFlightObjectIsNotNull(Flight flight) throws InvalidRequestException {

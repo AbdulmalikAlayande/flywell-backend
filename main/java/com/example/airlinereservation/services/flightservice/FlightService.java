@@ -1,4 +1,4 @@
-package com.example.airlinereservation.services;
+package com.example.airlinereservation.services.flightservice;
 
 import com.example.airlinereservation.data.model.Flight;
 import com.example.airlinereservation.dtos.Request.BookingRequest;

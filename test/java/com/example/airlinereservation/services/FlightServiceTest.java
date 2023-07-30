@@ -1,4 +1,6 @@
 package com.example.airlinereservation.services;
+import com.example.airlinereservation.services.flightservice.FlightService;
+import com.example.airlinereservation.services.flightservice.FlightServiceImpl;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

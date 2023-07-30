@@ -166,6 +166,10 @@ class PassengerServiceTest {
 		assertThat(response.getUsername()).isEqualTo("ayandunni#$2008");
 	}
 	
+	@Test void testThatUserTriesToLogInWhenLoginSessionIsStillOn(){
+		
+	}
+	
 	@Test
 	void findSavedPassengerWithIdThatDoesExist_InvalidRequestExceptionIsThrown(){
 		assertThrowsExactly(RuntimeException.class, ()->passengerService.findPassengerById("892ffr0ilj84aas787t274gf7qsfqwe8"),

@@ -12,24 +12,23 @@ import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import com.example.airlinereservation.utils.appUtils.TokenGenerator;
 import com.example.airlinereservation.utils.appUtils.Validator;
 import com.example.airlinereservation.utils.exceptions.*;
-import com.mysql.cj.log.Log;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.example.airlinereservation.utils.Exceptions.throwFailedRegistrationException;
 import static com.example.airlinereservation.utils.Exceptions.throwInvalidRequestException;
-import static com.example.airlinereservation.utils.appUtils.AppUtilities.LOGIN_SUCCESS_MESSAGE;
+import static com.example.airlinereservation.utils.appUtils.AppUtilities.*;
 
 @Service
 @AllArgsConstructor
@@ -131,36 +130,54 @@ public class PassengerServiceImplementation implements PassengerService{
 		return loginViaUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
 	}
 	
-	private LoginResponse loginViaUsernameAndPassword(String username, String password) {
+	private @NotNull LoginResponse loginViaUsernameAndPassword(String username, String password) throws LoginFailedException {
 		Optional<UserBioData> foundUser = userBioDataRepository.findByUserName(username);
-		Optional<Optional<LoginResponse>> response = foundUser.map(bioData -> {
+		AtomicReference<LoginResponse> response = new AtomicReference<>();
+		Optional<LoginResponse> optionalResponse = foundUser.map(bioData -> {
 			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(bioData);
-			return foundPassenger.map(passenger -> {
+			foundPassenger.ifPresent(passenger -> {
 				if (passenger.isLoggedIn())
-					return new LoginResponse();
+					response.set(loginResponse(SESSION_NOT_EXHAUSTED_MESSAGE, username));
 				passenger.setLastLoggedIn(LocalDate.now());
 				passenger.setLoggedIn(true);
 				passenger.setToken(TokenGenerator.generateSessionToken());
-				return loginResponse(LOGIN_SUCCESS_MESSAGE, username);
+				response.set(loginResponse(LOGIN_SUCCESS_MESSAGE, username));
 			});
+			return response.get();
 		});
-		return response.get().get();
+		if (optionalResponse.isPresent())
+			return optionalResponse.get();
+		throw new LoginFailedException(LOGIN_FAILURE_MESSAGE);
 	}
 	
 	private LoginResponse logInViaEmailAndPassword(String email, String password) {
-		return null;
+		Optional<UserBioData> foundBio = userBioDataRepository.findByEmailAndPassword(email, password);
+		AtomicReference<LoginResponse> loginResponse = new AtomicReference<>();
+		if (foundBio.isPresent()){
+			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(foundBio.get());
+			Optional<LoginResponse> optionalResponse = foundPassenger.map(passenger -> {
+				if (passenger.isLoggedIn())
+					return loginResponse(SESSION_NOT_EXHAUSTED_MESSAGE, foundBio.get().getUserName());
+				passenger.setLastLoggedIn(LocalDate.now());
+				passenger.setLoggedIn(true);
+				passenger.setToken(TokenGenerator.generateSessionToken());
+				return loginResponse(LOGIN_SUCCESS_MESSAGE, foundBio.get().getUserName());
+			});
+			loginResponse.set(optionalResponse.get());
+		}
+		return loginResponse.get();
 	}
 	
 	private void validateLoginCredentialsIntegrity(@NotNull LoginRequest loginRequest) throws LoginFailedException {
 		if (loginRequest.getUsername() == null && loginRequest.getEmail() == null)
-			throw new LoginFailedException("Login Failed:: Please provide the full details requested in the correct format");
+			throw new LoginFailedException(INCORRECT_FORMAT_LOGIN_FAILURE_MESSAGE);
 	}
 	
 	private void checkIfUserExists(@NotNull LoginRequest loginRequest) throws LoginFailedException {
 		boolean userDoesNotExistsByUsername = userDoesNotExistBy(loginRequest.getUsername());
 		boolean userDoesNotExistsByEmailAndPassword = userDoesNotExistBy(loginRequest.getEmail(), loginRequest.getPassword());
 		if (userDoesNotExistsByEmailAndPassword && userDoesNotExistsByUsername)
-			throw new LoginFailedException("Login Failed:: You do not have an account with us, Please register to create one");
+			throw new LoginFailedException(LOGIN_FAILURE_MESSAGE);
 	}
 	
 	private LoginResponse loginResponse(String message, String username) {

@@ -1,5 +1,6 @@
 package com.example.airlinereservation.Mapper;
 
+import com.example.airlinereservation.data.model.Destinations;
 import com.example.airlinereservation.data.model.Flight;
 import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
@@ -13,7 +14,7 @@ public class FlightMapper {
 				       .Airline(flightRequest.getAirline())
 				       .arrivalTime(flightRequest.getArrivalTime())
 				       .departureTime(flightRequest.getDepartureTime())
-				       .destination(flightRequest.getDestination())
+				       .destination(Destinations.valueOf(flightRequest.getDestination()))
 				       .baggageAllowance(flightRequest.getBaggageAllowance())
 				       .build();
 	}
@@ -26,7 +27,7 @@ public class FlightMapper {
 				       .baggageAllowance(flight.getBaggageAllowance())
 				       .departureDate(flight.getDepartureDate())
 				       .departureTime(flight.getDepartureTime())
-				       .destination(flight.getDestination())
+				       .destination(String.valueOf(flight.getDestination()).toLowerCase())
 				       .build(); 
 	}
 }

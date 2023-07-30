@@ -3,13 +3,14 @@ package com.example.airlinereservation.services.flightservice;
 import com.example.airlinereservation.data.model.Flight;
 import com.example.airlinereservation.data.model.Passenger;
 import com.example.airlinereservation.data.model.TravelClass;
+import com.example.airlinereservation.dtos.Response.FlightResponse;
 import com.example.airlinereservation.services.categories.*;
 import com.example.airlinereservation.services.passengerservice.PassengerService;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
 import com.example.airlinereservation.dtos.Request.FlightRequest;
-import com.example.airlinereservation.dtos.Response.FlightResponse;
 import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,10 +25,12 @@ import java.util.Optional;
 
 
 @Service
-public class FlightBooking implements Bookable {
+@RequiredArgsConstructor
+public class BolaAirFlightService implements Bookable {
 	FlightService flightService = new FlightServiceImpl();
 	@Autowired
 	PassengerService passengerService;
+	private Flight availableFlight;
 	
 	private final List<BookingCategory> bookingCategories = List.of(
 			FirstClassBookingCategory.getInstance(),
@@ -47,40 +50,23 @@ public class FlightBooking implements Bookable {
 		return flight;
 	}
 	
+	@Override
+	public FlightResponse bookFLight(BookingRequest bookingRequest) {
+		return null;
+	}
+	
+	@Override
+	public FlightResponse getAvailableSeatsByFlightId(String flightId) {
+		return null;
+	}
+	
+	@Override
+	public String cancelFlight(String passengerUsername) {
+		return null;
+	}
+	
 	private Flight newFlightReadyForBooking(Flight flight) {
-		FlightRequest newFlightToBeCreated;
-		int day = flight.getArrivalDate().getDayOfMonth();
-		Month month = flight.getArrivalDate().getMonth();
-		int hour = flight.getArrivalTime().getHour() + 3;
-		LocalTime time = LocalTime.of(hour, flight.getArrivalTime().getMinute());
-		//todo part that takes care
-		LocalDate date = null;
-		if (time == LocalTime.MIDNIGHT) {
-			int newDay = day + 1;
-			if (day > month.maxLength() || day > month.minLength()) {
-				Month newMonth = Month.of(month.ordinal() + 1);
-				date = LocalDate.of(flight.getArrivalDate().getYear(), newMonth, newDay);
-			} else date = LocalDate.of(flight.getArrivalDate().getYear(), month, newDay);
-		} else date = LocalDate.of(flight.getArrivalDate().getYear(), month, day);
-		//todo part for arrival time
-		LocalTime arrivalTime = time.plusHours(5);
-		LocalDate departureDate = LocalDate.of(flight.getArrivalDate().getYear(), month, day);
-		LocalDate arrivalDate = null;
-		if (arrivalTime == LocalTime.MIDNIGHT) {
-			int arrivalDay = departureDate.getDayOfMonth() + 1;
-			if(arrivalDay > departureDate.getMonth().maxLength() || arrivalDay > departureDate.getMonth().minLength()){
-	       		Month arrivalMonth = Month.of(departureDate.getMonth().ordinal() + 1);
-		        arrivalDate = LocalDate.of(departureDate.getYear(), arrivalMonth, arrivalDay);
-			}else arrivalDate = LocalDate.of(departureDate.getYear(), departureDate.getMonth(), arrivalDay);
-		}
-		else arrivalDate = LocalDate.of(departureDate.getYear(), departureDate.getMonth(), departureDate.getDayOfMonth());
-		newFlightToBeCreated = FlightRequest.builder()
-				                       .Airline("Bola-Air")
-				                       .departureDate(departureDate)
-				                       .departureTime(time)
-				                       .arrivalDate(arrivalDate)
-				                       .arrivalTime(arrivalTime)
-				                       .build();
+		
 		return null;
 	}
 	

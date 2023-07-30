@@ -14,14 +14,10 @@ import java.util.Optional;
 public interface FlightService {
 	
 	FlightResponse saveFlight(FlightRequest flightRequest) throws InvalidRequestException;
-	FlightResponse bookFLight(BookingRequest bookingRequest);
 	@AdminMethod
 	Flight saveFlightForAdminUsage(FlightRequest flightRequest);
 	String flightId();
 	FlightResponse updateFlight(FlightUpdateRequest flightRequest);
-	FlightResponse getAvailableSeatsByFlightId(String flightId);
-	String cancelFlight(String passengerUsername);
-	
 	boolean deleteFlightBy(String flightId) throws InvalidRequestException;
 	Optional<FlightResponse> findFlightBy(String flightId) throws InvalidRequestException;
 	long getCountOfAllFlights();

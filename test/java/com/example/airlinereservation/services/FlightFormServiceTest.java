@@ -2,7 +2,7 @@ package com.example.airlinereservation.services;
 
 import com.example.airlinereservation.services.flightformservice.FlightFormService;
 import com.example.airlinereservation.services.flightservice.Bookable;
-import com.example.airlinereservation.services.flightservice.FlightBooking;
+import com.example.airlinereservation.services.flightservice.BolaAirFlightService;
 import com.example.airlinereservation.services.passengerservice.PassengerService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +23,7 @@ public class FlightFormServiceTest {
 	FlightFormRequest flightFormRequest;
 	@SneakyThrows
 	@BeforeEach void startAlltestWith(){
-		bookable = new FlightBooking();
+		bookable = new BolaAirFlightService();
 		passengerRequest = PassengerRequest.builder()
 				                   .userName("dende")
 				                   .email("alaabdulmalik03@gmail.com")

@@ -39,6 +39,7 @@ public class FlightServiceImpl implements FlightService {
 	private FlightRepository flightRepo;
 	String flightId = null;
 	
+	
 	private final List<BookingCategory> bookingCategories = List.of(
 			FirstClassBookingCategory.getInstance(),
 			BusinessClassBookingCategory.getInstance(),
@@ -72,16 +73,6 @@ public class FlightServiceImpl implements FlightService {
 	}
 	
 	@Override
-	public FlightResponse getAvailableSeatsByFlightId(String flightId) {
-		return null;
-	}
-	
-	@Override
-	public String cancelFlight(String passengerUsername) {
-		return null;
-	}
-	
-	@Override
 	public boolean deleteFlightBy(String flightId) throws InvalidRequestException {
 		flightRepo.deleteById(flightId);
 		return true;
@@ -105,11 +96,6 @@ public class FlightServiceImpl implements FlightService {
 		for (int i = 0; i < flightRepo.findAll().size(); i++)
 			if (flightRepo.findAll().get(i) != null) foundFlights.add(flightRepo.findAll().get(i));
 		return Optional.of(foundFlights);
-	}
-	
-	@Override
-	public FlightResponse bookFLight(BookingRequest bookingRequest) {
-		return null;
 	}
 	
 	private void validateThatEachFieldOfTheFlightObjectIsNotNull(Flight flight) throws InvalidRequestException {

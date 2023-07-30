@@ -1,7 +1,7 @@
 package com.example.airlinereservation.services;
 
 import com.example.airlinereservation.services.flightservice.Bookable;
-import com.example.airlinereservation.services.flightservice.FlightBooking;
+import com.example.airlinereservation.services.flightservice.BolaAirFlightService;
 import com.example.airlinereservation.services.passengerservice.PassengerService;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -31,9 +31,25 @@ class BookableTest {
 	
 	@BeforeEach void startAllTestWith(){
 		payment = new Payment();
-		bookable = new FlightBooking();
+		bookable = new BolaAirFlightService();
 		bookingRequest = new BookingRequest();
 		passengerRequest = new PassengerRequest();
+	}
+	
+	@Test void checkAvailableFlight_FlightWhichIsNotFullyBooked_IsTheAvailableFlightReturned(){
+	
+	}
+	
+	@Test void testThatANewFlightIsCreatedIfAndOnlyIfThePreviousFlightHasDeparted(){
+	
+	}
+	
+	@Test void testThatIfASectionIsFullyBookedTheSystemThrowsAnExceptionAndTheUserIsPromptedToBookAnotherSection(){
+	
+	}
+	
+	@Test void testThatANewFlightIsNotCreatedIfThePreviousFlightHasNotDeparted(){
+	
 	}
 	
 	@SneakyThrows
@@ -48,7 +64,7 @@ class BookableTest {
 	@SneakyThrows
 	@Test
 	void checkAvailableFlightTest(){
-		Bookable bookable1 = new FlightBooking();
+		Bookable bookable1 = new BolaAirFlightService();
 		Flight availableFlight = bookable1.checkAvailableFlight();
 		assertNotNull(availableFlight);
 	}

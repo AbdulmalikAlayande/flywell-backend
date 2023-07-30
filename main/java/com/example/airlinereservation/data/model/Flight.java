@@ -38,7 +38,7 @@ public class Flight {
 	@OneToMany(cascade = CascadeType.DETACH)
 	private List<Passenger> passengers;
 	@NotBlank
-	private String destination;
+	private Destinations destination;
 	private int numberOfPassengers;
 	
 	@Transient

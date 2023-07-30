@@ -31,7 +31,7 @@ public class Flight {
 	private String Airline;
 	@NotBlank
 	private int baggageAllowance;
-	@Transient
+	@OneToOne
 	private AirCraft airCraft;
 	@OneToMany(cascade = CascadeType.DETACH)
 	private List<FlightForm> flightForm;

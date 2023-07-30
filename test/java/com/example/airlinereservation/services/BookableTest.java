@@ -37,6 +37,15 @@ class BookableTest {
 	}
 	
 	@SneakyThrows
+	@Test void testThatNewFlightIsNotCreatedIfThePreviousFlightIsNotFilledOrFullyBooked(){
+	
+	}
+	
+	@Test void testThatNewFlightIsCreatedIfPreviousFlightIsFullyBooked(){
+	
+	}
+	
+	@SneakyThrows
 	@Test
 	void checkAvailableFlightTest(){
 		Bookable bookable1 = new FlightBooking();

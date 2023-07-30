@@ -1,4 +1,4 @@
-package com.example.airlinereservation.services;
+package com.example.airlinereservation.services.passengerservice;
 
 import com.example.airlinereservation.data.model.Passenger;
 import com.example.airlinereservation.dtos.Request.LoginRequest;

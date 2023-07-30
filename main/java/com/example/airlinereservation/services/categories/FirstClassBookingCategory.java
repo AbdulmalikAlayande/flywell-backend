@@ -1,4 +1,4 @@
-package com.example.airlinereservation.services;
+package com.example.airlinereservation.services.categories;
 import com.example.airlinereservation.data.model.Flight;
 
 import java.math.BigInteger;
@@ -7,7 +7,7 @@ public class FirstClassBookingCategory extends BookingCategory {
 	private static FirstClassBookingCategory instance = null;
 	private FirstClassBookingCategory (){}
 	private static final int lastSeatInTheCategory = BigInteger.valueOf(4).intValue();
-	boolean canBook(Flight flight) {
+	public boolean canBook(Flight flight) {
 		return !flight.getAirCraft().getAircraftSeats()[lastSeatInTheCategory];
 	}
 	
@@ -17,7 +17,7 @@ public class FirstClassBookingCategory extends BookingCategory {
 		return instance;
 	}
 	
-	void assignSeat(Flight flight) {
+	public void assignSeat(Flight flight) {
 		assignSeatToPassenger(flight);
 	}
 	

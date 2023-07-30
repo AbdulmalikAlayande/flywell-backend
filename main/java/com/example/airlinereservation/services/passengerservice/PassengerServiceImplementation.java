@@ -1,4 +1,4 @@
-package com.example.airlinereservation.services;
+package com.example.airlinereservation.services.passengerservice;
 
 import com.example.airlinereservation.data.model.Passenger;
 import com.example.airlinereservation.data.model.UserBioData;
@@ -113,7 +113,7 @@ public class PassengerServiceImplementation implements PassengerService{
 				   return response;
 		}).orElseThrow(()-> {
 			try {
-				return throwInvalidRequestException("Update could not be completed");
+				return throwInvalidRequestException(UPDATE_NOT_COMPLETED);
 			} catch (InvalidRequestException e) {
 				throw new RuntimeException(e);
 			}

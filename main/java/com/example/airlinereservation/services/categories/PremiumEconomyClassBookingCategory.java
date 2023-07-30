@@ -1,4 +1,4 @@
-package com.example.airlinereservation.services;
+package com.example.airlinereservation.services.categories;
 
 import com.example.airlinereservation.data.model.Flight;
 
@@ -17,8 +17,8 @@ public class PremiumEconomyClassBookingCategory extends BookingCategory {
 		return instance;
 	}
 	
-	boolean canBook(Flight flight) { return !flight.getAirCraft().getAircraftSeats()[14]; }
-	void assignSeat(Flight flight) {
+	public boolean canBook(Flight flight) { return !flight.getAirCraft().getAircraftSeats()[14]; }
+	public void assignSeat(Flight flight) {
 		assignSeatToPassenger(flight);
 	}
 	

@@ -1,5 +1,6 @@
 package com.example.airlinereservation.services;
 
+import com.example.airlinereservation.services.passengerservice.PassengerService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import com.example.airlinereservation.data.model.Flight;

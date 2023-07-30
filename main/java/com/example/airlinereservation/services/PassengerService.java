@@ -28,7 +28,7 @@ public interface PassengerService {
 	Optional<PassengerResponse> findPassengerByEmailAndPassword(String email, String password) throws InvalidRequestException;
 	
 	Optional<PassengerResponse> findPassengerByUserName(String userName) throws InvalidRequestException;
-	boolean removePassengerByUserName(String userName);
+	boolean removePassengerByUserName(String userName) throws InvalidRequestException;
 	
 	Optional<Passenger> findPassengerByUserNameForAdmin(String passengerUsername);
 	

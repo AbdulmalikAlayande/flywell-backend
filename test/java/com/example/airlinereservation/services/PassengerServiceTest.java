@@ -7,6 +7,7 @@ import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.LoginResponse;
 import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
+import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import com.example.airlinereservation.utils.exceptions.LoginFailedException;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
@@ -122,7 +123,7 @@ class PassengerServiceTest {
 	}
 	@SneakyThrows
 	@Test void findSavedPassengerWithAUsernameThatDoesNotExist_InvalidRequestExceptionIsThrown(){
-		assertThrowsExactly(RuntimeException.class, ()->passengerService.findPassengerByUserName("mithra"),
+		assertThrowsExactly(InvalidRequestException.class, ()->passengerService.findPassengerByUserName("mithra"),
 				"Request Failed:: Invalid Username");
 	}
 		
@@ -163,7 +164,7 @@ class PassengerServiceTest {
 				                       .build();
 		LoginResponse response = passengerService.login(request);
 		assertThat(response.getMessage()).isNotEmpty();
-		assertThat(response.getUsername()).isEqualTo("ayandunni#$2008");
+		assertThat(response.getUsername()).isEqualTo(request.getUsername());
 	}
 	
 	@Test void testThatUserTriesToLogInWhenLoginSessionIsStillOn(){
@@ -172,7 +173,7 @@ class PassengerServiceTest {
 	
 	@Test
 	void findSavedPassengerWithIdThatDoesExist_InvalidRequestExceptionIsThrown(){
-		assertThrowsExactly(RuntimeException.class, ()->passengerService.findPassengerById("892ffr0ilj84aas787t274gf7qsfqwe8"),
+		assertThrowsExactly(RuntimeException.class, ()->passengerService.findPassengerById("892ffr0ilj84aas787t274gf7qwerty8"),
 				"Request Failed:: Invalid Id");
 	}
 	//todo to fail

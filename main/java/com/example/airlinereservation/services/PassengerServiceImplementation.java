@@ -61,7 +61,7 @@ public class PassengerServiceImplementation implements PassengerService{
 				throwFailedRegistrationException(throwable);
 			}
 		}
-		throw new FailedRegistrationException("Registration Failed:: Seems Like You Already Have An Account With Us");
+		throw new FailedRegistrationException(DUPLICATE_ACCOUNT_REGISTRATION_FAILURE_MESSAGE);
 	}
 	
 	private void validateEmailAndPassword(String email, String password) throws FieldInvalidException, InvalidRequestException {
@@ -80,12 +80,12 @@ public class PassengerServiceImplementation implements PassengerService{
 	private void checkForNullFields(Field[] declaredFields, PassengerRequest passengerRequest) {
 		Arrays.stream(declaredFields)
 			  .forEach(field -> {
-				  String errorMessage = "Field " + field.getName() + " is null or empty";
+				  String errorMessage = String.format(EMPTY_FIELD_MESSAGE, passengerRequest.getUserName());
 				  try {
 					  field.setAccessible(true);
 					  Object accessesField = field.get(passengerRequest);
 					  if (accessesField == null || (accessesField instanceof String && accessesField.toString().isEmpty()))
-						  throw new EmptyFieldException("Incomplete Details\n" + errorMessage);
+						  throw new EmptyFieldException(String.format(INCOMPLETE_DETAILS_MESSAGE, errorMessage));
 				  }
 				  catch (Exception e) {
 					  throw new RuntimeException(e);
@@ -150,7 +150,7 @@ public class PassengerServiceImplementation implements PassengerService{
 		throw new LoginFailedException(LOGIN_FAILURE_MESSAGE);
 	}
 	
-	private LoginResponse logInViaEmailAndPassword(String email, String password) {
+	private LoginResponse logInViaEmailAndPassword(String email, String password) throws LoginFailedException {
 		Optional<UserBioData> foundBio = userBioDataRepository.findByEmailAndPassword(email, password);
 		AtomicReference<LoginResponse> loginResponse = new AtomicReference<>();
 		if (foundBio.isPresent()){
@@ -163,7 +163,9 @@ public class PassengerServiceImplementation implements PassengerService{
 				passenger.setToken(TokenGenerator.generateSessionToken());
 				return loginResponse(LOGIN_SUCCESS_MESSAGE, foundBio.get().getUserName());
 			});
-			loginResponse.set(optionalResponse.get());
+			if (optionalResponse.isPresent())
+				loginResponse.set(optionalResponse.get());
+			else throw new LoginFailedException(LOGIN_FAILURE_MESSAGE);
 		}
 		return loginResponse.get();
 	}
@@ -171,6 +173,9 @@ public class PassengerServiceImplementation implements PassengerService{
 	private void validateLoginCredentialsIntegrity(@NotNull LoginRequest loginRequest) throws LoginFailedException {
 		if (loginRequest.getUsername() == null && loginRequest.getEmail() == null)
 			throw new LoginFailedException(INCORRECT_FORMAT_LOGIN_FAILURE_MESSAGE);
+		else if (loginRequest.getPassword() == null) {
+			throw new LoginFailedException(INCORRECT_FORMAT_LOGIN_FAILURE_MESSAGE);
+		}
 	}
 	
 	private void checkIfUserExists(@NotNull LoginRequest loginRequest) throws LoginFailedException {
@@ -199,7 +204,7 @@ public class PassengerServiceImplementation implements PassengerService{
 					   })
 				       .orElseThrow(()-> {
 					       try {
-						       return throwInvalidRequestException("Invalid Request:: User with id "+passengerId+" not found");
+						       return throwInvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, passengerId));
 					       } catch (InvalidRequestException e) {
 						       throw new RuntimeException(e);
 					       }
@@ -223,36 +228,32 @@ public class PassengerServiceImplementation implements PassengerService{
 		PassengerResponse response = new PassengerResponse();
 		foundBio.ifPresent(bioData -> {
 			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(bioData);
-			foundPassenger.ifPresent(passenger -> {
-				mapper.map(bioData, response);
-			});
+			foundPassenger.ifPresent(passenger -> mapper.map(bioData, response));
 		});
 		return Optional.of(response);
 	}
 	
-	@Override public Optional<PassengerResponse> findPassengerByUserName(String userName) {
+	@Override public Optional<PassengerResponse> findPassengerByUserName(String userName) throws InvalidRequestException {
 		PassengerResponse passengerResponse = new PassengerResponse();
+		AtomicReference<PassengerResponse> response = new AtomicReference<>();
 		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
-		return foundBio.map(userBioData -> {
-						   Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
-						   return foundPassenger.map(passenger -> {
-							   System.out.println("User bio data is:: "+userBioData.getUserName());
-							   mapper.map(userBioData, passengerResponse);
-							   return passengerResponse;
-						   });
-					   }).orElseThrow(() -> {
-			try {
-				return throwInvalidRequestException("Invalid Request:: User with username "+userName+" not found");
-			} catch (InvalidRequestException e) {
-				throw new RuntimeException(e);
-			}
+		Optional<PassengerResponse> optionalPassengerResponse = foundBio.map(userBioData -> {
+			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
+			foundPassenger.ifPresent(passenger -> {
+				mapper.map(userBioData, passengerResponse);
+				response.set(passengerResponse);
+			});
+			return response.get();
 		});
+		if (optionalPassengerResponse.isPresent())
+			return optionalPassengerResponse;
+		throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, userName));
 	}
 	
 	@Override public void removePassengerBId(String passengerId) throws InvalidRequestException {
 		Optional<Passenger> foundPassenger = passengerRepository.findById(passengerId);
 		if (foundPassenger.isEmpty())
-			throw new InvalidRequestException("Passenger with id: "+passengerId+" does not exists");
+			throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, passengerId));
 		passengerRepository.deleteById(passengerId);
 	}
 	
@@ -260,20 +261,20 @@ public class PassengerServiceImplementation implements PassengerService{
 		return passengerRepository.count();
 	}
 	
-	@Override public boolean removePassengerByUserName(String userName){
+	@Override public boolean removePassengerByUserName(String userName) throws InvalidRequestException {
 		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
-		String message = "Passenger Not Found Incorrect User name";
-		return foundBio.map(userBioData -> {
+		Optional<Boolean> optionalBooleanIsDeleted = foundBio.map(userBioData -> {
 			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
-			foundPassenger.ifPresent(passenger-> passengerRepository.deleteByUserBioData(userBioData));
-			return true;
-		}).orElseThrow(()-> {
-			try {
-				return throwInvalidRequestException(message);
-			} catch (InvalidRequestException e) {
-				throw new RuntimeException(e);
+			if (foundPassenger.isPresent()) {
+				passengerRepository.deleteByUserBioData(userBioData);
+				return true;
 			}
+			return false;
 		});
+		if (optionalBooleanIsDeleted.isPresent()){
+			return optionalBooleanIsDeleted.get();
+		}
+		else throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, userName));
 	}
 	
 	@Override

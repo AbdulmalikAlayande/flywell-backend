@@ -13,7 +13,7 @@ public interface Bookable {
 	
 	Flight createNewFlight(String abuja);
 	
-	void assignSeatToPassenger(Passenger passenger);
+	void assignSeatToPassenger(Passenger passenger, String destination, int category);
 	FlightResponse checkAvailableFlight(String destination) throws InvalidRequestException;
 	FlightResponse bookFLight(BookingRequest bookingRequest);
 	FlightResponse getAvailableSeatsByFlightId(String flightId);

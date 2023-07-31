@@ -96,8 +96,12 @@ public class BolaAirFlightService implements Bookable {
 	}
 	
 	@Override
-	public void assignSeatToPassenger(Passenger passenger) {
-	
+	public void assignSeatToPassenger(Passenger passenger, String destination, int category) {
+		for (Flight flight : availableFlights) {
+			if (flight.getDestination() == Destinations.valueOf(destination.toUpperCase())) {
+				BookingCategory bookingClass = bookingCategories.get(category);
+			}
+		}
 	}
 	
 	private Flight newFlightReadyForBooking(Flight flight) {

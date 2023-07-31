@@ -54,7 +54,7 @@ class BookableTest {
 		for (int index = 0; index < BigInteger.valueOf(20).intValue(); index++) {
 			Passenger passenger = new Passenger();
 			passenger.setLoggedIn(true);
-			bookable1.assignSeatToPassenger(passenger);
+			bookable1.assignSeatToPassenger(passenger, "LAGOS");
 		}
 		Flight createdFlight = bookable1.createNewFlight("LAGOS");
 		assertThat(createdFlight).isNotNull();

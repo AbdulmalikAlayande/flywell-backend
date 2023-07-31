@@ -6,6 +6,7 @@ import com.example.airlinereservation.data.model.Flight;
 public abstract class BookingCategory {
 	public abstract boolean canBook(Flight flight);
 	public abstract void assignSeat(Flight flight);
+	
 }
 
 // Modify the FlightBooking class to use the new booking categories

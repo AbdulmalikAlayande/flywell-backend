@@ -1,7 +1,6 @@
 package com.example.airlinereservation.services;
 
 import com.example.airlinereservation.services.flightservice.Bookable;
-import com.example.airlinereservation.services.flightservice.BolaAirFlightService;
 import com.example.airlinereservation.services.passengerservice.PassengerService;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class BookableTest {
+	@Autowired
 	Bookable bookable;
 	BookingRequest bookingRequest;
 	Payment payment;
@@ -28,10 +28,11 @@ class BookableTest {
 	@Autowired
 	PassengerService passengerService;
 	Flight booked;
+	@Autowired
+	Bookable bookable1;
 	
 	@BeforeEach void startAllTestWith(){
 		payment = new Payment();
-		bookable = new BolaAirFlightService();
 		bookingRequest = new BookingRequest();
 		passengerRequest = new PassengerRequest();
 	}
@@ -72,7 +73,6 @@ class BookableTest {
 	@SneakyThrows
 	@Test
 	void checkAvailableFlightTest(){
-		Bookable bookable1 = new BolaAirFlightService();
 		Flight availableFlight = bookable1.getAvailableFlight("flight");
 		assertNotNull(availableFlight);
 	}

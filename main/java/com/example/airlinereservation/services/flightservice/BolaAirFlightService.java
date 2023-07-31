@@ -11,8 +11,10 @@ import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import com.example.airlinereservation.services.categories.*;
 import com.example.airlinereservation.services.passengerservice.PassengerService;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,12 +31,10 @@ import static com.example.airlinereservation.utils.appUtils.AppUtilities.INVALID
 
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class BolaAirFlightService implements Bookable {
-	FlightService flightService = new FlightServiceImpl();
-	@Autowired
+	FlightService flightService;
 	PassengerService passengerService;
-	@Autowired
 	ModelMapper mapper;
 	private final List<Flight> availableFlights = new ArrayList<>();
 	
@@ -45,14 +45,23 @@ public class BolaAirFlightService implements Bookable {
 			EconomyClassBookingCategory.getInstance()
 	);
 	@Override
-	public Flight getAvailableFlight(String destination) {
-		return null;
+	public Flight getAvailableFlight(String destination) throws InvalidRequestException {
+		try {
+			return availableFlight(destination);
+		}catch (Exception exception){
+			throw new InvalidRequestException(INVALID_DESTINATION);
+		}
+	}
+	
+	@NotNull
+	private Flight availableFlight(String destination) {
+		Stream<Flight> availableFlight = availableFlights.stream().filter(flight -> flight.getDestination() == Destinations.valueOf(destination.toUpperCase()));
+		return availableFlight.findAny().orElseThrow();
 	}
 	
 	public FlightResponse checkAvailableFlight(String destination) throws InvalidRequestException {
 		try {
-			Stream<Flight> availableFlight = availableFlights.stream().filter(flight -> flight.getDestination() == Destinations.valueOf(destination.toUpperCase()));
-			Flight flight = availableFlight.findAny().orElseThrow();
+			Flight flight = availableFlight(destination);
 			FlightResponse response = new FlightResponse();
 			mapper.map(flight, response);
 			return response;
@@ -82,7 +91,7 @@ public class BolaAirFlightService implements Bookable {
 	}
 	
 	@Override
-	public Flight bookFlight(BookingRequest bookingRequest) {
+	public Flight bookFlight(BookingRequest bookingRequest) throws InvalidRequestException {
 		if (bookingRequestIsValid(bookingRequest) && paymentIsCompleted(bookingRequest) && nameIsValid(bookingRequest)) {
 			Flight availableFlight = getAvailableFlight("");
 			setPassengerToArrayOfPassengers(bookingRequest, availableFlight);

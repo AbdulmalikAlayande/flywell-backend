@@ -2,7 +2,6 @@ package com.example.airlinereservation.services;
 
 import com.example.airlinereservation.services.flightformservice.FlightFormService;
 import com.example.airlinereservation.services.flightservice.Bookable;
-import com.example.airlinereservation.services.flightservice.BolaAirFlightService;
 import com.example.airlinereservation.services.passengerservice.PassengerService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,11 +9,13 @@ import com.example.airlinereservation.data.model.Flight;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
 import com.example.airlinereservation.dtos.Request.FlightFormRequest;
 import com.example.airlinereservation.dtos.Request.PassengerRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class FlightFormServiceTest {
 	FlightFormService flightFormService;
+	@Autowired
 	Bookable bookable;
 	BookingRequest bookingRequest;
 	PassengerService passengerService;
@@ -22,8 +23,7 @@ public class FlightFormServiceTest {
 	
 	FlightFormRequest flightFormRequest;
 	@SneakyThrows
-	@BeforeEach void startAlltestWith(){
-		bookable = new BolaAirFlightService();
+	@BeforeEach void startAllTestWith(){
 		passengerRequest = PassengerRequest.builder()
 				                   .userName("dende")
 				                   .email("alaabdulmalik03@gmail.com")

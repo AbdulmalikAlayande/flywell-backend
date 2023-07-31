@@ -1,22 +1,23 @@
 package com.example.airlinereservation.services;
 
+import com.example.airlinereservation.data.model.*;
+import com.example.airlinereservation.dtos.Response.FlightResponse;
 import com.example.airlinereservation.services.flightservice.Bookable;
 import com.example.airlinereservation.services.passengerservice.PassengerService;
+import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.example.airlinereservation.data.model.Flight;
-import com.example.airlinereservation.data.model.Payment;
-import com.example.airlinereservation.data.model.PaymentMethod;
-import com.example.airlinereservation.data.model.Price;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
 import com.example.airlinereservation.dtos.Request.PassengerRequest;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.math.BigInteger;
+
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BookableTest {
@@ -37,24 +38,38 @@ class BookableTest {
 		passengerRequest = new PassengerRequest();
 	}
 	
-	@Test void checkAvailableFlight_FlightWhichIsNotFullyBooked_IsTheAvailableFlightReturned(){
-	
+	@Test void testThatANewFlightCanBeCreated(){
+		Flight createdFlight = bookable.createNewFlight("ABUJA");
+		assertThat(createdFlight).isNotNull();
 	}
 	
-	@Test void testThatIfASectionIsFullyBooked_TheSystemThrowsASeatFullyBookedException_AndTheUserIsPromptedToBookAnotherSection(){
+	@SneakyThrows
+	@Test void testThatNewFlightIsNotCreatedIfThePreviousFlightIsNotFilledOrFullyBooked(){
+		assertThrows(InvalidRequestException.class,
+				()-> bookable.createNewFlight("ABUJA"), "Previous Flight Is Not Fully Booked And Is Not Ready To Depart");
+	}
 	
+	@Test void testThatNewFlightIsCreatedIfPreviousFlightIsFullyBooked(){
+		bookable1.createNewFlight("LAGOS");
+		for (int index = 0; index < BigInteger.valueOf(20).intValue(); index++) {
+			Passenger passenger = new Passenger();
+			passenger.setLoggedIn(true);
+			bookable1.assignSeatToPassenger(passenger);
+		}
+		Flight createdFlight = bookable1.createNewFlight("LAGOS");
+		assertThat(createdFlight).isNotNull();
+		assertThat(createdFlight.getDestination()).isEqualTo(Destinations.LAGOS);
 	}
 	
 	@Test void testThatANewFlightIsNotCreatedIfThePreviousFlightHasNotDeparted(){
 	
 	}
 	
-	@SneakyThrows
-	@Test void testThatNewFlightIsNotCreatedIfThePreviousFlightIsNotFilledOrFullyBooked(){
+	@Test void checkAvailableFlight_FlightWhichIsNotFullyBooked_IsTheAvailableFlightReturned() throws InvalidRequestException {
 	
 	}
 	
-	@Test void testThatNewFlightIsCreatedIfPreviousFlightIsFullyBooked(){
+	@Test void testThatIfASectionIsFullyBooked_TheSystemThrowsASeatFullyBookedException_AndTheUserIsPromptedToBookAnotherSection(){
 	
 	}
 	

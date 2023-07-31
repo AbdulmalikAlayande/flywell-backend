@@ -12,11 +12,9 @@ import com.example.airlinereservation.services.categories.*;
 import com.example.airlinereservation.services.passengerservice.PassengerService;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -83,6 +81,23 @@ public class BolaAirFlightService implements Bookable {
 	@Override
 	public String cancelFlight(String passengerUsername) {
 		return null;
+	}
+	
+	@Override
+	public boolean isNotFilled(FlightResponse foundFlight) {
+		return false;
+	}
+	
+	@Override
+	public Flight createNewFlight(String destination) {
+		Flight flight = new Flight();
+		flight.setDestination(Destinations.valueOf(destination.toUpperCase()));
+		return flight;
+	}
+	
+	@Override
+	public void assignSeatToPassenger(Passenger passenger) {
+	
 	}
 	
 	private Flight newFlightReadyForBooking(Flight flight) {

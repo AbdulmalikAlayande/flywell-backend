@@ -40,11 +40,7 @@ class BookableTest {
 	
 	}
 	
-	@Test void testThatANewFlightIsCreatedIfAndOnlyIfThePreviousFlightHasDeparted(){
-	
-	}
-	
-	@Test void testThatIfASectionIsFullyBookedTheSystemThrowsAnExceptionAndTheUserIsPromptedToBookAnotherSection(){
+	@Test void testThatIfASectionIsFullyBooked_TheSystemThrowsASeatFullyBookedException_AndTheUserIsPromptedToBookAnotherSection(){
 	
 	}
 	
@@ -61,11 +57,23 @@ class BookableTest {
 	
 	}
 	
+	@Test void passengerTriesToBookFlightWithAnUndefinedDestination_InvalidRequestExceptionIsThrown(){
+	
+	}
+	
+	@Test void passengerTriesToBookFlightWithoutBeingLoggedIn_InvalidRequestExceptionIsThrown(){
+	
+	}
+	
+	@Test void testThatPassengerHasToRegister_BeforeTheyAreEligibleToBookAFlight_ElseInvalidRequestExceptionIsThrown(){
+	
+	}
+	
 	@SneakyThrows
 	@Test
 	void checkAvailableFlightTest(){
 		Bookable bookable1 = new BolaAirFlightService();
-		Flight availableFlight = bookable1.checkAvailableFlight();
+		Flight availableFlight = bookable1.getAvailableFlight("flight");
 		assertNotNull(availableFlight);
 	}
 	@SneakyThrows

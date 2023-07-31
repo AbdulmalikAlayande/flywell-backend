@@ -1,27 +1,31 @@
 package com.example.airlinereservation.services.flightservice;
 
+import com.example.airlinereservation.data.model.Destinations;
 import com.example.airlinereservation.data.model.Flight;
 import com.example.airlinereservation.data.model.Passenger;
 import com.example.airlinereservation.data.model.TravelClass;
+import com.example.airlinereservation.dtos.Request.BookingRequest;
+import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
+import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import com.example.airlinereservation.services.categories.*;
 import com.example.airlinereservation.services.passengerservice.PassengerService;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import com.example.airlinereservation.dtos.Request.BookingRequest;
-import com.example.airlinereservation.dtos.Request.FlightRequest;
-import com.example.airlinereservation.dtos.Response.PassengerResponse;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Month;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
+
+import static com.example.airlinereservation.utils.appUtils.AppUtilities.INVALID_DESTINATION;
 
 
 @Service
@@ -30,7 +34,9 @@ public class BolaAirFlightService implements Bookable {
 	FlightService flightService = new FlightServiceImpl();
 	@Autowired
 	PassengerService passengerService;
-	private Flight availableFlight;
+	@Autowired
+	ModelMapper mapper;
+	private final List<Flight> availableFlights = new ArrayList<>();
 	
 	private final List<BookingCategory> bookingCategories = List.of(
 			FirstClassBookingCategory.getInstance(),
@@ -39,15 +45,20 @@ public class BolaAirFlightService implements Bookable {
 			EconomyClassBookingCategory.getInstance()
 	);
 	@Override
-	public Flight checkAvailableFlight() {
-		Optional<List<Flight>> allFlights = flightService.getAllFLights();
-		Flight flight;
-		if (allFlights.isEmpty()) return newFlightReadyForBooking();
-		flight = allFlights.get().get(allFlights.get().size() - 1);
-		if (flight.getAirCraft().getAircraftSeats()[4] && flight.getAirCraft().getAircraftSeats()[9]
-				    && flight.getAirCraft().getAircraftSeats()[14] && flight.getAirCraft().getAircraftSeats()[19])
-			return newFlightReadyForBooking(flight);
-		return flight;
+	public Flight getAvailableFlight(String destination) {
+		return null;
+	}
+	
+	public FlightResponse checkAvailableFlight(String destination) throws InvalidRequestException {
+		try {
+			Stream<Flight> availableFlight = availableFlights.stream().filter(flight -> flight.getDestination() == Destinations.valueOf(destination.toUpperCase()));
+			Flight flight = availableFlight.findAny().orElseThrow();
+			FlightResponse response = new FlightResponse();
+			mapper.map(flight, response);
+			return response;
+		}catch (Exception exception){
+			throw new InvalidRequestException(INVALID_DESTINATION);
+		}
 	}
 	
 	@Override
@@ -71,9 +82,9 @@ public class BolaAirFlightService implements Bookable {
 	}
 	
 	@Override
-	public Flight bookFlight(BookingRequest bookingRequest) throws InvalidRequestException {
+	public Flight bookFlight(BookingRequest bookingRequest) {
 		if (bookingRequestIsValid(bookingRequest) && paymentIsCompleted(bookingRequest) && nameIsValid(bookingRequest)) {
-			Flight availableFlight = checkAvailableFlight();
+			Flight availableFlight = getAvailableFlight("");
 			setPassengerToArrayOfPassengers(bookingRequest, availableFlight);
 			BookingCategory bookingCategory = getBookingCategory(bookingRequest.getBookingCategory());
 			if (bookingCategory.canBook(availableFlight)) {

@@ -10,4 +10,5 @@ public class AppUtilities {
 	public static String INCORRECT_FORMAT_LOGIN_FAILURE_MESSAGE = "Login Failed:: Please provide the full details requested in the correct format";
 	public static String SESSION_NOT_EXHAUSTED_MESSAGE = "Your session has not expired";
 	public static String UPDATE_NOT_COMPLETED = "Update could not be completed";
+	public static String INVALID_DESTINATION = "Invalid Destination";
 }

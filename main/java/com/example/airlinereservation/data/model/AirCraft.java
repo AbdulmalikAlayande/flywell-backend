@@ -28,15 +28,4 @@ public class AirCraft {
 		return aircraftSeats[seatIndex];
 	}
 	
-	public boolean getInitialStateOfSeat(){
-		boolean isEmptySeat = false;
-		for (boolean seat : aircraftSeats) {
-			if (!seat) {
-				isEmptySeat = true;
-				break;
-			}
-		}
-		return isEmptySeat;
-	}
-	
 }

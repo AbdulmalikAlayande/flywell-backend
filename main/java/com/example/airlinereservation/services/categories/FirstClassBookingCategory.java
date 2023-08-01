@@ -24,7 +24,7 @@ public class FirstClassBookingCategory extends BookingCategory {
 	
 	@Override
 	public void assignSeat(Passenger passenger, Flight flight) {
-	
+		assignSeat(flight);
 	}
 	
 	private void assignSeatToPassenger(Flight flight) {

@@ -98,7 +98,6 @@ public class BolaAirFlightService implements Bookable {
 		for (Flight flight : availableFlights) {
 			if (flight.getDestination() == Destinations.valueOf(destination.toUpperCase())) {
 				BookingCategory bookingClass = bookingCategories.get(category);
-				bookingClass.assignSeat(flight);
 				bookingClass.assignSeat(passenger, flight);
 			}
 		}

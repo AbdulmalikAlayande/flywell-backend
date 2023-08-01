@@ -1,5 +1,6 @@
 package com.example.airlinereservation.services.categories;
 import com.example.airlinereservation.data.model.Flight;
+import com.example.airlinereservation.data.model.Passenger;
 
 import java.math.BigInteger;
 
@@ -19,6 +20,11 @@ public class FirstClassBookingCategory extends BookingCategory {
 	
 	public void assignSeat(Flight flight) {
 		assignSeatToPassenger(flight);
+	}
+	
+	@Override
+	public void assignSeat(Passenger passenger, Flight flight) {
+	
 	}
 	
 	private void assignSeatToPassenger(Flight flight) {

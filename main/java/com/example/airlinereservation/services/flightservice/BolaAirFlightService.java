@@ -1,9 +1,6 @@
 package com.example.airlinereservation.services.flightservice;
 
-import com.example.airlinereservation.data.model.Destinations;
-import com.example.airlinereservation.data.model.Flight;
-import com.example.airlinereservation.data.model.Passenger;
-import com.example.airlinereservation.data.model.TravelClass;
+import com.example.airlinereservation.data.model.*;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
 import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
@@ -34,6 +31,7 @@ public class BolaAirFlightService implements Bookable {
 	FlightService flightService;
 	PassengerService passengerService;
 	ModelMapper mapper;
+	private final AirCraft[] availableAirCrafts = new AirCraft[]{};
 	private final List<Flight> availableFlights = new ArrayList<>();
 	
 	private final List<BookingCategory> bookingCategories = List.of(

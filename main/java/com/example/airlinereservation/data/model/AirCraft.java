@@ -19,6 +19,7 @@ public class AirCraft {
 	@Id
 	private String id;
 	private String airCraftName;
+	private boolean isAvailable;
 	private final int numberOfSeats = BigInteger.valueOf(20).intValue();
 	@Transient
 	private final AirplaneSeats[] seats = new AirplaneSeats[numberOfSeats];

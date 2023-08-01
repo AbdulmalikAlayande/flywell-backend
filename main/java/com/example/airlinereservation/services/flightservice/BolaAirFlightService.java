@@ -82,7 +82,7 @@ public class BolaAirFlightService implements Bookable {
 	}
 	
 	@Override
-	public boolean isNotFilled(FlightResponse foundFlight) {
+	public boolean isNotFilled(Flight foundFlight) {
 		return false;
 	}
 	

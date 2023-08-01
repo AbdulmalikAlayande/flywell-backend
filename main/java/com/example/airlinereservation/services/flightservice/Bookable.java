@@ -9,7 +9,7 @@ import com.example.airlinereservation.dtos.Response.FlightResponse;
 public interface Bookable {
 	Flight bookFlight(BookingRequest bookingRequest) throws InvalidRequestException;
 	Flight getAvailableFlight(String destination) throws InvalidRequestException;
-	boolean isNotFilled(FlightResponse foundFlight);
+	boolean isNotFilled(Flight foundFlight);
 	
 	Flight createNewFlight(String abuja);
 	

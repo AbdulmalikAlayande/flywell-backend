@@ -8,14 +8,14 @@ public class FirstClassBookingCategory extends BookingCategory {
 	private static FirstClassBookingCategory instance = null;
 	private FirstClassBookingCategory (){}
 	private static final int lastSeatInTheCategory = BigInteger.valueOf(4).intValue();
-	public boolean canBook(Flight flight) {
-		return !flight.getAirCraft().getAircraftSeats()[lastSeatInTheCategory];
-	}
-	
 	public static FirstClassBookingCategory getInstance() {
 		if (instance == null)
 			return new FirstClassBookingCategory();
 		return instance;
+	}
+	
+	public boolean canBook(Flight flight) {
+		return !flight.getAirCraft().getAircraftSeats()[lastSeatInTheCategory];
 	}
 	
 	public void assignSeat(Flight flight) {

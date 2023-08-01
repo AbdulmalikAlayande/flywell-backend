@@ -50,15 +50,20 @@ class BookableTest {
 	}
 	
 	@Test void testThatNewFlightIsCreatedIfPreviousFlightIsFullyBooked(){
-		bookable1.createNewFlight("LAGOS");
+		Flight createdFlight1 = bookable1.createNewFlight("LAGOS");
+		int category = BigInteger.ZERO.intValue();
 		for (int index = 0; index < BigInteger.valueOf(20).intValue(); index++) {
+			if (category % BigInteger.valueOf(5).intValue() == BigInteger.ZERO.intValue())
+				category += BigInteger.valueOf(5).intValue();
 			Passenger passenger = new Passenger();
 			passenger.setLoggedIn(true);
-			bookable1.assignSeatToPassenger(passenger, "LAGOS", BigInteger.TWO.intValue());
+			bookable1.assignSeatToPassenger(passenger, "LAGOS", category);
 		}
-		Flight createdFlight = bookable1.createNewFlight("LAGOS");
-		assertThat(createdFlight).isNotNull();
-		assertThat(createdFlight.getDestination()).isEqualTo(Destinations.LAGOS);
+		Flight createdFlight2 = bookable1.createNewFlight("LAGOS");
+		assertThat(createdFlight2).isNotNull();
+		assertThat(createdFlight2.getDestination()).isEqualTo(Destinations.LAGOS);
+		assertThat(bookable1.isNotFilled(createdFlight1)).isFalse();
+		assertThat(bookable1.isNotFilled(createdFlight2)).isTrue();
 	}
 	
 	@Test void testThatANewFlightIsNotCreatedIfThePreviousFlightHasNotDeparted(){

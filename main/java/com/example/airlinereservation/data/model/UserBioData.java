@@ -34,6 +34,8 @@ public class UserBioData {
 	private String phoneNumber;
 	@NotBlank
 	private String password;
+	@OneToOne
+	private Address address;
 	
 	public String getFullName(){
 		return firstName + " " + lastName;

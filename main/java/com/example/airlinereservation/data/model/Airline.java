@@ -17,6 +17,8 @@ public class Airline {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
+	private String name;
+	private String code;
 	@OneToOne
 	private AirCraft airCraft;
 	@OneToMany

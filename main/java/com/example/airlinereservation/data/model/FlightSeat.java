@@ -10,4 +10,5 @@ public class FlightSeat extends Seat{
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
+	private String reservationNumber;
 }

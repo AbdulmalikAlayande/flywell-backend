@@ -16,4 +16,5 @@ public class Customer extends Person{
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
+	private Long frequentFlyerNumber;
 }

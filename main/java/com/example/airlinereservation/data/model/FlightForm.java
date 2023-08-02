@@ -1,5 +1,7 @@
 package com.example.airlinereservation.data.model;
 
+import com.example.airlinereservation.data.model.enums.Price;
+import com.example.airlinereservation.data.model.enums.TravelClass;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

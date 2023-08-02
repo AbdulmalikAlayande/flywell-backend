@@ -1,4 +1,4 @@
-package com.example.airlinereservation.data.model;
+package com.example.airlinereservation.data.model.enums;
 
 public enum Price {
 	FIRST_CLASS(200_000),

@@ -1,4 +1,4 @@
-package com.example.airlinereservation.services.messages.mail;
+package com.example.airlinereservation.services.notifications.mail;
 
 public interface MailService {
 	

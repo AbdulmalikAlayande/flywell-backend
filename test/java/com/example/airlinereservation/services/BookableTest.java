@@ -1,7 +1,9 @@
 package com.example.airlinereservation.services;
 
 import com.example.airlinereservation.data.model.*;
-import com.example.airlinereservation.dtos.Response.FlightResponse;
+import com.example.airlinereservation.data.model.enums.PaymentMethod;
+import com.example.airlinereservation.data.model.enums.PaymentStatus;
+import com.example.airlinereservation.data.model.enums.Price;
 import com.example.airlinereservation.services.flightservice.Bookable;
 import com.example.airlinereservation.services.passengerservice.PassengerService;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
@@ -152,7 +154,7 @@ class BookableTest {
 		Payment payment2 = new Payment();
 		payment2.setPaymentMethod(PaymentMethod.CARD);
 		payment2.setPrice(Price.ECONOMY_CLASS);
-		payment2.setStatus(true);
+		payment2.setStatus(PaymentStatus.COMPLETED);
 		
 		BookingRequest bookingRequest2 = new BookingRequest();
 		bookingRequest2.setBookingCategory(3);
@@ -165,7 +167,7 @@ class BookableTest {
 		Payment payment1 = new Payment();
 		payment1.setPaymentMethod(PaymentMethod.CASH);
 		payment1.setPrice(Price.BUSINESS_CLASS);
-		payment1.setStatus(true);
+		payment1.setStatus(PaymentStatus.PENDING);
 		
 		BookingRequest bookingRequest1 = new BookingRequest();
 		bookingRequest1.setBookingCategory(2);

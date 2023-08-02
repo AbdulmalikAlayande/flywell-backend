@@ -1,6 +1,6 @@
 package com.example.airlinereservation.Mapper;
 
-import com.example.airlinereservation.data.model.Destinations;
+import com.example.airlinereservation.data.model.enums.Destinations;
 import com.example.airlinereservation.data.model.Flight;
 import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;

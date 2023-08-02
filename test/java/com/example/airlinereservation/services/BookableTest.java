@@ -1,6 +1,7 @@
 package com.example.airlinereservation.services;
 
 import com.example.airlinereservation.data.model.*;
+import com.example.airlinereservation.data.model.enums.Destinations;
 import com.example.airlinereservation.data.model.enums.PaymentMethod;
 import com.example.airlinereservation.data.model.enums.PaymentStatus;
 import com.example.airlinereservation.data.model.enums.Price;

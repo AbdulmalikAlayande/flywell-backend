@@ -22,6 +22,7 @@ public class Flight {
 	private boolean isFullyBooked;
 	@NotBlank
 	private String Airline;
+	private String flightNumber;
 	private Destinations from;
 	private Destinations to;
 	private int numberOfPassengers;

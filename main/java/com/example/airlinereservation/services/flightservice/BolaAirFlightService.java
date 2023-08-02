@@ -90,7 +90,12 @@ public class BolaAirFlightService implements Bookable {
 	public Flight createNewFlight(String destination) {
 		Flight flight = new Flight();
 		flight.setDestination(Destinations.valueOf(destination.toUpperCase()));
+		AirCraft availableAirCraft = getAvailableAirCraft();
 		return flight;
+	}
+	
+	private AirCraft getAvailableAirCraft() {
+		return null;
 	}
 	
 	@Override

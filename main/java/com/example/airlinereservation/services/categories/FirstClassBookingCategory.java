@@ -15,7 +15,7 @@ public class FirstClassBookingCategory extends BookingCategory {
 	}
 	
 	public boolean canBook(Flight flight) {
-		return !flight.getAirCraft().getAircraftSeats()[lastSeatInTheCategory];
+		return true;
 	}
 	
 	public void assignSeat(Flight flight) {
@@ -29,10 +29,10 @@ public class FirstClassBookingCategory extends BookingCategory {
 	
 	private void assignSeatToPassenger(Flight flight) {
 		for (int firstSeat = 0; firstSeat < lastSeatInTheCategory; firstSeat++) {
-			if (!flight.getAirCraft().getAircraftSeats()[firstSeat]) {
-				flight.getAirCraft().getAircraftSeats()[firstSeat] = true;
-				break;
-			}
+//			if (!flight.getAirCraft().getAircraftSeats()[firstSeat]) {
+//				flight.getAirCraft().getAircraftSeats()[firstSeat] = true;
+//				break;
+//			}
 		}
 	}
 	

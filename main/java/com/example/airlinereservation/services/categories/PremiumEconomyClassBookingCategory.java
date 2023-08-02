@@ -18,7 +18,7 @@ public class PremiumEconomyClassBookingCategory extends BookingCategory {
 		return instance;
 	}
 	
-	public boolean canBook(Flight flight) { return !flight.getAirCraft().getAircraftSeats()[14]; }
+	public boolean canBook(Flight flight) { return true; }
 	public void assignSeat(Flight flight) {
 		assignSeatToPassenger(flight);
 	}
@@ -28,10 +28,10 @@ public class PremiumEconomyClassBookingCategory extends BookingCategory {
 	}
 	private void assignSeatToPassenger(Flight flight) {
 		for (int firstSeat = firstSeatInTheCategory; firstSeat <= lastSeatInTheCategory; firstSeat++) {
-			if (!flight.getAirCraft().getAircraftSeats()[firstSeat]) {
-				flight.getAirCraft().getAircraftSeats()[firstSeat] = true;
-				break;
-			}
+//			if (!flight.getAirCraft().getAircraftSeats()[firstSeat]) {
+//				flight.getAirCraft().getAircraftSeats()[firstSeat] = true;
+//				break;
+//			}
 		}
 	}
 }

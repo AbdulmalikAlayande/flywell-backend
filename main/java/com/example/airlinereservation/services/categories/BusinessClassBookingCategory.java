@@ -18,7 +18,7 @@ public class BusinessClassBookingCategory extends BookingCategory {
 		return instance;
 	}
 	
-	public boolean canBook(Flight flight) { return !flight.getAirCraft().getAircraftSeats()[9]; }
+	public boolean canBook(Flight flight) { return true; }
 	public void assignSeat(Flight flight) {
 		assignSeatToPassenger(flight);
 	}
@@ -30,10 +30,10 @@ public class BusinessClassBookingCategory extends BookingCategory {
 	
 	private void assignSeatToPassenger(Flight flight) {
 		for (int firstSeat = firstSeatInTheCategory; firstSeat < lastSeatInTheCategory; firstSeat++) {
-			if (!flight.getAirCraft().getAircraftSeats()[firstSeat]) {
-				flight.getAirCraft().getAircraftSeats()[firstSeat] = true;
-				break;
-			}
+//			if (!flight.getAirCraft().getAircraftSeats()[firstSeat]) {
+//				flight.getAirCraft().getAircraftSeats()[firstSeat] = true;
+//				break;
+//			}
 		}
 	}
 }

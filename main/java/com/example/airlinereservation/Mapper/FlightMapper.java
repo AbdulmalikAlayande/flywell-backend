@@ -27,7 +27,7 @@ public class FlightMapper {
 				       .baggageAllowance(flight.getBaggageAllowance())
 				       .departureDate(flight.getDepartureDate())
 				       .departureTime(flight.getDepartureTime())
-				       .destination(String.valueOf(flight.getDestination()).toLowerCase())
+				       .destination(String.valueOf(flight.getFrom()).toLowerCase())
 				       .build(); 
 	}
 }

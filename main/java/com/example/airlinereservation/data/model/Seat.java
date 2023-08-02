@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AirplaneSeats {
+public class Seat {
 	public int seatNumber;
 }

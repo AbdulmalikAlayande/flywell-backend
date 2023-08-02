@@ -22,7 +22,7 @@ public class AirCraft {
 	private boolean isAvailable;
 	private final int numberOfSeats = BigInteger.valueOf(20).intValue();
 	@Transient
-	private final AirplaneSeats[] seats = new AirplaneSeats[numberOfSeats];
+	private final Seat[] seats = new Seat[numberOfSeats];
 	public final boolean[] aircraftSeats = new boolean[numberOfSeats];
 	
 	public boolean getAircraftSeatsAt(int seatIndex){

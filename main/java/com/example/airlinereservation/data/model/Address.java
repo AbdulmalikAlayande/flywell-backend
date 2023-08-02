@@ -19,4 +19,10 @@ public class Address {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
+	private String country;
+	private String state;
+	private String postalCode;
+	private String streetName;
+	private String streetNumber;
+	private String houseNumber;
 }

@@ -30,7 +30,6 @@ import static com.example.airlinereservation.utils.appUtils.AppUtilities.INVALID
 @Service
 @AllArgsConstructor
 public class BolaAirFlightService implements Bookable {
-	FlightService flightService;
 	PassengerService passengerService;
 	ModelMapper mapper;
 	private final AirCraft[] availableAirCrafts = new AirCraft[]{};
@@ -130,12 +129,7 @@ public class BolaAirFlightService implements Bookable {
 	}
 	
 	private void setPassengerToArrayOfPassengers(BookingRequest bookingRequest, Flight availableFlight) {
-		for (int i = 0; i < availableFlight.getPassengers().size(); i++) {
-			if (availableFlight.getPassengers().get(i) == null) {
-				availableFlight.getPassengers().set(i, foundPassenger(bookingRequest).get());
-				break;
-			}
-		}
+	
 	}
 	
 	private Optional<Passenger> foundPassenger(BookingRequest bookingRequest) {
@@ -178,7 +172,7 @@ public class BolaAirFlightService implements Bookable {
 		LocalDate arrivalDate = null;
 		if (arrivalTime == LocalTime.MIDNIGHT)
 			arrivalDate = LocalDate.of(departureDate.getYear(), departureDate.getMonth(), departureDate.getDayOfMonth() + 1);
-		return flightService.saveFlightForAdminUsage(buildFlightRequest(departureTime, arrivalTime, arrivalDate));
+		return new Flight();
 	}
 	
 	

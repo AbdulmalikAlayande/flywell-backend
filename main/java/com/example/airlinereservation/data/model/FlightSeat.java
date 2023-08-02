@@ -1,14 +1,22 @@
 package com.example.airlinereservation.data.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.airlinereservation.data.model.enums.SeatStatus;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.math.BigDecimal;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 public class FlightSeat extends Seat{
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
+	private SeatStatus status;
+	private BigDecimal seatPrice;
 	private String reservationNumber;
 }

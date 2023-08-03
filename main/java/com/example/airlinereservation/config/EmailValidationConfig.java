@@ -4,10 +4,15 @@ import com.example.airlinereservation.config.mycustomannotations.EmailPattern;
 import com.example.airlinereservation.config.mycustomannotations.ValidEmailDomain;
 import com.example.airlinereservation.utils.appUtils.FieldValidator;
 import com.example.airlinereservation.utils.appUtils.Validator;
+import com.mailgun.api.v3.MailgunMessagesApi;
+import com.mailgun.api.v4.MailgunEmailVerificationApi;
+import com.mailgun.client.MailgunClient;
+import com.mailgun.model.verification.AddressValidationResponse;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+
 
 @Configuration
 @ComponentScan(basePackages = "com.example.airlinereservation.config.mycustomannotations",
@@ -18,6 +23,8 @@ import org.springframework.context.annotation.Configuration;
 @EnableAutoConfiguration
 public class EmailValidationConfig {
 	
+	public static String PRIVATE_API_KEY = System.getenv("MAIL_GUN_PRIVATE_API_KEY");
+	
 	@Bean
 	public ValidEmailDomain validEmailDomain() {
 		return new ValidEmailDomain();
@@ -26,5 +33,18 @@ public class EmailValidationConfig {
 	@Bean
 	public Validator getValidator(){
 		return new FieldValidator();
+	}
+	@Bean
+	public AddressValidationResponse validateEmail() {
+		MailgunEmailVerificationApi mailgunEmailVerificationApi = MailgunClient.config(PRIVATE_API_KEY)
+				                                                          .createApi(MailgunEmailVerificationApi.class);
+		
+		return mailgunEmailVerificationApi.validateAddress("foo@mailgun.com");
+	}
+	
+	@Bean
+	public MailgunMessagesApi mailgunMessagesApi() {
+		return MailgunClient.config(PRIVATE_API_KEY)
+				       .createApi(MailgunMessagesApi.class);
 	}
 }

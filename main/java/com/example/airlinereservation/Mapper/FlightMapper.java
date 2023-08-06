@@ -1,6 +1,5 @@
 package com.example.airlinereservation.Mapper;
 
-import com.example.airlinereservation.data.model.enums.Destinations;
 import com.example.airlinereservation.data.model.Flight;
 import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
@@ -16,7 +15,7 @@ public class FlightMapper {
 		return FlightResponse.builder()
 				       .flightId(flight.getId())
 				       .Airline(flight.getAirline())
-				       .destination(String.valueOf(flight.getFrom()).toLowerCase())
+				       .destination(String.valueOf(flight.getFromWhere()).toLowerCase())
 				       .build(); 
 	}
 }

@@ -52,7 +52,7 @@ public class BolaAirFlightService implements Bookable {
 	
 	@NotNull
 	private Flight availableFlight(String destination) {
-		Stream<Flight> availableFlight = availableFlights.stream().filter(flight -> flight.getFrom() == Destinations.valueOf(destination.toUpperCase()));
+		Stream<Flight> availableFlight = availableFlights.stream().filter(flight -> flight.getFromWhere() == Destinations.valueOf(destination.toUpperCase()));
 		return availableFlight.findAny().orElseThrow();
 	}
 	
@@ -90,7 +90,7 @@ public class BolaAirFlightService implements Bookable {
 	@Override
 	public Flight createNewFlight(String destination) {
 		Flight flight = new Flight();
-		flight.setFrom(Destinations.valueOf(destination.toUpperCase()));
+		flight.setFromWhere(Destinations.valueOf(destination.toUpperCase()));
 		AirCraft availableAirCraft = getAvailableAirCraft();
 		return flight;
 	}
@@ -102,7 +102,7 @@ public class BolaAirFlightService implements Bookable {
 	@Override
 	public void assignSeatToPassenger(Passenger passenger, String destination, int category) {
 		for (Flight flight : availableFlights) {
-			if (flight.getFrom() == Destinations.valueOf(destination.toUpperCase())) {
+			if (flight.getFromWhere() == Destinations.valueOf(destination.toUpperCase())) {
 				BookingCategory bookingClass = bookingCategories.get(category);
 				bookingClass.assignSeat(passenger, flight);
 			}

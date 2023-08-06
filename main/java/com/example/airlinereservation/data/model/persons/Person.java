@@ -7,5 +7,4 @@ import lombok.Data;
 
 @Data
 public abstract class Person {
-	private UserBioData bioData;
 }

@@ -31,4 +31,5 @@ public class FlightInstance {
 	private AirCraft airCraft;
 	@OneToMany
 	private List<FlightSeat> flightSeat;
+
 }

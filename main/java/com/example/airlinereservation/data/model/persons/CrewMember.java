@@ -1,9 +1,7 @@
 package com.example.airlinereservation.data.model.persons;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.airlinereservation.data.model.UserBioData;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Builder
@@ -17,4 +15,7 @@ public class CrewMember extends Person{
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
+	@OneToOne
+	private UserBioData bioData;
+	
 }

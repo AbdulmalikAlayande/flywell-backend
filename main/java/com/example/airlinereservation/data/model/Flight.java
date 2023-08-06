@@ -23,8 +23,12 @@ public class Flight {
 	@NotBlank
 	private String Airline;
 	private String flightNumber;
-	private Destinations from;
-	private Destinations to;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "from_where")
+	private Destinations fromWhere;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "to_where")
+	private Destinations toWhere;
 	private int numberOfPassengers;
 	@Transient
 	private Airport departureAirport;

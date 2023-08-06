@@ -7,17 +7,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
-@Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public non-sealed class TextMessage extends Notification{
-	
-	@Id
+
+//	@Id
 	private String id;
 	private String phoneNumber;
-	@ManyToOne(cascade = CascadeType.DETACH)
+//	@ManyToOne(cascade = CascadeType.DETACH)
 	private Customer person;
 }

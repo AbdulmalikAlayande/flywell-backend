@@ -34,17 +34,17 @@ public class EmailValidationConfig {
 	public Validator getValidator(){
 		return new FieldValidator();
 	}
-	@Bean
-	public AddressValidationResponse validateEmail() {
-		MailgunEmailVerificationApi mailgunEmailVerificationApi = MailgunClient.config(PRIVATE_API_KEY)
-				                                                          .createApi(MailgunEmailVerificationApi.class);
-		
-		return mailgunEmailVerificationApi.validateAddress("foo@mailgun.com");
-	}
-	
-	@Bean
-	public MailgunMessagesApi mailgunMessagesApi() {
-		return MailgunClient.config(PRIVATE_API_KEY)
-				       .createApi(MailgunMessagesApi.class);
-	}
+//	@Bean
+//	public AddressValidationResponse validateEmail() {
+//		MailgunEmailVerificationApi mailgunEmailVerificationApi = MailgunClient.config(PRIVATE_API_KEY)
+//				                                                          .createApi(MailgunEmailVerificationApi.class);
+//
+//		return mailgunEmailVerificationApi.validateAddress("foo@mailgun.com");
+//	}
+//
+//	@Bean
+//	public MailgunMessagesApi mailgunMessagesApi() {
+//		return MailgunClient.config(PRIVATE_API_KEY)
+//				       .createApi(MailgunMessagesApi.class);
+//	}
 }

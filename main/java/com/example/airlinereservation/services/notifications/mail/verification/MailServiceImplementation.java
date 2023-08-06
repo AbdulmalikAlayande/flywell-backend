@@ -1,4 +1,4 @@
-package com.example.airlinereservation.services.notifications.mail;
+package com.example.airlinereservation.services.notifications.mail.verification;
 
 import org.springframework.stereotype.Service;
 

@@ -55,9 +55,15 @@ public class Mailer {
 	
 	public static void main(String[] args) {
 		Mailer mailer = new Mailer();
+		
+//		AddressValidationResponse validationResponse = mailer.validateEmail();
+//		log.info("Email Validated Successfully");
+//		System.out.println("Result is: "+validationResponse.getResult());
+//		System.out.println("Response is: "+validationResponse.getAddress());
+		
 		MessageResponse response = mailer.sendMessage();
-		System.out.println("Sent Successfully");
 		log.info("Email Sent Successfully");
 		System.out.println(response.getMessage());
+		
 	}
 }

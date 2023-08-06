@@ -23,7 +23,9 @@ public class Flight {
 	@NotBlank
 	private String Airline;
 	private String flightNumber;
+	@Enumerated(EnumType.STRING)
 	private Destinations from;
+	@Enumerated(EnumType.STRING)
 	private Destinations to;
 	private int numberOfPassengers;
 	@Transient

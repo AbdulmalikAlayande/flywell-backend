@@ -1,6 +1,7 @@
 package com.example.airlinereservation.data.model.persons;
 
 import com.example.airlinereservation.data.model.UserBioData;
+import com.example.airlinereservation.data.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +16,8 @@ public class Customer extends Person{
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
 	private Long frequentFlyerNumber;
+	@Enumerated(EnumType.STRING)
+	private Role role;
 	@OneToOne
 	private UserBioData bioData;
 	

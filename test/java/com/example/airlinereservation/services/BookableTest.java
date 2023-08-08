@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
-import com.example.airlinereservation.dtos.Request.PassengerRequest;
+import com.example.airlinereservation.dtos.Request.CustomerRequest;
 
 import java.math.BigInteger;
 
@@ -28,7 +28,7 @@ class BookableTest {
 	Bookable bookable;
 	BookingRequest bookingRequest;
 	Payment payment;
-	PassengerRequest passengerRequest;
+	CustomerRequest passengerRequest;
 	@Autowired
 	CustomerService passengerService;
 	Flight booked;
@@ -38,7 +38,7 @@ class BookableTest {
 	@BeforeEach void startAllTestWith(){
 		payment = new Payment();
 		bookingRequest = new BookingRequest();
-		passengerRequest = new PassengerRequest();
+		passengerRequest = new CustomerRequest();
 	}
 	
 	@Test void testThatANewFlightCanBeCreated(){
@@ -129,8 +129,8 @@ class BookableTest {
 	
 	}
 	
-	private PassengerRequest buildPassenger(){
-		return PassengerRequest.builder()
+	private CustomerRequest buildPassenger(){
+		return CustomerRequest.builder()
 				       .userName("abdul@20")
 				       .email("alaabdulmalik03@gmail.com")
 				       .phoneNumber("07036174617")
@@ -140,8 +140,8 @@ class BookableTest {
 				       .build();
 	}
 	
-	private PassengerRequest buildPassenger1(){
-		return PassengerRequest.builder()
+	private CustomerRequest buildPassenger1(){
+		return CustomerRequest.builder()
 				       .userName("crayon")
 				       .email("alaabdulmalik03@gmail.com")
 				       .phoneNumber("07036174617")

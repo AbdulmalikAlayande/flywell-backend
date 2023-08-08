@@ -5,10 +5,10 @@ import com.example.airlinereservation.data.model.UserBioData;
 import com.example.airlinereservation.data.repositories.PassengerRepository;
 import com.example.airlinereservation.data.repositories.UserBioDataRepository;
 import com.example.airlinereservation.dtos.Request.LoginRequest;
-import com.example.airlinereservation.dtos.Request.PassengerRequest;
+import com.example.airlinereservation.dtos.Request.CustomerRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.LoginResponse;
-import com.example.airlinereservation.dtos.Response.PassengerResponse;
+import com.example.airlinereservation.dtos.Response.CustomerResponse;
 import com.example.airlinereservation.utils.appUtils.TokenGenerator;
 import com.example.airlinereservation.utils.appUtils.Validator;
 import com.example.airlinereservation.utils.exceptions.*;
@@ -42,16 +42,16 @@ public class BolaAirCustomerService implements CustomerService {
 	
 	
 	@Override
-	public PassengerResponse registerNewCustomer(@NotNull PassengerRequest passengerRequest) throws FailedRegistrationException {
-		Field[] declaredFields = passengerRequest.getClass().getDeclaredFields();
-		PassengerResponse passengerResponse = new PassengerResponse();
-		if (userDoesNotExistBy(passengerRequest.getUserName())){
+	public CustomerResponse registerNewCustomer(@NotNull CustomerRequest CustomerRequest) throws FailedRegistrationException {
+		Field[] declaredFields = CustomerRequest.getClass().getDeclaredFields();
+		CustomerResponse passengerResponse = new CustomerResponse();
+		if (userDoesNotExistBy(CustomerRequest.getUserName())){
 			try {
-				checkForNullFields(declaredFields, passengerRequest);
-				validateEmailAndPassword(passengerRequest.getEmail(), passengerRequest.getPassword());
+				checkForNullFields(declaredFields, CustomerRequest);
+				validateEmailAndPassword(CustomerRequest.getEmail(), CustomerRequest.getPassword());
 				Passenger passenger = new Passenger();
 				UserBioData biodata = new UserBioData();
-				mapper.map(passengerRequest, biodata);
+				mapper.map(CustomerRequest, biodata);
 				biodata.setFullName(passengerResponse.getFullName());
 				passenger.setUserBioData(biodata);
 				passengerRepository.save(passenger);
@@ -77,7 +77,7 @@ public class BolaAirCustomerService implements CustomerService {
 				       .isEmpty();
 	}
 	
-	private void checkForNullFields(Field[] declaredFields, PassengerRequest passengerRequest) {
+	private void checkForNullFields(Field[] declaredFields, CustomerRequest passengerRequest) {
 		Arrays.stream(declaredFields)
 			  .forEach(field -> {
 				  String errorMessage = String.format(EMPTY_FIELD_MESSAGE, passengerRequest.getUserName());
@@ -94,8 +94,8 @@ public class BolaAirCustomerService implements CustomerService {
 	}
 	
 	@Override
-	public PassengerResponse updateDetailsOfRegisteredCustomer(@NotNull UpdateRequest updateRequest) {
-		PassengerResponse response = new PassengerResponse();
+	public CustomerResponse updateDetailsOfRegisteredCustomer(@NotNull UpdateRequest updateRequest) {
+		CustomerResponse response = new CustomerResponse();
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setSkipNullEnabled(true);
 		Optional<UserBioData> userBio = userBioDataRepository.findByUserName(updateRequest.getUserName());
@@ -190,12 +190,12 @@ public class BolaAirCustomerService implements CustomerService {
 	}
 	
 	private boolean userDoesNotExistBy(String email, String password) {
-		Optional<PassengerResponse> response = findCustomerByEmailAndPassword(email, password);
+		Optional<CustomerResponse> response = findCustomerByEmailAndPassword(email, password);
 		return response.isEmpty();
 	}
 	
-	@Override public Optional<PassengerResponse> findCustomerById(String passengerId) {
-		PassengerResponse response = new PassengerResponse();
+	@Override public Optional<CustomerResponse> findCustomerById(String passengerId) {
+		CustomerResponse response = new CustomerResponse();
 		Optional<Passenger> foundPassenger = passengerRepository.findById(passengerId);
 		return Optional.of(foundPassenger
 				       .map(passenger -> {
@@ -212,20 +212,20 @@ public class BolaAirCustomerService implements CustomerService {
 	}
 	
 	@Override
-	public List<PassengerResponse> getAllCustomers() {
-		List<PassengerResponse> responses = new ArrayList<>();
+	public List<CustomerResponse> getAllCustomers() {
+		List<CustomerResponse> responses = new ArrayList<>();
 		List<Passenger> allPassengers = passengerRepository.findAll();
 		allPassengers.forEach(passenger -> {
-			PassengerResponse response = new PassengerResponse();
+			CustomerResponse response = new CustomerResponse();
 			mapper.map(passenger.getUserBioData(), response);
 			responses.add(response);
 		});
 		return responses;
 	}
 	
-	@Override public Optional<PassengerResponse> findCustomerByEmailAndPassword(String email, String password) {
+	@Override public Optional<CustomerResponse> findCustomerByEmailAndPassword(String email, String password) {
 		Optional<UserBioData> foundBio = userBioDataRepository.findByEmailAndPassword(email, password);
-		PassengerResponse response = new PassengerResponse();
+		CustomerResponse response = new CustomerResponse();
 		foundBio.ifPresent(bioData -> {
 			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(bioData);
 			foundPassenger.ifPresent(passenger -> mapper.map(bioData, response));
@@ -233,11 +233,11 @@ public class BolaAirCustomerService implements CustomerService {
 		return Optional.of(response);
 	}
 	
-	@Override public Optional<PassengerResponse> findCustomerByUserName(String userName) throws InvalidRequestException {
-		PassengerResponse passengerResponse = new PassengerResponse();
-		AtomicReference<PassengerResponse> response = new AtomicReference<>();
+	@Override public Optional<CustomerResponse> findCustomerByUserName(String userName) throws InvalidRequestException {
+		CustomerResponse passengerResponse = new CustomerResponse();
+		AtomicReference<CustomerResponse> response = new AtomicReference<>();
 		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
-		Optional<PassengerResponse> optionalPassengerResponse = foundBio.map(userBioData -> {
+		Optional<CustomerResponse> optionalPassengerResponse = foundBio.map(userBioData -> {
 			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
 			foundPassenger.ifPresent(passenger -> {
 				mapper.map(userBioData, passengerResponse);

@@ -2,10 +2,10 @@ package com.example.airlinereservation.services;
 
 import com.example.airlinereservation.config.TestConfigurations;
 import com.example.airlinereservation.dtos.Request.LoginRequest;
-import com.example.airlinereservation.dtos.Request.PassengerRequest;
+import com.example.airlinereservation.dtos.Request.CustomerRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.LoginResponse;
-import com.example.airlinereservation.dtos.Response.PassengerResponse;
+import com.example.airlinereservation.dtos.Response.CustomerResponse;
 import com.example.airlinereservation.services.passengerservice.CustomerService;
 import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CustomerServiceTest {
 	@Autowired
 	CustomerService passengerService;
-	PassengerResponse passengerResponse;
+	CustomerResponse passengerResponse;
 	UpdateRequest updateRequest;
 	
 	@BeforeEach
@@ -37,7 +37,7 @@ class CustomerServiceTest {
 	public void startAllTestWith() {
 		passengerService.removeAll();
 		updateRequest = new UpdateRequest();
-		passengerService.registerNewCustomer(PassengerRequest
+		passengerService.registerNewCustomer(CustomerRequest
 				        .builder().phoneNumber("567890234").firstName("Alayande")
 				        .lastName("Amirah").email("ololadeayandunni@gmail.com").userName("mirah")
 				        .password("ayandunni#$2008").build());
@@ -90,10 +90,10 @@ class CustomerServiceTest {
 		updateRequest.setPhoneNumber("08056472356");
 		updateRequest.setUserName("mirah");
 		updateRequest.setNewUserName("mithra");
-		PassengerResponse updateResponse = passengerService.updateDetailsOfRegisteredCustomer(updateRequest);
+		CustomerResponse updateResponse = passengerService.updateDetailsOfRegisteredCustomer(updateRequest);
 		assertThat(updateResponse).isNotNull();
 		assertThat(updateResponse.getEmail()).isEqualTo(updateRequest.getEmail());
-		Optional<PassengerResponse> foundPassenger = passengerService.findCustomerByUserName(updateRequest.getNewUserName());
+		Optional<CustomerResponse> foundPassenger = passengerService.findCustomerByUserName(updateRequest.getNewUserName());
 		assertThat(foundPassenger.isPresent()).isTrue();
 		foundPassenger.ifPresent(passenger->{
 			assertThat(passenger.getUserName()).isEqualTo(updateRequest.getNewUserName());
@@ -101,21 +101,21 @@ class CustomerServiceTest {
 		});
 	}
 	
-	private PassengerRequest buildIncompletePassenger() {
-		return PassengerRequest.builder().email("theeniolasamuel@gmail.com").firstName("Samuel")
+	private CustomerRequest buildIncompletePassenger() {
+		return CustomerRequest.builder().email("theeniolasamuel@gmail.com").firstName("Samuel")
 				       .lastName("Eniola").userName("cocolate").password("coco@22").build();
 	}
-	private PassengerRequest buildPassengerWithIncorrectFormatDetails() {
-		return PassengerRequest.builder().password("Obim").userName("Obinali G").email("emailgmail")
+	private CustomerRequest buildPassengerWithIncorrectFormatDetails() {
+		return CustomerRequest.builder().password("Obim").userName("Obinali G").email("emailgmail")
 				       .lastName("Obinali").firstName("Goodness").phoneNumber("08045673421").build();
 	}
-	private PassengerRequest buildPassenger1() {
-		return PassengerRequest.builder().password("zainab@64").lastName("Alayande").firstName("Zainab")
+	private CustomerRequest buildPassenger1() {
+		return CustomerRequest.builder().password("zainab@64").lastName("Alayande").firstName("Zainab")
 				       .phoneNumber("08030669508").email("alayandezainab64@gmail.com").userName("zen@20").build();
 	}
 	
-	private PassengerRequest buildPassenger() {
-		return PassengerRequest
+	private CustomerRequest buildPassenger() {
+		return CustomerRequest
 				       .builder().password("ayanniyi@20").lastName("Alayande").firstName("Abdulmalik")
 				       .phoneNumber("07036174617").email("alaabdulmalik03@gmail.com").userName("ayanniyi@20").build();
 	}
@@ -127,11 +127,11 @@ class CustomerServiceTest {
 		
 	@SneakyThrows
 	@Test void findSavedPassengerWithUsername_PassengerWithTheSaidUsernameIsFound(){
-		Optional<PassengerResponse> response = passengerService.findCustomerByUserName("mirah");
+		Optional<CustomerResponse> response = passengerService.findCustomerByUserName("mirah");
 		assertThat(response.isPresent()).isTrue();
 		response.ifPresent(passengerResponse -> {
 			assertThat(passengerResponse).isNotNull();
-			assertThat(passengerResponse).isInstanceOf(PassengerResponse.class);
+			assertThat(passengerResponse).isInstanceOf(CustomerResponse.class);
 			assertThat(passengerResponse.getUserName()).isNotEmpty();
 		});
 	}
@@ -179,10 +179,10 @@ class CustomerServiceTest {
 	@Test
 	@Disabled
 	public void findSavedPassengerWithId_PassengerWithTheSaidIdIsFound(){
-		Optional<PassengerResponse> response = passengerService.findCustomerById("");
+		Optional<CustomerResponse> response = passengerService.findCustomerById("");
 		response.ifPresent(passengerResponse -> {
 			assertThat(passengerResponse).isNotNull();
-			assertThat(passengerResponse).isInstanceOf(PassengerResponse.class);
+			assertThat(passengerResponse).isInstanceOf(CustomerResponse.class);
 			assertThat(passengerResponse.getUserName()).isNotEmpty();
 		});
 	}
@@ -196,7 +196,7 @@ class CustomerServiceTest {
 
 	@SneakyThrows
 	@Test void getAllPassengersTest(){
-		List<PassengerResponse> allPassengersPresent = passengerService.getAllCustomers();
+		List<CustomerResponse> allPassengersPresent = passengerService.getAllCustomers();
 		allPassengersPresent.forEach(passengerResponse->{
 			assertThat(passengerResponse).isNotNull();
 			assertThat(passengerResponse.getUserName()).isNotNull();

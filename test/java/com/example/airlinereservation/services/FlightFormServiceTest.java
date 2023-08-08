@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import com.example.airlinereservation.data.model.Flight;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
 import com.example.airlinereservation.dtos.Request.FlightFormRequest;
-import com.example.airlinereservation.dtos.Request.PassengerRequest;
+import com.example.airlinereservation.dtos.Request.CustomerRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -19,12 +19,12 @@ public class FlightFormServiceTest {
 	Bookable bookable;
 	BookingRequest bookingRequest;
 	CustomerService passengerService;
-	PassengerRequest passengerRequest;
+	CustomerRequest passengerRequest;
 	
 	FlightFormRequest flightFormRequest;
 	@SneakyThrows
 	@BeforeEach void startAllTestWith(){
-		passengerRequest = PassengerRequest.builder()
+		passengerRequest = CustomerRequest.builder()
 				                   .userName("dende")
 				                   .email("alaabdulmalik03@gmail.com")
 				                   .firstName("Abdulmalik")

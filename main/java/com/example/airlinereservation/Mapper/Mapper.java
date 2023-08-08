@@ -1,14 +1,13 @@
 package com.example.airlinereservation.Mapper;
 
 import com.example.airlinereservation.data.model.Passenger;
-import com.example.airlinereservation.dtos.Request.PassengerRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
-import com.example.airlinereservation.dtos.Response.PassengerResponse;
+import com.example.airlinereservation.dtos.Response.CustomerResponse;
 
 public class Mapper {
 
-	public static PassengerResponse map(Passenger passenger) {
-		return PassengerResponse.builder()
+	public static CustomerResponse map(Passenger passenger) {
+		return CustomerResponse.builder()
 				       .id(passenger.getId())
 				       .message("Registration Successful")
 				       .build();

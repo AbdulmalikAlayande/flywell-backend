@@ -6,7 +6,7 @@ import com.example.airlinereservation.data.model.enums.TravelClass;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
 import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
-import com.example.airlinereservation.dtos.Response.PassengerResponse;
+import com.example.airlinereservation.dtos.Response.CustomerResponse;
 import com.example.airlinereservation.services.categories.*;
 import com.example.airlinereservation.services.passengerservice.CustomerService;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
@@ -146,7 +146,7 @@ public class BolaAirFlightService implements Bookable {
 	
 	@SneakyThrows
 	private boolean nameIsValid(BookingRequest bookingRequest){
-		Optional<PassengerResponse> passengerResponse = passengerService.findCustomerByUserName(bookingRequest.getPassengerUsername());
+		Optional<CustomerResponse> passengerResponse = passengerService.findCustomerByUserName(bookingRequest.getPassengerUsername());
 		return passengerResponse.isPresent();
 	}
 	

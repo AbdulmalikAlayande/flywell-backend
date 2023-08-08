@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PassengerRequest {
+public class CustomerRequest {
 	@NotBlank
 	private String firstName;
 	@NotBlank

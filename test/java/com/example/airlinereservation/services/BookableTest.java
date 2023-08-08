@@ -6,7 +6,7 @@ import com.example.airlinereservation.data.model.enums.PaymentMethod;
 import com.example.airlinereservation.data.model.enums.PaymentStatus;
 import com.example.airlinereservation.data.model.enums.Price;
 import com.example.airlinereservation.services.flightservice.Bookable;
-import com.example.airlinereservation.services.passengerservice.PassengerService;
+import com.example.airlinereservation.services.passengerservice.CustomerService;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
-import com.example.airlinereservation.dtos.Request.PassengerRequest;
+import com.example.airlinereservation.dtos.Request.CustomerRequest;
 
 import java.math.BigInteger;
 
@@ -28,9 +28,9 @@ class BookableTest {
 	Bookable bookable;
 	BookingRequest bookingRequest;
 	Payment payment;
-	PassengerRequest passengerRequest;
+	CustomerRequest passengerRequest;
 	@Autowired
-	PassengerService passengerService;
+	CustomerService passengerService;
 	Flight booked;
 	@Autowired
 	Bookable bookable1;
@@ -38,7 +38,7 @@ class BookableTest {
 	@BeforeEach void startAllTestWith(){
 		payment = new Payment();
 		bookingRequest = new BookingRequest();
-		passengerRequest = new PassengerRequest();
+		passengerRequest = new CustomerRequest();
 	}
 	
 	@Test void testThatANewFlightCanBeCreated(){
@@ -101,7 +101,7 @@ class BookableTest {
 	}
 	@SneakyThrows
 	@Test void testThatPassengerCanBookFlight_AndSeatsWillBeAssignedToThePassenger(){
-		passengerService.registerNewPassenger(buildPassenger());
+		passengerService.registerNewCustomer(buildPassenger());
 		bookingRequest.setBookingCategory(3);
 		bookingRequest.setPassengerUsername(buildPassenger().getUserName());
 		booked = bookable.bookFlight(bookingRequest);
@@ -110,8 +110,8 @@ class BookableTest {
 	
 	@SneakyThrows
 	@Test void testThatAFlightHasToBeFullyBookedBeforeAnother(){
-		passengerService.registerNewPassenger(buildPassenger());
-		passengerService.registerNewPassenger(buildPassenger1());
+		passengerService.registerNewCustomer(buildPassenger());
+		passengerService.registerNewCustomer(buildPassenger1());
 		
 		Flight bookedFlight = bookable.bookFlight(getBookingRequest1());
 		Flight bookedFlight2 = bookable.bookFlight(getBookingRequest2());
@@ -129,8 +129,8 @@ class BookableTest {
 	
 	}
 	
-	private PassengerRequest buildPassenger(){
-		return PassengerRequest.builder()
+	private CustomerRequest buildPassenger(){
+		return CustomerRequest.builder()
 				       .userName("abdul@20")
 				       .email("alaabdulmalik03@gmail.com")
 				       .phoneNumber("07036174617")
@@ -140,8 +140,8 @@ class BookableTest {
 				       .build();
 	}
 	
-	private PassengerRequest buildPassenger1(){
-		return PassengerRequest.builder()
+	private CustomerRequest buildPassenger1(){
+		return CustomerRequest.builder()
 				       .userName("crayon")
 				       .email("alaabdulmalik03@gmail.com")
 				       .phoneNumber("07036174617")

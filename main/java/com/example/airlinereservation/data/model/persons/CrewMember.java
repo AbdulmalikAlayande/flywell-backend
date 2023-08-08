@@ -17,5 +17,5 @@ public class CrewMember extends Person{
 	private String id;
 	@OneToOne
 	private UserBioData bioData;
-	
+	private boolean available;
 }

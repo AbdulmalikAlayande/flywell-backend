@@ -32,5 +32,35 @@ class AdminServiceTest {
 	
 	}
 	
-//	@Test void testThat
+	@Test void testThatTextMessageIsSentToAdminAfterAdminHasBeenCreated(){
+	
+	}
+	
+	@Test void testThatAdminTriesToCreateAccountWithInvalidData_ExceptionIsThrown(){
+	
+	}
+	
+	@Test void testFindAdminByUsername_AdminIsFound(){
+	
+	}
+	
+	@Test void testThatFindAdminByUsernameWIthInvalidUsername_InvalidRequestExceptionIsThrown(){
+	
+	}
+	
+	@Test void testThatAdminCanAddCrewMember(){
+	
+	}
+	
+	@Test void testThatAdminCanAssignCrewMember(){
+	
+	}
+	
+	@Test void testThatAdminCanAddAirCraftToTheListOfAirCraft(){
+		
+	}
+	
+	@Test void BlockUserTest(){
+	
+	}
 }

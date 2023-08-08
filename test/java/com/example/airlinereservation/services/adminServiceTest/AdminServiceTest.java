@@ -1,4 +1,4 @@
-package java.com.example.airlinereservation.services.adminServiceTest;
+package com.example.airlinereservation.services.adminServiceTest;
 
 import org.springframework.boot.test.context.SpringBootTest;
 

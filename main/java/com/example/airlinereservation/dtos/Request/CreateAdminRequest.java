@@ -4,6 +4,4 @@ import com.example.airlinereservation.data.model.UserBioData;
 
 public class CreateAdminRequest extends UserBioData {
 
-
-
 }

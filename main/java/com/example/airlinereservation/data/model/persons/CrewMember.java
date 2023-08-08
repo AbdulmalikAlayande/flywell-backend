@@ -20,5 +20,5 @@ public class CrewMember extends Person{
 	private Role role;
 	@OneToOne
 	private UserBioData bioData;
-	
+	private boolean available;
 }

@@ -33,7 +33,7 @@ import static com.example.airlinereservation.utils.appUtils.AppUtilities.*;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class CustomerServiceImplementation implements PassengerService{
+public class BolaAirCustomerService implements CustomerService {
 	
 	Validator validator;
 	private PassengerRepository passengerRepository;

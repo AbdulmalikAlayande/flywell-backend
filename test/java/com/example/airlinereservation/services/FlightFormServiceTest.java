@@ -2,7 +2,7 @@ package com.example.airlinereservation.services;
 
 import com.example.airlinereservation.services.flightformservice.FlightFormService;
 import com.example.airlinereservation.services.flightservice.Bookable;
-import com.example.airlinereservation.services.passengerservice.PassengerService;
+import com.example.airlinereservation.services.passengerservice.CustomerService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import com.example.airlinereservation.data.model.Flight;
@@ -18,7 +18,7 @@ public class FlightFormServiceTest {
 	@Autowired
 	Bookable bookable;
 	BookingRequest bookingRequest;
-	PassengerService passengerService;
+	CustomerService passengerService;
 	PassengerRequest passengerRequest;
 	
 	FlightFormRequest flightFormRequest;

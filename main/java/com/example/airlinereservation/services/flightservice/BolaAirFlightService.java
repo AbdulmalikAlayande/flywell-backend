@@ -8,7 +8,7 @@ import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
 import com.example.airlinereservation.dtos.Response.PassengerResponse;
 import com.example.airlinereservation.services.categories.*;
-import com.example.airlinereservation.services.passengerservice.PassengerService;
+import com.example.airlinereservation.services.passengerservice.CustomerService;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -30,7 +30,7 @@ import static com.example.airlinereservation.utils.appUtils.AppUtilities.INVALID
 @Service
 @AllArgsConstructor
 public class BolaAirFlightService implements Bookable {
-	PassengerService passengerService;
+	CustomerService passengerService;
 	ModelMapper mapper;
 	private final AirCraft[] availableAirCrafts = new AirCraft[]{};
 	private final List<Flight> availableFlights = new ArrayList<>();

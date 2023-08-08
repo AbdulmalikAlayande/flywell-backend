@@ -6,7 +6,7 @@ import com.example.airlinereservation.dtos.Request.PassengerRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.LoginResponse;
 import com.example.airlinereservation.dtos.Response.PassengerResponse;
-import com.example.airlinereservation.services.passengerservice.PassengerService;
+import com.example.airlinereservation.services.passengerservice.CustomerService;
 import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import com.example.airlinereservation.utils.exceptions.LoginFailedException;
@@ -26,9 +26,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Validated
 @SpringBootTest(classes = {TestConfigurations.class})
-class PassengerServiceTest {
+class CustomerServiceTest {
 	@Autowired
-	PassengerService passengerService;
+	CustomerService passengerService;
 	PassengerResponse passengerResponse;
 	UpdateRequest updateRequest;
 	

@@ -12,7 +12,7 @@ import com.example.airlinereservation.utils.exceptions.LoginFailedException;
 
 import java.util.List;
 import java.util.Optional;
-public interface PassengerService {
+public interface CustomerService {
 	
 	
 	PassengerResponse registerNewCustomer(PassengerRequest passengerRequest) throws FailedRegistrationException;

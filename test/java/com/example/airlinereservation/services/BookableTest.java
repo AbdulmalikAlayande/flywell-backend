@@ -6,7 +6,7 @@ import com.example.airlinereservation.data.model.enums.PaymentMethod;
 import com.example.airlinereservation.data.model.enums.PaymentStatus;
 import com.example.airlinereservation.data.model.enums.Price;
 import com.example.airlinereservation.services.flightservice.Bookable;
-import com.example.airlinereservation.services.passengerservice.PassengerService;
+import com.example.airlinereservation.services.passengerservice.CustomerService;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ class BookableTest {
 	Payment payment;
 	PassengerRequest passengerRequest;
 	@Autowired
-	PassengerService passengerService;
+	CustomerService passengerService;
 	Flight booked;
 	@Autowired
 	Bookable bookable1;

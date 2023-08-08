@@ -33,7 +33,7 @@ import static com.example.airlinereservation.utils.appUtils.AppUtilities.*;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class PassengerServiceImplementation implements PassengerService{
+public class CustomerServiceImplementation implements PassengerService{
 	
 	Validator validator;
 	private PassengerRepository passengerRepository;
@@ -42,7 +42,7 @@ public class PassengerServiceImplementation implements PassengerService{
 	
 	
 	@Override
-	public PassengerResponse registerNewPassenger(@NotNull PassengerRequest passengerRequest) throws FailedRegistrationException {
+	public PassengerResponse registerNewCustomer(@NotNull PassengerRequest passengerRequest) throws FailedRegistrationException {
 		Field[] declaredFields = passengerRequest.getClass().getDeclaredFields();
 		PassengerResponse passengerResponse = new PassengerResponse();
 		if (userDoesNotExistBy(passengerRequest.getUserName())){
@@ -94,7 +94,7 @@ public class PassengerServiceImplementation implements PassengerService{
 	}
 	
 	@Override
-	public PassengerResponse updateDetailsOfRegisteredPassenger(@NotNull UpdateRequest updateRequest) {
+	public PassengerResponse updateDetailsOfRegisteredCustomer(@NotNull UpdateRequest updateRequest) {
 		PassengerResponse response = new PassengerResponse();
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setSkipNullEnabled(true);
@@ -194,7 +194,7 @@ public class PassengerServiceImplementation implements PassengerService{
 		return response.isEmpty();
 	}
 	
-	@Override public Optional<PassengerResponse> findPassengerById(String passengerId) {
+	@Override public Optional<PassengerResponse> findCustomerById(String passengerId) {
 		PassengerResponse response = new PassengerResponse();
 		Optional<Passenger> foundPassenger = passengerRepository.findById(passengerId);
 		return Optional.of(foundPassenger
@@ -250,7 +250,7 @@ public class PassengerServiceImplementation implements PassengerService{
 		throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, userName));
 	}
 	
-	@Override public void removePassengerBId(String passengerId) throws InvalidRequestException {
+	@Override public void removeCustomerById(String passengerId) throws InvalidRequestException {
 		Optional<Passenger> foundPassenger = passengerRepository.findById(passengerId);
 		if (foundPassenger.isEmpty())
 			throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, passengerId));
@@ -261,7 +261,7 @@ public class PassengerServiceImplementation implements PassengerService{
 		return passengerRepository.count();
 	}
 	
-	@Override public boolean removePassengerByUserName(String userName) throws InvalidRequestException {
+	@Override public boolean removeCustomerByUserName(String userName) throws InvalidRequestException {
 		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
 		Optional<Boolean> optionalBooleanIsDeleted = foundBio.map(userBioData -> {
 			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);

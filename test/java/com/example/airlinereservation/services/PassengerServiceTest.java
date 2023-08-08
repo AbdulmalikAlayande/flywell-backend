@@ -37,7 +37,7 @@ class PassengerServiceTest {
 	public void startAllTestWith() {
 		passengerService.removeAll();
 		updateRequest = new UpdateRequest();
-		passengerService.registerNewPassenger(PassengerRequest
+		passengerService.registerNewCustomer(PassengerRequest
 				        .builder().phoneNumber("567890234").firstName("Alayande")
 				        .lastName("Amirah").email("ololadeayandunni@gmail.com").userName("mirah")
 				        .password("ayandunni#$2008").build());
@@ -51,7 +51,7 @@ class PassengerServiceTest {
 	@SneakyThrows
 	@Test void testThatPassengerTriesToRegisterWithIncompleteDetails_ExceptionIsThrown(){
 		assertThatThrownBy(()->passengerService
-				.registerNewPassenger(buildIncompletePassenger()), "Incomplete Details")
+				.registerNewCustomer(buildIncompletePassenger()), "Incomplete Details")
 				.as("")
 				.isInstanceOf(FailedRegistrationException.class)
 				.hasMessageContaining("Incomplete Details");
@@ -59,9 +59,9 @@ class PassengerServiceTest {
 	
 	@SneakyThrows
 	@Test void whenPassengerTriesToRegisterTwice_RegistrationFailedExceptionIsThrown() {
-		passengerService.registerNewPassenger(buildPassenger());
+		passengerService.registerNewCustomer(buildPassenger());
 		assertThatThrownBy(() -> passengerService
-				.registerNewPassenger(buildPassenger()), "Seems Like You Already Have An Account With Us")
+				.registerNewCustomer(buildPassenger()), "Seems Like You Already Have An Account With Us")
 				.as("Seems Like You Already Have An Account With Us")
 				.isInstanceOf(FailedRegistrationException.class)
 				.hasMessageContaining("Seems Like You Already Have An Account With Us");
@@ -69,7 +69,7 @@ class PassengerServiceTest {
 	
 	@Test void testThatPassengerTriesToRegisterUsingDetailsWithIncorrectFormat_RegistrationFailedExceptionIsThrown() {
 		assertThatThrownBy(() ->passengerService
-				.registerNewPassenger(buildPassengerWithIncorrectFormatDetails()), "Invalid Email Format")
+				.registerNewCustomer(buildPassengerWithIncorrectFormatDetails()), "Invalid Email Format")
 				.as("Please enter a valid email format", "")
 				.isInstanceOf(FailedRegistrationException.class)
 				.hasMessageContaining("Please enter a valid email format");
@@ -77,7 +77,7 @@ class PassengerServiceTest {
 	
 	@SneakyThrows
 	@Test void testThatPassengerCanRegisterSuccessfully_IfAllChecksArePassed(){
-		passengerResponse = passengerService.registerNewPassenger(buildPassenger1());
+		passengerResponse = passengerService.registerNewCustomer(buildPassenger1());
 		assertThat(passengerService.getCountOfPassengers()).isNotZero();
 		assertThat(passengerService.getCountOfPassengers()).isGreaterThan(BigInteger.ZERO.intValue());
 		assertThat(passengerResponse).isNotNull();
@@ -90,7 +90,7 @@ class PassengerServiceTest {
 		updateRequest.setPhoneNumber("08056472356");
 		updateRequest.setUserName("mirah");
 		updateRequest.setNewUserName("mithra");
-		PassengerResponse updateResponse = passengerService.updateDetailsOfRegisteredPassenger(updateRequest);
+		PassengerResponse updateResponse = passengerService.updateDetailsOfRegisteredCustomer(updateRequest);
 		assertThat(updateResponse).isNotNull();
 		assertThat(updateResponse.getEmail()).isEqualTo(updateRequest.getEmail());
 		Optional<PassengerResponse> foundPassenger = passengerService.findPassengerByUserName(updateRequest.getNewUserName());
@@ -171,7 +171,7 @@ class PassengerServiceTest {
 	
 	@Test
 	void findSavedPassengerWithIdThatDoesExist_InvalidRequestExceptionIsThrown(){
-		assertThrowsExactly(RuntimeException.class, ()->passengerService.findPassengerById("892ffr0ilj84aas787t274gf7qwerty8"),
+		assertThrowsExactly(RuntimeException.class, ()->passengerService.findCustomerById("892ffr0ilj84aas787t274gf7qwerty8"),
 				"Request Failed:: Invalid Id");
 	}
 	//todo to fail
@@ -179,7 +179,7 @@ class PassengerServiceTest {
 	@Test
 	@Disabled
 	public void findSavedPassengerWithId_PassengerWithTheSaidIdIsFound(){
-		Optional<PassengerResponse> response = passengerService.findPassengerById("");
+		Optional<PassengerResponse> response = passengerService.findCustomerById("");
 		response.ifPresent(passengerResponse -> {
 			assertThat(passengerResponse).isNotNull();
 			assertThat(passengerResponse).isInstanceOf(PassengerResponse.class);
@@ -189,8 +189,8 @@ class PassengerServiceTest {
 	
 		@SneakyThrows
 	@Test void removePassengerByUserNameTest(){
-		passengerService.registerNewPassenger(buildPassenger());
-		boolean isDeleted = passengerService.removePassengerByUserName(buildPassenger().getUserName());
+		passengerService.registerNewCustomer(buildPassenger());
+		boolean isDeleted = passengerService.removeCustomerByUserName(buildPassenger().getUserName());
 		assertTrue(isDeleted);
 	}
 
@@ -208,7 +208,7 @@ class PassengerServiceTest {
 	@SneakyThrows
 	@Disabled
 	@Test void removePassengerByIdTest(){
-		passengerService.removePassengerBId(passengerResponse.getId());
+		passengerService.removeCustomerById(passengerResponse.getId());
 		assertEquals(BigInteger.TWO.intValue(), passengerService.getCountOfPassengers());
 	}
 }

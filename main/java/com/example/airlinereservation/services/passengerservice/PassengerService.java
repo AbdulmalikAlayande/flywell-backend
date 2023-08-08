@@ -15,17 +15,17 @@ import java.util.Optional;
 public interface PassengerService {
 	
 	
-	PassengerResponse registerNewPassenger(PassengerRequest passengerRequest) throws FailedRegistrationException;
-	PassengerResponse updateDetailsOfRegisteredPassenger(UpdateRequest updateRequest);
+	PassengerResponse registerNewCustomer(PassengerRequest passengerRequest) throws FailedRegistrationException;
+	PassengerResponse updateDetailsOfRegisteredCustomer(UpdateRequest updateRequest);
 	LoginResponse login(LoginRequest loginRequest) throws LoginFailedException;
-	Optional<PassengerResponse> findPassengerById(String passengerId) throws InvalidRequestException;
-	void removePassengerBId(String passengerId) throws InvalidRequestException;
+	Optional<PassengerResponse> findCustomerById(String passengerId) throws InvalidRequestException;
+	void removeCustomerById(String passengerId) throws InvalidRequestException;
 	long getCountOfPassengers();
 	List<PassengerResponse> getAllPassengers();
 	Optional<PassengerResponse> findPassengerByEmailAndPassword(String email, String password) throws InvalidRequestException;
 	
 	Optional<PassengerResponse> findPassengerByUserName(String userName) throws InvalidRequestException;
-	boolean removePassengerByUserName(String userName) throws InvalidRequestException;
+	boolean removeCustomerByUserName(String userName) throws InvalidRequestException;
 	
 	Optional<Passenger> findPassengerByUserNameForAdmin(String passengerUsername);
 	

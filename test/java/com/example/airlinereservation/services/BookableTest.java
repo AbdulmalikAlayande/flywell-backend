@@ -101,7 +101,7 @@ class BookableTest {
 	}
 	@SneakyThrows
 	@Test void testThatPassengerCanBookFlight_AndSeatsWillBeAssignedToThePassenger(){
-		passengerService.registerNewPassenger(buildPassenger());
+		passengerService.registerNewCustomer(buildPassenger());
 		bookingRequest.setBookingCategory(3);
 		bookingRequest.setPassengerUsername(buildPassenger().getUserName());
 		booked = bookable.bookFlight(bookingRequest);
@@ -110,8 +110,8 @@ class BookableTest {
 	
 	@SneakyThrows
 	@Test void testThatAFlightHasToBeFullyBookedBeforeAnother(){
-		passengerService.registerNewPassenger(buildPassenger());
-		passengerService.registerNewPassenger(buildPassenger1());
+		passengerService.registerNewCustomer(buildPassenger());
+		passengerService.registerNewCustomer(buildPassenger1());
 		
 		Flight bookedFlight = bookable.bookFlight(getBookingRequest1());
 		Flight bookedFlight2 = bookable.bookFlight(getBookingRequest2());

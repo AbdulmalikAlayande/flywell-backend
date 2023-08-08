@@ -32,7 +32,7 @@ public class FlightFormServiceTest {
 				                   .password("ayanniyi@20")
 				                   .phoneNumber("07036174617")
 				                   .build();
-		passengerService.registerNewPassenger(passengerRequest);
+		passengerService.registerNewCustomer(passengerRequest);
 		bookingRequest = BookingRequest.builder()
 				                .bookingCategory(1)
 				                .passengerUsername("dende")

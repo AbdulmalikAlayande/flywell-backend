@@ -190,7 +190,7 @@ public class CustomerServiceImplementation implements PassengerService{
 	}
 	
 	private boolean userDoesNotExistBy(String email, String password) {
-		Optional<PassengerResponse> response = findPassengerByEmailAndPassword(email, password);
+		Optional<PassengerResponse> response = findCustomerByEmailAndPassword(email, password);
 		return response.isEmpty();
 	}
 	
@@ -212,7 +212,7 @@ public class CustomerServiceImplementation implements PassengerService{
 	}
 	
 	@Override
-	public List<PassengerResponse> getAllPassengers() {
+	public List<PassengerResponse> getAllCustomers() {
 		List<PassengerResponse> responses = new ArrayList<>();
 		List<Passenger> allPassengers = passengerRepository.findAll();
 		allPassengers.forEach(passenger -> {
@@ -223,7 +223,7 @@ public class CustomerServiceImplementation implements PassengerService{
 		return responses;
 	}
 	
-	@Override public Optional<PassengerResponse> findPassengerByEmailAndPassword(String email, String password) {
+	@Override public Optional<PassengerResponse> findCustomerByEmailAndPassword(String email, String password) {
 		Optional<UserBioData> foundBio = userBioDataRepository.findByEmailAndPassword(email, password);
 		PassengerResponse response = new PassengerResponse();
 		foundBio.ifPresent(bioData -> {
@@ -233,7 +233,7 @@ public class CustomerServiceImplementation implements PassengerService{
 		return Optional.of(response);
 	}
 	
-	@Override public Optional<PassengerResponse> findPassengerByUserName(String userName) throws InvalidRequestException {
+	@Override public Optional<PassengerResponse> findCustomerByUserName(String userName) throws InvalidRequestException {
 		PassengerResponse passengerResponse = new PassengerResponse();
 		AtomicReference<PassengerResponse> response = new AtomicReference<>();
 		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
@@ -257,7 +257,7 @@ public class CustomerServiceImplementation implements PassengerService{
 		passengerRepository.deleteById(passengerId);
 	}
 	
-	@Override public long getCountOfPassengers() {
+	@Override public long getCountOfCustomers() {
 		return passengerRepository.count();
 	}
 	

@@ -78,8 +78,8 @@ class PassengerServiceTest {
 	@SneakyThrows
 	@Test void testThatPassengerCanRegisterSuccessfully_IfAllChecksArePassed(){
 		passengerResponse = passengerService.registerNewCustomer(buildPassenger1());
-		assertThat(passengerService.getCountOfPassengers()).isNotZero();
-		assertThat(passengerService.getCountOfPassengers()).isGreaterThan(BigInteger.ZERO.intValue());
+		assertThat(passengerService.getCountOfCustomers()).isNotZero();
+		assertThat(passengerService.getCountOfCustomers()).isGreaterThan(BigInteger.ZERO.intValue());
 		assertThat(passengerResponse).isNotNull();
 	}
 	
@@ -93,7 +93,7 @@ class PassengerServiceTest {
 		PassengerResponse updateResponse = passengerService.updateDetailsOfRegisteredCustomer(updateRequest);
 		assertThat(updateResponse).isNotNull();
 		assertThat(updateResponse.getEmail()).isEqualTo(updateRequest.getEmail());
-		Optional<PassengerResponse> foundPassenger = passengerService.findPassengerByUserName(updateRequest.getNewUserName());
+		Optional<PassengerResponse> foundPassenger = passengerService.findCustomerByUserName(updateRequest.getNewUserName());
 		assertThat(foundPassenger.isPresent()).isTrue();
 		foundPassenger.ifPresent(passenger->{
 			assertThat(passenger.getUserName()).isEqualTo(updateRequest.getNewUserName());
@@ -121,13 +121,13 @@ class PassengerServiceTest {
 	}
 	@SneakyThrows
 	@Test void findSavedPassengerWithAUsernameThatDoesNotExist_InvalidRequestExceptionIsThrown(){
-		assertThrowsExactly(InvalidRequestException.class, ()->passengerService.findPassengerByUserName("mithra"),
+		assertThrowsExactly(InvalidRequestException.class, ()->passengerService.findCustomerByUserName("mithra"),
 				"Request Failed:: Invalid Username");
 	}
 		
 	@SneakyThrows
 	@Test void findSavedPassengerWithUsername_PassengerWithTheSaidUsernameIsFound(){
-		Optional<PassengerResponse> response = passengerService.findPassengerByUserName("mirah");
+		Optional<PassengerResponse> response = passengerService.findCustomerByUserName("mirah");
 		assertThat(response.isPresent()).isTrue();
 		response.ifPresent(passengerResponse -> {
 			assertThat(passengerResponse).isNotNull();
@@ -196,20 +196,20 @@ class PassengerServiceTest {
 
 	@SneakyThrows
 	@Test void getAllPassengersTest(){
-		List<PassengerResponse> allPassengersPresent = passengerService.getAllPassengers();
+		List<PassengerResponse> allPassengersPresent = passengerService.getAllCustomers();
 		allPassengersPresent.forEach(passengerResponse->{
 			assertThat(passengerResponse).isNotNull();
 			assertThat(passengerResponse.getUserName()).isNotNull();
 			assertThat(passengerResponse.getUserName()).isNotEmpty();
 		});
-		assertThat(allPassengersPresent.size()).isEqualTo(passengerService.getCountOfPassengers());
+		assertThat(allPassengersPresent.size()).isEqualTo(passengerService.getCountOfCustomers());
 	}
 	
 	@SneakyThrows
 	@Disabled
 	@Test void removePassengerByIdTest(){
 		passengerService.removeCustomerById(passengerResponse.getId());
-		assertEquals(BigInteger.TWO.intValue(), passengerService.getCountOfPassengers());
+		assertEquals(BigInteger.TWO.intValue(), passengerService.getCountOfCustomers());
 	}
 }
 

@@ -146,7 +146,7 @@ public class BolaAirFlightService implements Bookable {
 	
 	@SneakyThrows
 	private boolean nameIsValid(BookingRequest bookingRequest){
-		Optional<PassengerResponse> passengerResponse = passengerService.findPassengerByUserName(bookingRequest.getPassengerUsername());
+		Optional<PassengerResponse> passengerResponse = passengerService.findCustomerByUserName(bookingRequest.getPassengerUsername());
 		return passengerResponse.isPresent();
 	}
 	

@@ -23,7 +23,6 @@ public class Flight {
 	@NotBlank
 	private String Airline;
 	private String flightNumber;
-	@Enumerated(EnumType.STRING)
 	@Column(name = "from_where")
 	private Destinations fromWhere;
 	@Enumerated(EnumType.STRING)

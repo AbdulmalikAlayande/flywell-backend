@@ -12,8 +12,11 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Map;
+
 @Slf4j
 public class Mailer {
+	String ritch = System.getenv("Richards");
 	static String DOMAIN_NAME = System.getenv("MAIL_GUN_DOMAIN_NAME");
 	static String PRIVATE_API_KEY = System.getenv("MAIL_GUN_PRIVATE_API_KEY");
 // ...
@@ -55,7 +58,7 @@ public class Mailer {
 	
 	public static void main(String[] args) {
 		Mailer mailer = new Mailer();
-		
+
 //		AddressValidationResponse validationResponse = mailer.validateEmail();
 //		log.info("Email Validated Successfully");
 //		System.out.println("Result is: "+validationResponse.getResult());

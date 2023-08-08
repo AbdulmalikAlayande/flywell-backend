@@ -23,4 +23,14 @@ class AdminServiceTest {
 	@Test void testThatAdminTriesToCreateAccountTwiceInvalidRequestExceptionIsThrown(){
 	
 	}
+	
+	@Test void testThatEmailIsSentToAdminWhenAdminHasBeenCreated(){
+	
+	}
+	
+	@Test void testThatAdminCanBeInvitedToOurApplication(){
+	
+	}
+	
+//	@Test void testThat
 }

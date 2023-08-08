@@ -6,7 +6,7 @@ import javax.validation.constraints.Pattern;
 import java.lang.annotation.*;
 
 @Constraint(validatedBy = ValidEmailDomain.class)
-@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
 @Documented

@@ -16,6 +16,10 @@ class AdminServiceTest {
 	void tearDown() {
 	}
 	
+	@Test void testThatAdminCanBeInvitedToOurApplication(){
+	
+	}
+	
 	@Test void createAdminTest(){
 	
 	}
@@ -25,10 +29,6 @@ class AdminServiceTest {
 	}
 	
 	@Test void testThatEmailIsSentToAdminWhenAdminHasBeenCreated(){
-	
-	}
-	
-	@Test void testThatAdminCanBeInvitedToOurApplication(){
 	
 	}
 	

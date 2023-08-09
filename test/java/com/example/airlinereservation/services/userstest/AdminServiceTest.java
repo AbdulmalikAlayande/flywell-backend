@@ -1,8 +1,11 @@
-package com.example.airlinereservation.services.userservice;
 
+package com.example.airlinereservation.services.userstest;
+
+import com.example.airlinereservation.dtos.Request.AdminInvitationRequest;
 import com.example.airlinereservation.dtos.Request.CreateAdminRequest;
+import com.example.airlinereservation.dtos.Response.AdminInvitationResponse;
 import com.example.airlinereservation.dtos.Response.CreateAdminResponse;
-import com.example.airlinereservation.services.adminServices.AdminService;
+import com.example.airlinereservation.services.userservice.AdminService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +17,8 @@ class AdminServiceTest {
 
 	@Autowired
 	private AdminService adminService;
-	private CreateAdminRequest createAdminRequest;
-	private CreateAdminResponse createAdminResponse;
+	CreateAdminRequest createAdminRequest;
+	CreateAdminResponse createAdminResponse;
 	
 	@BeforeEach
 	void setUp() {
@@ -26,7 +29,9 @@ class AdminServiceTest {
 	}
 	
 	@Test void testThatAdminCanBeInvitedToOurApplication(){
-	
+		AdminInvitationRequest invitationRequest = new AdminInvitationRequest();
+		AdminInvitationResponse response = adminService.inviteAdmin(invitationRequest);
+		
 	}
 	
 	@Test void createAdminTest(){

@@ -1,6 +1,5 @@
 package com.example.airlinereservation.dtos.Request;
 
-import com.example.airlinereservation.data.model.UserBioData;
 import lombok.*;
 
 @Builder
@@ -9,7 +8,6 @@ import lombok.*;
 @Getter
 @Setter
 
-public class CreateAdminRequest  {
-    private String  email;
-
+public class CreateAdminRequest {
+	
 }

@@ -8,7 +8,7 @@ import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
 import com.example.airlinereservation.dtos.Response.CustomerResponse;
 import com.example.airlinereservation.services.categories.*;
-import com.example.airlinereservation.services.passengerservice.CustomerService;
+import com.example.airlinereservation.services.userservice.CustomerService;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;

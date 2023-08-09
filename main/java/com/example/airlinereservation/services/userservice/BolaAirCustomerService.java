@@ -1,4 +1,4 @@
-package com.example.airlinereservation.services.passengerservice;
+package com.example.airlinereservation.services.userservice;
 
 import com.example.airlinereservation.data.model.Passenger;
 import com.example.airlinereservation.data.model.UserBioData;

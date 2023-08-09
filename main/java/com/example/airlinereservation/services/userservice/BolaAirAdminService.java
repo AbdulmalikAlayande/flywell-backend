@@ -1,4 +1,13 @@
-package com.example.airlinereservation.services.passengerservice;
+package com.example.airlinereservation.services.userservice;
 
-public class BolaAirAdminService {
+import com.example.airlinereservation.dtos.Request.CreateAdminRequest;
+import com.example.airlinereservation.dtos.Response.CreateAdminResponse;
+
+public class BolaAirAdminService implements AdminService{
+
+    @Override
+    public CreateAdminResponse createAdmin(CreateAdminRequest createAdminRequest) {
+        return null;
+    }
+
 }

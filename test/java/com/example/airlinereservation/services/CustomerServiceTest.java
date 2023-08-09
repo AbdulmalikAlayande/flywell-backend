@@ -6,7 +6,7 @@ import com.example.airlinereservation.dtos.Request.CustomerRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.LoginResponse;
 import com.example.airlinereservation.dtos.Response.CustomerResponse;
-import com.example.airlinereservation.services.passengerservice.CustomerService;
+import com.example.airlinereservation.services.userservice.CustomerService;
 import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import com.example.airlinereservation.utils.exceptions.LoginFailedException;

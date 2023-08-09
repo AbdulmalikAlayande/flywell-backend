@@ -1,16 +1,11 @@
-package com.example.airlinereservation.services.adminServices;
+package com.example.airlinereservation.services.userservice;
 
 import com.example.airlinereservation.dtos.Request.CreateAdminRequest;
 import com.example.airlinereservation.dtos.Response.CreateAdminResponse;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@NoArgsConstructor
-@AllArgsConstructor
-
-public class BolaAdminService implements AdminService{
+public class BolaAirAdminService implements AdminService{
 	
 	@Override
 	public CreateAdminResponse createAdmin(CreateAdminRequest createAdminRequest) {

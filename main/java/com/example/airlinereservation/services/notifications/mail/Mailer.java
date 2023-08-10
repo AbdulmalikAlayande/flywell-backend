@@ -5,6 +5,7 @@ import com.example.airlinereservation.data.model.notifications.Notification;
 import com.example.airlinereservation.dtos.Request.NotificationRequest;
 import com.example.airlinereservation.dtos.Response.NotificationResponse;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.io.Resource;
@@ -45,6 +46,28 @@ public class Mailer implements MailService{
 	
 	@Override
 	public ResponseEntity<NotificationResponse> sendReservationConfirmationEmail(NotificationRequest notificationRequest) {
+		return null;
+	}
+	
+	
+	public String loadTemplateContent(Resource templateResource){
+		Formatter formatter = new Formatter();
+			try {
+				InputStream inputStream = templateResource.getInputStream();
+				ByteArrayOutputStream result = new ByteArrayOutputStream();
+				byte[] buffer = new byte[1024];
+				int length;
+				while ((length = inputStream.read(buffer)) != -1) {
+					result.write(buffer, 0, length);
+				}
+				return result.toString(StandardCharsets.UTF_8);
+			} catch (IOException exception) {
+				log.error(TEMPLATE_LOAD_FAILED, exception);
+				return formatter.format("%s%s", TEMPLATE_LOAD_FAILED, exception.getMessage()).toString();
+			}
+	}
+	@Override
+	public ResponseEntity<NotificationResponse> sendAccountActivationEmail(NotificationRequest notificationRequest) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("api-key", brevoApiKey);
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -73,28 +96,6 @@ public class Mailer implements MailService{
 			log.info(MESSAGE_SUCCESSFULLY_SENT);
 		else log.error(MESSAGE_FAILED_TO_SEND);
 		return response;
-	}
-	
-	
-	public String loadTemplateContent(Resource templateResource){
-		Formatter formatter = new Formatter();
-			try {
-				InputStream inputStream = templateResource.getInputStream();
-				ByteArrayOutputStream result = new ByteArrayOutputStream();
-				byte[] buffer = new byte[1024];
-				int length;
-				while ((length = inputStream.read(buffer)) != -1) {
-					result.write(buffer, 0, length);
-				}
-				return result.toString(StandardCharsets.UTF_8);
-			} catch (IOException exception) {
-				log.error(TEMPLATE_LOAD_FAILED, exception);
-				return formatter.format("%s%s", TEMPLATE_LOAD_FAILED, exception.getMessage()).toString();
-			}
-	}
-	@Override
-	public ResponseEntity<NotificationResponse> sendAccountActivationEmail(NotificationRequest notificationRequest) {
-		return null;
 	}
 	
 	@Override

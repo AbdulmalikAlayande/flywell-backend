@@ -35,10 +35,4 @@ public class EmailValidationConfig {
 		return new FieldValidator();
 	}
 
-	@Bean
-	public MailgunMessagesApi mailgunMessagesApi() {
-		return MailgunClient.config(PRIVATE_API_KEY)
-				       .createApi(MailgunMessagesApi.class);
-	}
-
 }

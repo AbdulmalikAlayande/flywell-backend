@@ -4,6 +4,7 @@ import com.example.airlinereservation.data.model.notifications.Email;
 import com.example.airlinereservation.data.model.notifications.Notification;
 import com.example.airlinereservation.dtos.Request.NotificationRequest;
 import com.example.airlinereservation.dtos.Response.NotificationResponse;
+import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.TemplateEngine;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,12 +51,14 @@ public class Mailer implements MailService{
 	}
 	
 	@Override
-	public ResponseEntity<NotificationResponse> sendAccountActivationEmail(NotificationRequest notificationRequest) {
+	public ResponseEntity<NotificationResponse> sendAccountActivationEmail(NotificationRequest notificationRequest) throws IOException, InvalidRequestException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("api-key", brevoApiKey);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
 		Resource foundTemplateResource = resourceLoader.getResource(ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL);
+		System.out.println(foundTemplateResource);
+		System.out.println(foundTemplateResource.getInputStream());
 		String templateContent = loadTemplateContent(foundTemplateResource);
 		
 		Notification notification = new Email();

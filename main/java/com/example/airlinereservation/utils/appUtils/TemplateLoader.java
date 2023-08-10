@@ -1,5 +1,6 @@
 package com.example.airlinereservation.utils.appUtils;
 
+import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 
@@ -14,20 +15,20 @@ import static com.example.airlinereservation.utils.appUtils.Constants.TEMPLATE_L
 @Slf4j
 public class TemplateLoader {
 	
-	public static String loadTemplateContent(Resource templateResource){
+	public static String loadTemplateContent(Resource templateResource) throws InvalidRequestException {
 		Formatter formatter = new Formatter();
+		ByteArrayOutputStream result = new ByteArrayOutputStream();
 		try {
 			InputStream inputStream = templateResource.getInputStream();
-			ByteArrayOutputStream result = new ByteArrayOutputStream();
 			byte[] buffer = new byte[1024];
 			int length;
 			while ((length = inputStream.read(buffer)) != -1) {
 				result.write(buffer, 0, length);
 			}
-			return result.toString(StandardCharsets.UTF_8);
 		} catch (IOException exception) {
 			log.error(TEMPLATE_LOAD_FAILED, exception);
-			return formatter.format("%s%s", TEMPLATE_LOAD_FAILED, exception.getMessage()).toString();
+			throw new InvalidRequestException(TEMPLATE_LOAD_FAILED, exception);
 		}
+		return result.toString(StandardCharsets.UTF_8);
 	}
 }

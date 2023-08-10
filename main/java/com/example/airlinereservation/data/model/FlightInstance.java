@@ -29,7 +29,7 @@ public class FlightInstance {
 	private int baggageAllowance;
 	@Transient
 	private AirCraft airCraft;
-	@OneToMany
+	@OneToMany()
 	private List<FlightSeat> flightSeat;
-
+	// TODO: 8/10/2023  
 }

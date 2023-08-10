@@ -83,9 +83,10 @@ class AdminServiceTest {
 	@Test void testFindAdminByUsername_AdminIsFound(){
 		adminService.createAdmin(buildAdmin());
 		Optional<UserBioData> foundAdmin = adminService.findByUsername(buildAdmin().getUserName());
-		assertThat(foundAdmin.get().getUserName()).isEqualTo(buildAdmin().getUserName());
-		System.out.println("****" + foundAdmin);
-
+		assertThat(foundAdmin.isPresent()).isTrue();
+		foundAdmin.ifPresent(admin->{
+			assertThat(admin.getUserName()).isEqualTo(buildAdmin().getUserName());
+		});
 
 	
 	}

@@ -12,6 +12,8 @@ import com.example.airlinereservation.dtos.Response.CreateAdminResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class BolaAirAdminService implements AdminService{
@@ -55,4 +57,11 @@ public class BolaAirAdminService implements AdminService{
     public AdminInvitationResponse inviteAdmin(AdminInvitationRequest invitationRequest) {
         return null;
     }
+
+    @Override
+    public Optional<UserBioData> findByUsername(String userName) {
+        return bioDataRepository.findByUserName(userName);
+    }
+
+
 }

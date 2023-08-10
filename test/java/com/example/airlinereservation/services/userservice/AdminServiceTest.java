@@ -7,14 +7,16 @@ import com.example.airlinereservation.dtos.Request.AdminInvitationRequest;
 import com.example.airlinereservation.dtos.Request.CreateAdminRequest;
 import com.example.airlinereservation.dtos.Response.AdminInvitationResponse;
 import com.example.airlinereservation.dtos.Response.CreateAdminResponse;
-import com.example.airlinereservation.services.userservice.AdminService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class AdminServiceTest {
@@ -39,8 +41,14 @@ class AdminServiceTest {
 	}
 	
 	@Test void createAdminTest(){
-		Admin admin = new Admin();
-		CreateAdminRequest adminRequest = CreateAdminRequest.builder()
+		CreateAdminResponse adminResponse = adminService.createAdmin(buildAdmin());
+		assertThat(adminResponse.getMessage()).isEqualTo("Admin created successfully");
+	}
+
+
+
+	public static CreateAdminRequest buildAdmin(){
+        return CreateAdminRequest.builder()
 				.country("Nigeria")
 				.email("rich@gmail.com")
 				.state("Lagos")
@@ -54,8 +62,6 @@ class AdminServiceTest {
 				.streetNumber("No 2")
 				.userName("Farooq")
 				.build();
-		CreateAdminResponse adminResponse = adminService.createAdmin(adminRequest);
-		assertThat(adminResponse.getMessage()).isEqualTo("Admin created successfully");
 	}
 	
 	@Test void testThatAdminTriesToCreateAccountTwiceInvalidRequestExceptionIsThrown(){
@@ -75,6 +81,12 @@ class AdminServiceTest {
 	}
 	
 	@Test void testFindAdminByUsername_AdminIsFound(){
+		adminService.createAdmin(buildAdmin());
+		Optional<UserBioData> foundAdmin = adminService.findByUsername(buildAdmin().getUserName());
+		assertThat(foundAdmin.get().getUserName()).isEqualTo(buildAdmin().getUserName());
+		System.out.println("****" + foundAdmin);
+
+
 	
 	}
 	

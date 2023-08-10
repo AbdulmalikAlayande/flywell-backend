@@ -24,7 +24,6 @@ public class MailServiceTest {
 		notificationRequest.setUsername("Zee");
 	}
 	
-	
 	@SneakyThrows
 	@Test void sendEmailTest(){
 	

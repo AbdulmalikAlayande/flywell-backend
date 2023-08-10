@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.TemplateEngine;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +28,6 @@ import static com.example.airlinereservation.utils.appUtils.TemplateLoader.loadT
 @Service
 @AllArgsConstructor
 public class Mailer implements MailService{
-	
 	private final String brevoApiKey;
 	private final ResourceLoader resourceLoader;
 	private final RestTemplate restTemplate;
@@ -62,14 +60,14 @@ public class Mailer implements MailService{
 		
 		Notification notification = new Email();
 		modelMapper.map(notificationRequest, notification);
-		notification.setMailSender(Sender.builder().senderEmail("noreply@gmail.com").build());
+		notification.setMailSender(Sender.builder().senderEmail(SENDER_EMAIL).build());
 		List<Notification> notifications = new ArrayList<>();
 		notification.setContent(templateContent);
 		notifications.add(notification);
 		
 		Map<String, Object> requestBody = new HashMap<>();
-		requestBody.put("user", notifications);
-		requestBody.put("template_id", BREVO_MAIL_TEMPLATE_ID);
+		requestBody.put(USER, notifications);
+		requestBody.put(TEMPLATE_ID, BREVO_MAIL_TEMPLATE_ID);
 		
 		HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 		ResponseEntity<NotificationResponse> response = restTemplate.exchange(

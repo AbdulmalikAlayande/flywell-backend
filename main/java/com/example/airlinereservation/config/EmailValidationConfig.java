@@ -34,7 +34,6 @@ public class EmailValidationConfig {
 	public Validator getValidator(){
 		return new FieldValidator();
 	}
-	
 	@Bean
 	public EmailValidationConfig validationConfig(){
 		return new EmailValidationConfig();

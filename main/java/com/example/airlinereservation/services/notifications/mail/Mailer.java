@@ -5,7 +5,6 @@ import com.example.airlinereservation.data.model.notifications.Notification;
 import com.example.airlinereservation.dtos.Request.NotificationRequest;
 import com.example.airlinereservation.dtos.Response.NotificationResponse;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.io.Resource;
@@ -15,11 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.TemplateEngine;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.example.airlinereservation.utils.appUtils.Constants.*;
 import static com.example.airlinereservation.utils.appUtils.TemplateLoader.loadTemplateContent;

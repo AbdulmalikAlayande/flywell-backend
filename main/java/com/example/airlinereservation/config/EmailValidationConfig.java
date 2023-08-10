@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.client.RestTemplate;
-import org.thymeleaf.TemplateEngine;
 
 
 @Configuration
@@ -42,11 +41,6 @@ public class EmailValidationConfig {
 	@Bean
 	public String brevoApiKey(){
 		return PRIVATE_API_KEY;
-	}
-	
-	@Bean
-	public TemplateEngine templateEngine(){
-		return new TemplateEngine();
 	}
 	
 	@Bean

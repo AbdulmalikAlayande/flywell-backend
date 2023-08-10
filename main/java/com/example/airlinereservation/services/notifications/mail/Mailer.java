@@ -73,10 +73,8 @@ public class Mailer implements MailService{
 		
 		HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 		ResponseEntity<NotificationResponse> response = restTemplate.exchange(
-				BREVO_SEND_EMAIL_API_URL,
-				HttpMethod.POST,
-				requestEntity,
-				NotificationResponse.class
+				BREVO_SEND_EMAIL_API_URL, HttpMethod.POST,
+				requestEntity, NotificationResponse.class
 		);
 		if (response.getStatusCode().is2xxSuccessful())
 			log.info(MESSAGE_SUCCESSFULLY_SENT);

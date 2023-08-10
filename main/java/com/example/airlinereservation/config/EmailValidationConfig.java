@@ -48,8 +48,4 @@ public class EmailValidationConfig {
 		return new RestTemplate();
 	}
 	
-	@Bean
-	public ResourceLoader resourceLoader(){
-		return new DefaultResourceLoader();
-	}
 }

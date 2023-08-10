@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.example.airlinereservation.utils.appUtils.AppUtilities.INVALID_DESTINATION;
+import static com.example.airlinereservation.utils.appUtils.Constants.INVALID_DESTINATION;
 
 
 @Service

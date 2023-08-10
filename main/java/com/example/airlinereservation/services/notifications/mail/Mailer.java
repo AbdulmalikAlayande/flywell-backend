@@ -1,72 +1,106 @@
 package com.example.airlinereservation.services.notifications.mail;
-//import com.mailgun.api.v3.MailgunMessagesApi;
-//import com.mailgun.client.MailgunClient;
-//import com.mailgun.model.message.Message;
-//import com.mailgun.model.message.MessageResponse;
-//import com.mashape.unirest.http.HttpResponse;
-//import com.mailgun.api.v4.MailgunEmailVerificationApi;
-//import com.mailgun.model.verification.AddressValidationResponse;
 
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import com.example.airlinereservation.data.model.notifications.Email;
+import com.example.airlinereservation.data.model.notifications.Notification;
+import com.example.airlinereservation.dtos.Request.NotificationRequest;
+import com.example.airlinereservation.dtos.Response.NotificationResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.thymeleaf.TemplateEngine;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@Slf4j
-public class Mailer {
-	String ritch = System.getenv("Richards");
-	static String DOMAIN_NAME = System.getenv("MAIL_GUN_DOMAIN_NAME");
-	static String PRIVATE_API_KEY = System.getenv("MAIL_GUN_PRIVATE_API_KEY");
-// ...
-//	public AddressValidationResponse validateEmail() {
-//		MailgunEmailVerificationApi mailgunEmailVerificationApi = MailgunClient.config(PRIVATE_API_KEY)
-//				                                                          .createApi(MailgunEmailVerificationApi.class);
-//
-//		return mailgunEmailVerificationApi.validateAddress("foo@mailgun.com");
-//	}
-//
-//	public MailgunMessagesApi mailgunMessagesApi() {
-//		return MailgunClient.config(PRIVATE_API_KEY)
-//				       .createApi(MailgunMessagesApi.class);
-//	}
-//	public static JsonNode sendSimpleMessage() throws UnirestException {
-//		HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/" + DOMAIN_NAME  + "/messages")
-//		.basicAuth("api", PRIVATE_API_KEY)
-//				 .queryString("from", "Excited User <USER@YOURDOMAIN.COM>")
-//				 .queryString("to", "farindebabajide@gmail.com")
-//				 .queryString("subject", "hello")
-//				 .queryString("text", "testing")
-//				 .asJson();
-//		return request.getBody();
-//	}
-//
-//	public MessageResponse sendMessage() {
-//		MailgunMessagesApi mailgunMessagesApi = MailgunClient.config(PRIVATE_API_KEY)
-//				                                        .createApi(MailgunMessagesApi.class);
-//
-//		Message message = Message.builder()
-//				                  .from("alaabdulmalik03@gmail.com")
-//				                  .to("farindebabajide@gmail.com")
-//				                  .subject("Hello")
-//				                  .text("Testing out some Mailgun awesomeness!")
-//				                  .build();
-//
-//		return mailgunMessagesApi.sendMessage(DOMAIN_NAME, message);
-//	}
-	
-	public static void main(String[] args) {
-		Mailer mailer = new Mailer();
+import static com.example.airlinereservation.utils.appUtils.Constants.*;
 
-//		AddressValidationResponse validationResponse = mailer.validateEmail();
-//		log.info("Email Validated Successfully");
-//		System.out.println("Result is: "+validationResponse.getResult());
-//		System.out.println("Response is: "+validationResponse.getAddress());
+@Slf4j
+@Service
+@AllArgsConstructor
+public class Mailer implements MailService{
+	
+	private final String brevoApiKey;
+	private final ResourceLoader resourceLoader;
+	private final RestTemplate restTemplate;
+	private final TemplateEngine templateEngine;
+	private final ModelMapper modelMapper;
+	
+	@Override
+	public ResponseEntity<NotificationResponse> importContacts(NotificationRequest notificationRequest) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Content-Type", "application/json");
+		headers.set("api-key", brevoApiKey);
 		
-//		MessageResponse response = mailer.sendMessage();
-//		log.info("Email Sent Successfully");
-//		System.out.println(response.getMessage());
+		HttpEntity<NotificationRequest> request = new HttpEntity<>(notificationRequest, headers);
+		return restTemplate.postForEntity(BREVO_CONTACTS_IMPORT_URL, request, NotificationResponse.class);
+	}
+	
+	@Override
+	public ResponseEntity<NotificationResponse> sendReservationConfirmationEmail(NotificationRequest notificationRequest) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("api-key", brevoApiKey);
+		headers.setContentType(MediaType.APPLICATION_JSON);
 		
+		Resource foundTemplateResource = resourceLoader.getResource(ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL);
+		String templateContent = loadTemplateContent(foundTemplateResource);
+		
+		Notification notification = new Email();
+		modelMapper.map(notificationRequest, notification);
+		List<Notification> notifications = new ArrayList<>();
+		notification.setContent(templateContent);
+		notifications.add(notification);
+		
+		Map<String, Object> requestBody = new HashMap<>();
+		requestBody.put("user", notifications);
+		requestBody.put("template_id", BREVO_MAIL_TEMPLATE_ID);
+		
+		HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+		ResponseEntity<NotificationResponse> response = restTemplate.exchange(
+				BREVO_SEND_EMAIL_API_URL,
+				HttpMethod.POST,
+				requestEntity,
+				NotificationResponse.class
+		);
+		if (response.getStatusCode().is2xxSuccessful())
+			log.info("Email sent successfully");
+		else log.error("Failed to send email");
+		return response;
+	}
+	
+	
+	public String loadTemplateContent(Resource templateResource){
+			try {
+				InputStream inputStream = templateResource.getInputStream();
+				ByteArrayOutputStream result = new ByteArrayOutputStream();
+				byte[] buffer = new byte[1024];
+				int length;
+				while ((length = inputStream.read(buffer)) != -1) {
+					result.write(buffer, 0, length);
+				}
+				return result.toString(StandardCharsets.UTF_8);
+			} catch (IOException exception) {
+				log.error("Error loading template content", exception);
+				return String.format("%s%s", TEMPLATE_LOAD_FAILED, exception.getMessage());
+			}
+	}
+	@Override
+	public ResponseEntity<NotificationResponse> sendAccountActivationEmail(NotificationRequest notificationRequest) {
+		return null;
+	}
+	
+	@Override
+	public ResponseEntity<NotificationResponse> sendFlightFormAsPdf(NotificationRequest notificationRequest) {
+		return null;
 	}
 }

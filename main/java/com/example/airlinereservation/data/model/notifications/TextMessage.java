@@ -1,11 +1,11 @@
 package com.example.airlinereservation.data.model.notifications;
 
 import com.example.airlinereservation.data.model.persons.Customer;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
@@ -19,4 +19,7 @@ public non-sealed class TextMessage extends Notification{
 	private String phoneNumber;
 //	@ManyToOne(cascade = CascadeType.DETACH)
 	private Customer person;
+	private LocalDateTime createdOn;
+	private String content;
+	private MultipartFile file;
 }

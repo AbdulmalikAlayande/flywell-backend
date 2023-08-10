@@ -1,10 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .inner-div{
+            width: 50em;
+            height: 40em;
+            border-width: 1px;
+            border-color: black;
+            border-style: solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        button{
+
+        }
+        .activation button{
+            height: 40px;
+            width: 60px;
+            border-radius: 22%;
+            background-color: antiquewhite;
+            color: black;
+        }
+        .activation button:hover{
+            height: 40px;
+            width: 60px;
+            border-radius: 22%;
+            background-color: antiquewhite;
+            color: black
+        }
+
+        h1{
+
+        }
+
+
+    </style>
 </head>
 <body>
-
+<div class="inner-div">
+    <h1>
+        Activate Your Account
+    </h1>
+    <div>
+        <p th:text="'Hi ' + ${username} + ', Welcome To Bola-Air, We Are Very Pleased To Have You'">
+        </p>
+    </div>
+    <div class="activation">
+        <a th:href="@{https://localhost:8080/}">
+            <button>Activate</button>
+        </a>
+    </div>
+    <div class="social_media_handle_div">
+        <a th:href="@{https://www.instagram.com/blaq_mhee/}">
+            <button>
+                <img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1691485113/cloudinary%20images/assets/IMG-20230808-WA0014_bbqfku.jpg"
+                     alt="instagram image">
+            </button>
+        </a>
+        <a th:href="@{https://www.facebook.com/abdulmalik.alayande.39}">
+            <button>
+                <img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1691485113/cloudinary%20images/assets/IMG-20230808-WA0012_ypxwv9.jpg"
+                     alt="facebook image">
+            </button>
+        </a>
+        <a th:href="@{https://twitter.com/The_good_man02}">
+            <button>
+                <img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1691485113/cloudinary%20images/assets/IMG-20230808-WA0011_b0jlmn.jpg"
+                     alt="twitter image">
+            </button>
+        </a>
+        <a th:href="@{https://www.linkedin.com/in/abdulmalik-alayande-b49814250/}">
+            <button>
+                <img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1691485113/cloudinary%20images/assets/IMG-20230808-WA0013_caer1p.jpg"
+                     alt="linkedIn image">
+            </button>
+        </a>
+    </div>
+</div>
 </body>
 </html>

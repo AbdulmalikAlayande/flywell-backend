@@ -2,7 +2,7 @@ package com.example.airlinereservation.services.userservice;
 
 import com.example.airlinereservation.data.model.Passenger;
 import com.example.airlinereservation.data.model.UserBioData;
-import com.example.airlinereservation.data.repositories.PassengerRepository;
+import com.example.airlinereservation.data.repositories.CustomerRepository;
 import com.example.airlinereservation.data.repositories.UserBioDataRepository;
 import com.example.airlinereservation.dtos.Request.LoginRequest;
 import com.example.airlinereservation.dtos.Request.CustomerRequest;
@@ -10,7 +10,7 @@ import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.LoginResponse;
 import com.example.airlinereservation.dtos.Response.CustomerResponse;
 import com.example.airlinereservation.utils.appUtils.TokenGenerator;
-import com.example.airlinereservation.utils.appUtils.Validator;
+import com.example.airlinereservation.services.notifications.Validator;
 import com.example.airlinereservation.utils.exceptions.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static com.example.airlinereservation.utils.Exceptions.throwFailedRegistrationException;
 import static com.example.airlinereservation.utils.Exceptions.throwInvalidRequestException;
-import static com.example.airlinereservation.utils.appUtils.AppUtilities.*;
+import static com.example.airlinereservation.utils.appUtils.Constants.*;
 
 @Service
 @AllArgsConstructor
@@ -36,7 +36,7 @@ import static com.example.airlinereservation.utils.appUtils.AppUtilities.*;
 public class BolaAirCustomerService implements CustomerService {
 	
 	Validator validator;
-	private PassengerRepository passengerRepository;
+	private CustomerRepository passengerRepository;
 	private UserBioDataRepository userBioDataRepository;
 	private ModelMapper mapper;
 	

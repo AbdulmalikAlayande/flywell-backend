@@ -18,10 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.example.airlinereservation.utils.appUtils.Constants.*;
 
@@ -73,13 +70,14 @@ public class Mailer implements MailService{
 				NotificationResponse.class
 		);
 		if (response.getStatusCode().is2xxSuccessful())
-			log.info("Email sent successfully");
-		else log.error("Failed to send email");
+			log.info(MESSAGE_SUCCESSFULLY_SENT);
+		else log.error(MESSAGE_FAILED_TO_SEND);
 		return response;
 	}
 	
 	
 	public String loadTemplateContent(Resource templateResource){
+		Formatter formatter = new Formatter();
 			try {
 				InputStream inputStream = templateResource.getInputStream();
 				ByteArrayOutputStream result = new ByteArrayOutputStream();
@@ -90,8 +88,8 @@ public class Mailer implements MailService{
 				}
 				return result.toString(StandardCharsets.UTF_8);
 			} catch (IOException exception) {
-				log.error("Error loading template content", exception);
-				return String.format("%s%s", TEMPLATE_LOAD_FAILED, exception.getMessage());
+				log.error(TEMPLATE_LOAD_FAILED, exception);
+				return formatter.format("%s%s", TEMPLATE_LOAD_FAILED, exception.getMessage()).toString();
 			}
 	}
 	@Override

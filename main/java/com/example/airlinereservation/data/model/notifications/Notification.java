@@ -12,4 +12,5 @@ public sealed abstract class Notification permits Email, TextMessage {
 	@JsonProperty("email")
 	private String content;
 	private MultipartFile file;
+	private Sender mailSender;
 }

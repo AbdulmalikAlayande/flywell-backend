@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.TemplateEngine;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.example.airlinereservation.utils.appUtils.Constants.*;
@@ -28,6 +26,7 @@ import static com.example.airlinereservation.utils.appUtils.TemplateLoader.loadT
 @Service
 @AllArgsConstructor
 public class Mailer implements MailService{
+
 	private final String brevoApiKey;
 	private final ResourceLoader resourceLoader;
 	private final RestTemplate restTemplate;
@@ -38,7 +37,7 @@ public class Mailer implements MailService{
 	public ResponseEntity<NotificationResponse> importContacts(NotificationRequest notificationRequest) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Type", "application/json");
-		headers.set("api-key", brevoApiKey);
+		headers.set(API_KEY, brevoApiKey);
 		
 		HttpEntity<NotificationRequest> request = new HttpEntity<>(notificationRequest, headers);
 		return restTemplate.postForEntity(BREVO_CONTACTS_IMPORT_URL, request, NotificationResponse.class);
@@ -52,7 +51,7 @@ public class Mailer implements MailService{
 	@Override
 	public ResponseEntity<NotificationResponse> sendAccountActivationEmail(NotificationRequest notificationRequest) throws InvalidRequestException {
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("api-key", brevoApiKey);
+		headers.set(API_KEY, brevoApiKey);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
 		Resource foundTemplateResource = resourceLoader.getResource(ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL);
@@ -61,15 +60,12 @@ public class Mailer implements MailService{
 		Notification notification = new Email();
 		modelMapper.map(notificationRequest, notification);
 		notification.setMailSender(Sender.builder().senderEmail(SENDER_EMAIL)
-				                                   .senderFirstName("Alayande")
-				                                   .senderLastName("Abdulmalik")
+				                                   .senderFirstName(SENDER_FIRSTNAME)
+				                                   .senderLastName(SENDER_LASTNAME)
 				                                   .build());
-		List<Notification> notifications = new ArrayList<>();
 		notification.setContent(templateContent);
-		notifications.add(notification);
-		
 		Map<String, Object> requestBody = new HashMap<>();
-		requestBody.put(USER, notifications);
+		requestBody.put(USER, notification);
 		requestBody.put(TEMPLATE_ID, BREVO_MAIL_TEMPLATE_ID);
 		
 		HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);

@@ -2,7 +2,6 @@ package com.example.airlinereservation.data.model.notifications;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.springframework.integration.router.RecipientListRouter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -14,7 +13,7 @@ public sealed abstract class Notification permits Email, TextMessage {
 	@JsonProperty("htmlContent")
 	private String content;
 	private MultipartFile file;
-	private Sender mailSender;
+	private Sender sender;
 	@JsonProperty("to")
 	private List<Recipients> recipients;
 	@JsonProperty("cc")

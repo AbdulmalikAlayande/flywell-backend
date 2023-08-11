@@ -69,7 +69,7 @@ public class Mailer implements MailService{
 		requestBody.put(USER, notifications);
 		requestBody.put(TEMPLATE_ID, BREVO_MAIL_TEMPLATE_ID);
 		
-			HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+		HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 		ResponseEntity<NotificationResponse> response = restTemplate.exchange(
 				BREVO_SEND_EMAIL_API_URL, HttpMethod.POST,
 				requestEntity, NotificationResponse.class

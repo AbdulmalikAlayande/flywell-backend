@@ -11,20 +11,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
-//@Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public non-sealed class Email extends Notification{
-//	@Id
 	private String id;
 	private String phoneNumber;
-//	@ManyToOne(cascade = CascadeType.ALL)
 	private Customer person;
 	private LocalDateTime createdOn;
-	@JsonProperty("email")
-	private String content;
 	private MultipartFile file;
+	@JsonProperty("htmlContent")
+	private String content;
+	private Sender mailSender;
 }

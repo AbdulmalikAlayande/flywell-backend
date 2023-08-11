@@ -60,7 +60,10 @@ public class Mailer implements MailService{
 		
 		Notification notification = new Email();
 		modelMapper.map(notificationRequest, notification);
-		notification.setMailSender(Sender.builder().senderEmail(SENDER_EMAIL).build());
+		notification.setMailSender(Sender.builder().senderEmail(SENDER_EMAIL)
+				                                   .senderFirstName("Alayande")
+				                                   .senderLastName("Abdulmalik")
+				                                   .build());
 		List<Notification> notifications = new ArrayList<>();
 		notification.setContent(templateContent);
 		notifications.add(notification);

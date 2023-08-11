@@ -10,7 +10,8 @@ import lombok.RequiredArgsConstructor;
 @Data
 @AllArgsConstructor
 public class Sender {
-	
+	private String senderFirstName;
+	private String senderLastName;
 	public String senderEmail;
 	public String senderPhoneNumber;
 }

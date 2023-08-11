@@ -4,7 +4,7 @@ public final class Constants {
 	
 	public static final String USER = "user";
 	public static final String TEMPLATE_ID = "template_id";
-	public static final String SENDER_EMAIL = "noreply@gmail.com";
+	public static final String SENDER_EMAIL = "alaabdulmalik03@gmail.com";
 	public static final String MESSAGE_SUCCESSFULLY_SENT = "Email sent successfully";
 	public static final String MESSAGE_FAILED_TO_SEND = "Failed to send email";
 	public static final String TEMPLATE_LOAD_FAILED = "Error loading template content Template failed to load:: ";

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -27,7 +28,7 @@ public class MailServiceTest {
 		recipient.setEmail("alayandezainab64@gmail.com");
 		notificationRequest = new NotificationRequest();
 		recipient.setUsername("Zee");
-		notificationRequest.setTo(List.of(recipient));
+		notificationRequest.setTo(Collections.singletonList(recipient));
 	}
 	
 	@SneakyThrows

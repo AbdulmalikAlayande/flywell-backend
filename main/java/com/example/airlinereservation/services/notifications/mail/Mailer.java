@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.TemplateEngine;
 
-import java.util.Collections;
+import java.util.Objects;
 
 import static com.example.airlinereservation.utils.appUtils.Constants.*;
 import static com.example.airlinereservation.utils.appUtils.TemplateLoader.loadTemplateContent;
@@ -52,33 +52,30 @@ public class Mailer implements MailService{
 		headers.set(API_KEY, brevoApiKey);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
-//		Resource foundTemplateResource = resourceLoader.getResource(ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL);
-//		String templateContent = loadTemplateContent(foundTemplateResource);
-//
-//		Notification notification = new Email();
-////		modelMapper.map(notificationRequest, notification);
-//		notification.setRecipients(notificationRequest.getTo());
-//		notification.setSender(Sender.builder().email(SENDER_EMAIL)
-//				                               .name(SENDER_FULL_NAME)
-//				                               .build());
-//		notification.setHtmlContent("<p>Hello World</p>");
-//		notification.setSubject("Activate Your Account");
-////		requestBody.put(TEMPLATE_ID, BREVO_MAIL_TEMPLATE_ID);
+		Resource foundTemplateResource = resourceLoader.getResource(ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL);
+		String templateContent = loadTemplateContent(foundTemplateResource);
+
+		Notification notification = new Notification();
+		notification.setTo(notificationRequest.getTo());
+		notification.setSender(new Sender(SENDER_FULL_NAME, SENDER_EMAIL));
+		notification.setSubject("Activate Your Account");
+		notification.setHtmlContent("Hello World");
+//		requestBody.put(TEMPLATE_ID, BREVO_MAIL_TEMPLATE_ID);
 		
-		MailDto mailDto = new MailDto();
-		mailDto.setSender(new Mailing("Man", "man@gmail.com"));
-		mailDto.setTo(Collections.singletonList(new Mailing("woman", "woman@gmail.com")));
-		mailDto.setSubject("welcome");
-		mailDto.setHtmlContent("this is the message");
+//		MailDto mailDto = new MailDto();
+//		mailDto.setSender(new Mailing("Man", "man@gmail.com"));
+//		mailDto.setTo(Collections.singletonList(new Mailing("woman", "woman@gmail.com")));
+//		mailDto.setSubject("welcome");
+//		mailDto.setHtmlContent("this is the message");
 		
-		HttpEntity<MailDto> requestEntity = new HttpEntity<>(mailDto, headers);
+		HttpEntity<Notification> requestEntity = new HttpEntity<>(notification, headers);
 		ResponseEntity<NotificationResponse> response = restTemplate.postForEntity(
 				BREVO_SEND_EMAIL_API_URL,
 				requestEntity, NotificationResponse.class
 		);                                                               
 		if (response.getStatusCode().is2xxSuccessful())
-			log.info("{} response body:: {}", MESSAGE_SUCCESSFULLY_SENT, response.getBody());
-		else log.error("{} response body:: {}", MESSAGE_FAILED_TO_SEND, response.getBody());
+			log.info("{} response body:: {}", MESSAGE_SUCCESSFULLY_SENT, Objects.requireNonNull(response.getBody()));
+		else log.error("{} response body:: {}", MESSAGE_FAILED_TO_SEND, Objects.requireNonNull(response.getBody()));
 		return response;
 	}
 	

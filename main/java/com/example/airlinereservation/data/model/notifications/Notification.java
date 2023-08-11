@@ -8,13 +8,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public sealed abstract class Notification permits Email, TextMessage {
+public sealed class Notification permits Email, TextMessage {
 	private Sender sender;
 	private LocalDateTime createdOn;
 	@JsonProperty("htmlContent")
 	private String htmlContent;
 	@JsonProperty("to")
-	private List<Recipients> recipients;
+	private List<Recipients> to;
 	@JsonProperty("cc")
 	private List<String> carbonCopyMails;
 	@JsonProperty("bcc")

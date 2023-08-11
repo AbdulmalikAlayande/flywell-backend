@@ -9,15 +9,16 @@ import java.util.List;
 
 @Data
 public sealed abstract class Notification permits Email, TextMessage {
+	private Sender sender;
 	private LocalDateTime createdOn;
 	@JsonProperty("htmlContent")
-	private String content;
-	private MultipartFile file;
-	private Sender sender;
+	private String textContent;
 	@JsonProperty("to")
 	private List<Recipients> recipients;
 	@JsonProperty("cc")
 	private List<String> carbonCopyMails;
 	@JsonProperty("bcc")
 	private List<String> blindCarbonCopyMails;
+	private String subject;
+	private MultipartFile file;
 }

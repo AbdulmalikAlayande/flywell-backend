@@ -62,21 +62,19 @@ public class Mailer implements MailService{
 		notification.setSender(Sender.builder().email(SENDER_EMAIL)
 				                               .name(SENDER_FULL_NAME)
 				                               .build());
-		notification.setContent(templateContent);
+		notification.setTextContent(templateContent);
 		Map<String, Object> requestBody = new HashMap<>();
 		requestBody.put(USER, notification);
 //		requestBody.put(TEMPLATE_ID, BREVO_MAIL_TEMPLATE_ID);
-		requestBody.put("sender", notification.getSender());
 		
 		HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 		ResponseEntity<NotificationResponse> response = restTemplate.postForEntity(
 				BREVO_SEND_EMAIL_API_URL,
 				requestEntity, NotificationResponse.class
-		);
-		System.out.println(response.getBody());
+		);                                                               
 		if (response.getStatusCode().is2xxSuccessful())
-			log.info(MESSAGE_SUCCESSFULLY_SENT);
-		else log.error(MESSAGE_FAILED_TO_SEND);
+			log.info("{} response body:: {}", MESSAGE_SUCCESSFULLY_SENT, response.getBody());
+		else log.error("{} response body:: {}", MESSAGE_FAILED_TO_SEND, response.getBody());
 		return response;
 	}
 	

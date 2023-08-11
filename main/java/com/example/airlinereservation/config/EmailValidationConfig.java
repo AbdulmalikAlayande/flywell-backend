@@ -22,7 +22,7 @@ import org.springframework.web.client.RestTemplate;
 @EnableAutoConfiguration
 public class EmailValidationConfig {
 	
-	public static String PRIVATE_API_KEY = System.getenv("BOLA_AIR_2_BREVO_API_KEY");
+	public static String PRIVATE_API_KEY = System.getenv("BREVO_API_KEY");
 	
 	@Bean
 	public EmailDomainValidator validEmailDomain() {

@@ -1,8 +1,6 @@
 package com.example.airlinereservation.services.notifications.mail;
 
-import com.example.airlinereservation.data.model.notifications.Email;
-import com.example.airlinereservation.data.model.notifications.Notification;
-import com.example.airlinereservation.data.model.notifications.Sender;
+import com.example.airlinereservation.data.model.notifications.*;
 import com.example.airlinereservation.dtos.Request.NotificationRequest;
 import com.example.airlinereservation.dtos.Response.NotificationResponse;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
@@ -16,8 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.TemplateEngine;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
 
 import static com.example.airlinereservation.utils.appUtils.Constants.*;
 import static com.example.airlinereservation.utils.appUtils.TemplateLoader.loadTemplateContent;
@@ -50,24 +47,31 @@ public class Mailer implements MailService{
 	
 	@Override
 	public ResponseEntity<NotificationResponse> sendAccountActivationEmail(NotificationRequest notificationRequest) throws InvalidRequestException {
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set(API_KEY, brevoApiKey);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
-		Resource foundTemplateResource = resourceLoader.getResource(ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL);
-		String templateContent = loadTemplateContent(foundTemplateResource);
+//		Resource foundTemplateResource = resourceLoader.getResource(ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL);
+//		String templateContent = loadTemplateContent(foundTemplateResource);
+//
+//		Notification notification = new Email();
+////		modelMapper.map(notificationRequest, notification);
+//		notification.setRecipients(notificationRequest.getTo());
+//		notification.setSender(Sender.builder().email(SENDER_EMAIL)
+//				                               .name(SENDER_FULL_NAME)
+//				                               .build());
+//		notification.setHtmlContent("<p>Hello World</p>");
+//		notification.setSubject("Activate Your Account");
+////		requestBody.put(TEMPLATE_ID, BREVO_MAIL_TEMPLATE_ID);
 		
-		Notification notification = new Email();
-		modelMapper.map(notificationRequest, notification);
-		notification.setSender(Sender.builder().email(SENDER_EMAIL)
-				                               .name(SENDER_FULL_NAME)
-				                               .build());
-		notification.setTextContent(templateContent);
-		Map<String, Object> requestBody = new HashMap<>();
-		requestBody.put(USER, notification);
-//		requestBody.put(TEMPLATE_ID, BREVO_MAIL_TEMPLATE_ID);
+		MailDto mailDto = new MailDto();
+		mailDto.setSender(new Mailing("Man", "man@gmail.com"));
+		mailDto.setTo(Collections.singletonList(new Mailing("woman", "woman@gmail.com")));
+		mailDto.setSubject("welcome");
+		mailDto.setHtmlContent("this is the message");
 		
-		HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+		HttpEntity<MailDto> requestEntity = new HttpEntity<>(mailDto, headers);
 		ResponseEntity<NotificationResponse> response = restTemplate.postForEntity(
 				BREVO_SEND_EMAIL_API_URL,
 				requestEntity, NotificationResponse.class

@@ -12,7 +12,7 @@ public sealed abstract class Notification permits Email, TextMessage {
 	private Sender sender;
 	private LocalDateTime createdOn;
 	@JsonProperty("htmlContent")
-	private String textContent;
+	private String htmlContent;
 	@JsonProperty("to")
 	private List<Recipients> recipients;
 	@JsonProperty("cc")

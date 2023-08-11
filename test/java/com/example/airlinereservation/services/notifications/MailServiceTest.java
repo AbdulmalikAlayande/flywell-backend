@@ -27,7 +27,7 @@ public class MailServiceTest {
 		recipient.setEmail("alayandezainab64@gmail.com");
 		notificationRequest = new NotificationRequest();
 		recipient.setUsername("Zee");
-		notificationRequest.setRecipients(List.of(recipient));
+		notificationRequest.setTo(List.of(recipient));
 	}
 	
 	@SneakyThrows

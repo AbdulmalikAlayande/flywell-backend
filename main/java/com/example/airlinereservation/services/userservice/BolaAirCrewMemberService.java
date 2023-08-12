@@ -21,8 +21,8 @@ public class BolaAirCrewMemberService implements CrewMemberService {
     @Override
     public CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) {
         CrewMember newCrewMember = new CrewMember();
-        newCrewMember.setBioData(createCrewMemberRequest.getBioData());
-        newCrewMember.setRole(createCrewMemberRequest.getRole());
+//        newCrewMember.setBioData(createCrewMemberRequest.getBioData());
+//        newCrewMember.setRole(createCrewMemberRequest.getRole());
         newCrewMember.setAvailable(true);
         crewMemberRepository.save(newCrewMember);
         CreateCrewMemberResponse createCrewMemberResponse = new CreateCrewMemberResponse();

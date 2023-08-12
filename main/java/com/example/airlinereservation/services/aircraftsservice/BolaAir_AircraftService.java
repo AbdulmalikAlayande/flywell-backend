@@ -1,11 +1,11 @@
-package com.example.airlinereservation.services.flightservice;
+package com.example.airlinereservation.services.aircraftsservice;
 
 import com.example.airlinereservation.dtos.Request.AirCraftRequest;
 import com.example.airlinereservation.dtos.Response.AirCraftResponse;
 
 public class BolaAir_AircraftService implements AirCraftService{
 	@Override
-	public AirCraftResponse addAirCraft(AirCraftRequest airCraftRequest) {
+	public AirCraftResponse saveAirCraft(AirCraftRequest airCraftRequest) {
 		return null;
 	}
 	

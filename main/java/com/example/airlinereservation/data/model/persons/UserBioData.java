@@ -22,8 +22,8 @@ public class UserBioData {
 	private String firstName;
 	@NotEmpty
 	private String lastName;
-	@NotEmpty
-	private String fullName;
+	@NotBlank
+	private String password;
 	@Column(unique = true)
 	@NotBlank
 	private String userName;
@@ -32,8 +32,8 @@ public class UserBioData {
 	private String email;
 	@NotBlank
 	private String phoneNumber;
-	@NotBlank
-	private String password;
+	@NotEmpty
+	private String fullName;
 	@OneToOne
 	private Address address;
 	

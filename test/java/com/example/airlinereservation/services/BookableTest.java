@@ -5,6 +5,7 @@ import com.example.airlinereservation.data.model.enums.Destinations;
 import com.example.airlinereservation.data.model.enums.PaymentMethod;
 import com.example.airlinereservation.data.model.enums.PaymentStatus;
 import com.example.airlinereservation.data.model.enums.Price;
+import com.example.airlinereservation.data.model.flight.Flight;
 import com.example.airlinereservation.services.flightservice.Bookable;
 import com.example.airlinereservation.services.userservice.CustomerService;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;

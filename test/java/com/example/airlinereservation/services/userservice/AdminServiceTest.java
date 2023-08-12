@@ -1,7 +1,7 @@
 
 package com.example.airlinereservation.services.userservice;
 
-import com.example.airlinereservation.data.model.UserBioData;
+import com.example.airlinereservation.data.model.persons.UserBioData;
 import com.example.airlinereservation.dtos.Request.AdminInvitationRequest;
 import com.example.airlinereservation.dtos.Request.CreateAdminRequest;
 import com.example.airlinereservation.dtos.Response.AdminInvitationResponse;
@@ -79,8 +79,6 @@ class AdminServiceTest {
 		foundAdmin.ifPresent(admin->{
 			assertThat(admin.getUserName()).isEqualTo(buildAdmin().getUserName());
 		});
-
-	
 	}
 	
 	@Test void testThatFindAdminByUsernameWIthInvalidUsername_InvalidRequestExceptionIsThrown(){

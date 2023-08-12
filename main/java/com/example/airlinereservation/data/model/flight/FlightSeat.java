@@ -1,5 +1,6 @@
-package com.example.airlinereservation.data.model;
+package com.example.airlinereservation.data.model.flight;
 
+import com.example.airlinereservation.data.model.Seat;
 import com.example.airlinereservation.data.model.enums.SeatStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 @Setter
-public class FlightSeat extends Seat{
+public class FlightSeat extends Seat {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;

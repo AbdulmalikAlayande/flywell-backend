@@ -1,4 +1,4 @@
-package com.example.airlinereservation.data.model;
+package com.example.airlinereservation.data.model.persons;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

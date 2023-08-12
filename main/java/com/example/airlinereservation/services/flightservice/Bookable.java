@@ -1,6 +1,6 @@
 package com.example.airlinereservation.services.flightservice;
 
-import com.example.airlinereservation.data.model.Flight;
+import com.example.airlinereservation.data.model.flight.Flight;
 import com.example.airlinereservation.data.model.Passenger;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import com.example.airlinereservation.dtos.Request.BookingRequest;

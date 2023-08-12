@@ -1,5 +1,6 @@
-package com.example.airlinereservation.data.model;
+package com.example.airlinereservation.data.model.aircraft;
 
+import com.example.airlinereservation.data.model.Seat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;

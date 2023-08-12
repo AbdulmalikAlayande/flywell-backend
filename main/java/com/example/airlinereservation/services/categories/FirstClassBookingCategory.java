@@ -1,5 +1,5 @@
 package com.example.airlinereservation.services.categories;
-import com.example.airlinereservation.data.model.Flight;
+import com.example.airlinereservation.data.model.flight.Flight;
 import com.example.airlinereservation.data.model.Passenger;
 
 import java.math.BigInteger;

@@ -1,5 +1,6 @@
-package com.example.airlinereservation.data.model;
+package com.example.airlinereservation.data.model.flight;
 
+import com.example.airlinereservation.data.model.Passenger;
 import com.example.airlinereservation.data.model.enums.Price;
 import com.example.airlinereservation.data.model.enums.TravelClass;
 import jakarta.persistence.*;

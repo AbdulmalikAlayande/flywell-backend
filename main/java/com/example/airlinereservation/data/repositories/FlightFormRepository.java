@@ -1,6 +1,6 @@
 package com.example.airlinereservation.data.repositories;
 
-import com.example.airlinereservation.data.model.FlightForm;
+import com.example.airlinereservation.data.model.flight.FlightForm;
 import com.example.airlinereservation.data.model.Passenger;
 import org.springframework.data.jpa.repository.JpaRepository;
 

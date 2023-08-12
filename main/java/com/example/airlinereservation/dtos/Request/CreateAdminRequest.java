@@ -1,8 +1,5 @@
 package com.example.airlinereservation.dtos.Request;
 
-import com.example.airlinereservation.data.model.Address;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToOne;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;

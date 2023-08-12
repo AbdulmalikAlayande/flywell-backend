@@ -1,5 +1,7 @@
-package com.example.airlinereservation.data.model;
+package com.example.airlinereservation.data.model.flight;
 
+import com.example.airlinereservation.data.model.Airport;
+import com.example.airlinereservation.data.model.Passenger;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

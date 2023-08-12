@@ -7,6 +7,7 @@ import com.example.airlinereservation.dtos.Request.AdminInvitationRequest;
 import com.example.airlinereservation.dtos.Request.CreateAdminRequest;
 import com.example.airlinereservation.dtos.Response.AdminInvitationResponse;
 import com.example.airlinereservation.dtos.Response.CreateAdminResponse;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,8 @@ class AdminServiceTest {
 		AdminInvitationResponse response = adminService.inviteAdmin(invitationRequest);
 		
 	}
-	
+
+	@SneakyThrows
 	@Test void createAdminTest(){
 		CreateAdminResponse adminResponse = adminService.createAdmin(buildAdmin());
 		assertThat(adminResponse.getMessage()).isEqualTo("Admin created successfully");
@@ -79,7 +81,8 @@ class AdminServiceTest {
 	@Test void testThatAdminTriesToCreateAccountWithInvalidData_ExceptionIsThrown(){
 	
 	}
-	
+
+	@SneakyThrows
 	@Test void testFindAdminByUsername_AdminIsFound(){
 		adminService.createAdmin(buildAdmin());
 		Optional<UserBioData> foundAdmin = adminService.findByUsername(buildAdmin().getUserName());

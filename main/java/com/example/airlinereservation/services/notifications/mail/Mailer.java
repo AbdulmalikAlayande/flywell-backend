@@ -55,19 +55,11 @@ public class Mailer implements MailService{
 		Resource foundTemplateResource = resourceLoader.getResource(ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL);
 		String templateContent = loadTemplateContent(foundTemplateResource);
 
-		Notification notification = new Notification();
-		notification.setTo(notificationRequest.getTo());
-		notification.setSender(new Sender(SENDER_FULL_NAME, SENDER_EMAIL));
+		Notification notification = new Email();
+		modelMapper.map(notificationRequest, notification);
+		notification.setSender(Sender.builder().name(SENDER_FULL_NAME).email(SENDER_EMAIL).build());
 		notification.setSubject("Activate Your Account");
-		notification.setHtmlContent("Hello World");
-//		requestBody.put(TEMPLATE_ID, BREVO_MAIL_TEMPLATE_ID);
-		
-//		MailDto mailDto = new MailDto();
-//		mailDto.setSender(new Mailing("Man", "man@gmail.com"));
-//		mailDto.setTo(Collections.singletonList(new Mailing("woman", "woman@gmail.com")));
-//		mailDto.setSubject("welcome");
-//		mailDto.setHtmlContent("this is the message");
-		
+		notification.setHtmlContent(templateContent);
 		HttpEntity<Notification> requestEntity = new HttpEntity<>(notification, headers);
 		ResponseEntity<NotificationResponse> response = restTemplate.postForEntity(
 				BREVO_SEND_EMAIL_API_URL,

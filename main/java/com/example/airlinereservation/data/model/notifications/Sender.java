@@ -1,6 +1,10 @@
 package com.example.airlinereservation.data.model.notifications;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +14,11 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @Data
 @AllArgsConstructor
+@Entity
 public class Sender {
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private String id;
 	@JsonProperty("name")
 	private String name;
 	@JsonProperty("email")

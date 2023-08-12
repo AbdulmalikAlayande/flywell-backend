@@ -1,24 +1,30 @@
 package com.example.airlinereservation.data.model.notifications;
 
+import com.example.airlinereservation.data.model.persons.Customer;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public sealed class Notification permits Email, TextMessage {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Entity
+public abstract sealed class Notification permits Email, TextMessage {
+	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private String id;
+	@OneToOne
 	private Sender sender;
 	private LocalDateTime createdOn;
 	@JsonProperty("htmlContent")
 	private String htmlContent;
 	@JsonProperty("to")
+	@OneToMany
 	private List<Recipients> to;
-	@JsonProperty("cc")
-	private List<String> carbonCopyMails;
-	@JsonProperty("bcc")
-	private List<String> blindCarbonCopyMails;
 	private String subject;
-	private MultipartFile file;
+	@OneToMany
+	private List<NotificationMultipartFile> file;
+	@OneToMany
+	private List<Customer> person;
 }

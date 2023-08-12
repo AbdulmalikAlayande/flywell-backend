@@ -31,4 +31,14 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 	public void removeAircraft(AirCraft aircraft) {
 	
 	}
+	
+	@Override
+	public boolean hangerContainsAirCraftByName(String airCraftName) {
+		return false;
+	}
+	
+	@Override
+	public boolean hangerContainsAirCraftByModel(String airCraftName) {
+		return false;
+	}
 }

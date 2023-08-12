@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Builder
 @Data
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 public class AirCraft {
 	@Id
 	private String id;
+	private String hangerId;
 	private String airCraftName;
 	private String model;
 	private LocalDate datePurchased;
@@ -33,4 +35,16 @@ public class AirCraft {
 		return aircraftSeats[seatIndex];
 	}
 	
+
+	@Override
+	public boolean equals(Object object){
+		if (object == null || object.getClass() != this.getClass())
+			return false;
+		AirCraft airCraft = (AirCraft) object;
+		return airCraft.getHangerId().equals(this.getHangerId());
+	}
+	
+	public int hashCode(){
+		return Objects.hash(hangerId);
+	}
 }

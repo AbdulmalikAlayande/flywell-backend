@@ -9,4 +9,8 @@ public interface AirCraftManagementService {
 	AirCraftResponse addAircraftToHanger(AirCraftRequest airCraftRequest);
 	AirCraft getAvailableAirCraft(String location, boolean availability);
 	void removeAircraft(AirCraft aircraft);
+	
+	boolean hangerContainsAirCraftByName(String airCraftName);
+	
+	boolean hangerContainsAirCraftByModel(String airCraftName);
 }

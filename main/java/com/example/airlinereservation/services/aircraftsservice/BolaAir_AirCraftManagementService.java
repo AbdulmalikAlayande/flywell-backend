@@ -25,6 +25,7 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 		AirCraft airCraft = new AirCraft();
 		mapper.map(airCraftRequest, airCraft);
 		airCraft.setAvailable(true);
+		hanger.add(airCraft);
 		AirCraftResponse airCraftResponse = new AirCraftResponse();
 		mapper.map(airCraft, airCraftResponse);
 		return airCraftResponse;

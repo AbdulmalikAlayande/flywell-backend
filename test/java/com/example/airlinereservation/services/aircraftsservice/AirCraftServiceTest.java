@@ -1,4 +1,4 @@
-package com.example.airlinereservation.services.flightservice;
+package com.example.airlinereservation.services.aircraftsservice;
 
 import org.junit.jupiter.api.Test;
 

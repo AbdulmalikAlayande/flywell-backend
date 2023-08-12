@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -41,16 +42,16 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 	
 	@Override
 	public boolean hangerContainsAirCraftByName(String airCraftName) {
-		return false;
+		return hanger.stream().anyMatch(airCraft -> Objects.equals(airCraft.getAirCraftName(), airCraftName));
 	}
 	
 	@Override
-	public boolean hangerContainsAirCraftByModel(String airCraftName) {
-		return false;
+	public boolean hangerContainsAirCraftByModel(String model) {
+		return hanger.stream().anyMatch(airCraft -> Objects.equals(airCraft.getModel(), model));
 	}
 	
 	@Override
 	public boolean hangerContainsAirCraft(AirCraft airCraft) {
-		return false;
+		return hanger.stream().anyMatch(craft -> craft.equals(airCraft));
 	}
 }

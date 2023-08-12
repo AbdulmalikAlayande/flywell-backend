@@ -38,7 +38,7 @@ public class AirCraftManagementServiceTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getAirCraftName()).isEqualTo(airCraftRequest.getAirCraftName());
 		assertThat(airAirCraftManagementService.hangerContainsAirCraftByName(airCraftRequest.getAirCraftName())).isTrue();
-		assertThat(airAirCraftManagementService.hangerContainsAirCraftByModel(airCraftRequest.getAirCraftName())).isTrue();
+		assertThat(airAirCraftManagementService.hangerContainsAirCraftByModel(airCraftRequest.getModel())).isTrue();
 	}
 	
 	@Test void addSameAirCraftToHangerMultipleTimes_InvalidRequestExceptionIsThrown(){

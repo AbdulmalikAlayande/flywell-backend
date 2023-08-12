@@ -4,6 +4,7 @@ import com.example.airlinereservation.data.model.aircraft.AirCraft;
 import com.example.airlinereservation.dtos.Request.AirCraftRequest;
 import com.example.airlinereservation.dtos.Response.AirCraftResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class BolaAir_AirCraftManagementService implements AirCraftManagementService{
 	
 	private final Set<AirCraft> hanger = new HashSet<>();
@@ -25,6 +27,8 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 		AirCraft airCraft = new AirCraft();
 		mapper.map(airCraftRequest, airCraft);
 		airCraft.setAvailable(true);
+		log.info("hanger id:: {}", airCraft.getHangerId());
+		System.out.println("hanger id:: "+airCraft.getHangerId());
 		hanger.add(airCraft);
 		AirCraftResponse airCraftResponse = new AirCraftResponse();
 		mapper.map(airCraft, airCraftResponse);
@@ -39,6 +43,7 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 	
 	@Override
 	public void removeAircraft(AirCraft aircraft) {
+	
 	}
 	
 	@Override

@@ -31,5 +31,4 @@ public class FlightInstance {
 	private AirCraft airCraft;
 	@OneToMany()
 	private List<FlightSeat> flightSeat;
-	// TODO: 8/10/2023  
 }

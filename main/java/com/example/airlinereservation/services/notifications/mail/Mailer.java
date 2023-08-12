@@ -35,7 +35,6 @@ public class Mailer implements MailService{
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Type", "application/json");
 		headers.set(API_KEY, brevoApiKey);
-		
 		HttpEntity<NotificationRequest> request = new HttpEntity<>(notificationRequest, headers);
 		return restTemplate.postForEntity(BREVO_CONTACTS_IMPORT_URL, request, NotificationResponse.class);
 	}

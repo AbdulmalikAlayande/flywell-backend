@@ -21,4 +21,5 @@ public class NotificationMultipartFile {
 	private String id;
 	private String fileName;
 	private Byte fileSize;
+	private String url;
 }

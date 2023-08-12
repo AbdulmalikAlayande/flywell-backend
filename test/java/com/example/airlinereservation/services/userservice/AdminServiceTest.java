@@ -2,8 +2,7 @@
 package com.example.airlinereservation.services.userservice;
 
 import com.example.airlinereservation.data.model.UserBioData;
-import com.example.airlinereservation.data.model.persons.Admin;
-import com.example.airlinereservation.data.model.persons.Customer;
+
 import com.example.airlinereservation.dtos.Request.AdminInvitationRequest;
 import com.example.airlinereservation.dtos.Request.CreateAdminRequest;
 import com.example.airlinereservation.dtos.Response.AdminInvitationResponse;
@@ -18,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class AdminServiceTest {
@@ -52,19 +50,10 @@ class AdminServiceTest {
 
 	public static CreateAdminRequest buildAdmin(){
         return CreateAdminRequest.builder()
-				.country("Nigeria")
-				.email("rich@gmail.com")
-				.state("Lagos")
-				.firstName("Malik")
-				.lastName("Alhaji")
-				.phoneNumber("08081493711")
-				.houseNumber("No 2")
-				.password("password")
-				.postalCode("1234")
-				.streetName("Wallstreet")
-				.streetNumber("No 2")
-				.userName("Farooq")
-				.build();
+								.country("Nigeria").email("rich@gmail.com").state("Lagos").firstName("Malik")
+						        .lastName("Alhaji").phoneNumber("08081493711").houseNumber("No 2")
+						        .password("password").postalCode("1234").streetName("Wallstreet")
+						        .streetNumber("No 2").userName("Farooq").build();
 	}
 	
 	@Test void testThatAdminTriesToCreateAccountTwiceInvalidRequestExceptionIsThrown(){
@@ -113,5 +102,43 @@ class AdminServiceTest {
 	
 
 	
+	@Test void testThatAdminBlocksAndAdmin_TheBlockedAdminCannotAccessTheSystemAgain(){
+	
+	}
+	
+	@Test void testThatAdminBlocksCustomer_TheBlockedCustomerNoLongerHaveAccessToTheSystem(){
+	
+	}
+	
+	@Test void testThatAdminCanBlockCrewMember_BlockedCrewMemberCannotAccessTheSystem(){
+	
+	}
+	
+	@Test void testThatAdminCanBlockFrontDeskOfficer_BlockedOfficerNoLongerHasAccessToTheSystem(){
+	
+	}
+	@Test void testThatAdminUnBlocksAndAdmin_TheUnBlockedAdminCanNowHasAccessTheSystemAgain(){
+	
+	}
+	
+	@Test void testThatAdminUnBlocksCustomer_TheUnBlockedCustomerNowHasAccessToTheSystem(){
+	
+	}
+	
+	@Test void testThatAdminCanUnBlockCrewMember_UnBlockedCrewMemberHasAccessToTheSystem(){
+	
+	}
+	
+	@Test void testThatAdminCanUnBlockFrontDeskOfficer_UnBlockedOfficerNowHasAccessToTheSystem(){
+	
+	}
+	
+	@Test void testThatAdminCanAssignCrewMember_AssignedCrewMembersAreNoLongerAvailable(){
+	
+	}
+	
+	@Test void testThatAdminTriesToReAssignAnUnavailableCrewMember_InvalidRequestExceptionIsThrown(){
+	
+	}
 
 }

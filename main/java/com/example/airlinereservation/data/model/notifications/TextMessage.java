@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-public non-sealed class TextMessage extends Notification{
+public class TextMessage extends Notification{
 	private String id;
 	private String phoneNumber;
 }

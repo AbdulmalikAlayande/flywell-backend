@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 
 @Builder
 @Data
@@ -20,6 +21,8 @@ public class AirCraft {
 	@Id
 	private String id;
 	private String airCraftName;
+	private String model;
+	private LocalDate datePurchased;
 	private boolean isAvailable;
 	private final int numberOfSeats = BigInteger.valueOf(20).intValue();
 	@Transient

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public non-sealed class Email extends Notification{
+public class Email extends Notification{
 	
 	private String id;
 	private String email;

@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Entity
-public abstract sealed class Notification permits Email, TextMessage {
+public abstract class Notification {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;

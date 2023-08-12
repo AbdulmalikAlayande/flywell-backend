@@ -141,15 +141,12 @@ class CustomerServiceTest {
 	}
 	
 	@Test void testThatUserTriesToLoginWithoutSigningUpLoginFailedExceptionIsThrown(){
-		LoginRequest request = LoginRequest.builder().email("alamala@gmail.com")
-				                       .password("alamala@42").username("alamala1").build();
+		LoginRequest request = LoginRequest.builder().email("alamala@gmail.com").password("alamala@42").username("alamala1").build();
 		assertThrows(LoginFailedException.class, ()-> passengerService.login(request), "Login Failed:: You do not have an account with us, Please register to create one");
 	}
 	
 	@Test void testThatUserTriesToLoginWithoutValidOrIncompleteCredentialsLoginFailedExceptionIsThrown(){
-		LoginRequest request = LoginRequest.builder()
-				                       .username("mirah").email("ololadeayandunni@gmail.com")
-				                       .build();
+		LoginRequest request = LoginRequest.builder().username("mirah").email("ololadeayandunni@gmail.com").build();
 		assertThrows(LoginFailedException.class, ()-> passengerService.login(request), "Login Failed:: Please provide the full details requested in the correct format");
 	}
 

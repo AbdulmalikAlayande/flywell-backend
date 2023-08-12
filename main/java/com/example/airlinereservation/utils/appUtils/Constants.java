@@ -7,7 +7,6 @@ public final class Constants {
 	public static final String SENDER_FULL_NAME = SENDER_FIRSTNAME + SENDER_LASTNAME;
 	public static final String API_KEY = "api-key";
 	public static final String USER = "user";
-	public static final String TEMPLATE_ID = "template_id";
 	public static final String SENDER_EMAIL = "alaabdulmalik03@gmail.com";
 	public static final String MESSAGE_SUCCESSFULLY_SENT = "Email sent successfully";
 	public static final String MESSAGE_FAILED_TO_SEND = "Failed to send email";

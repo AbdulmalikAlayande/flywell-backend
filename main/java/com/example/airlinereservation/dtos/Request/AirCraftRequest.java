@@ -1,5 +1,6 @@
 package com.example.airlinereservation.dtos.Request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +13,10 @@ import java.time.LocalDate;
 @Builder
 @Data
 public class AirCraftRequest {
-	
+	@NotBlank
 	private String airCraftName;
+	@NotBlank
 	private String model;
+	@NotBlank
 	private LocalDate datePurchased;
 }

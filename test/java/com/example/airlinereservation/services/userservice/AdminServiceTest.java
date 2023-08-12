@@ -1,6 +1,5 @@
 
 package com.example.airlinereservation.services.userservice;
-
 import com.example.airlinereservation.data.model.persons.UserBioData;
 import com.example.airlinereservation.dtos.Request.AdminInvitationRequest;
 import com.example.airlinereservation.dtos.Request.CreateAdminRequest;
@@ -97,9 +96,7 @@ class AdminServiceTest {
 		
 	}
 	
-	@Test void BlockUserTest(){
-	
-	}
+
 	
 	@Test void testThatAdminBlocksAndAdmin_TheBlockedAdminCannotAccessTheSystemAgain(){
 	
@@ -139,4 +136,5 @@ class AdminServiceTest {
 	@Test void testThatAdminTriesToReAssignAnUnavailableCrewMember_InvalidRequestExceptionIsThrown(){
 	
 	}
+
 }

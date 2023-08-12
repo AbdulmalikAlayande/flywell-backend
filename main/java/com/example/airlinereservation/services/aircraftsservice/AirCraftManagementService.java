@@ -13,4 +13,6 @@ public interface AirCraftManagementService {
 	boolean hangerContainsAirCraftByName(String airCraftName);
 	
 	boolean hangerContainsAirCraftByModel(String airCraftName);
+	
+	boolean hangerContainsAirCraft(AirCraft airCraft);
 }

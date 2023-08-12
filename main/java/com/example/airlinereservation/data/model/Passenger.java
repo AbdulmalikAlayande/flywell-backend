@@ -1,6 +1,7 @@
 package com.example.airlinereservation.data.model;
 
 import com.example.airlinereservation.data.model.enums.Gender;
+import com.example.airlinereservation.data.model.persons.UserBioData;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

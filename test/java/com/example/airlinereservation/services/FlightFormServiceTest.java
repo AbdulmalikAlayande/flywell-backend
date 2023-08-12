@@ -5,7 +5,7 @@ import com.example.airlinereservation.services.flightservice.Bookable;
 import com.example.airlinereservation.services.userservice.CustomerService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
-import com.example.airlinereservation.data.model.Flight;
+import com.example.airlinereservation.data.model.flight.Flight;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
 import com.example.airlinereservation.dtos.Request.FlightFormRequest;
 import com.example.airlinereservation.dtos.Request.CustomerRequest;

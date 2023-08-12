@@ -1,8 +1,10 @@
 package com.example.airlinereservation.services.flightservice;
 
 import com.example.airlinereservation.data.model.*;
+import com.example.airlinereservation.data.model.aircraft.AirCraft;
 import com.example.airlinereservation.data.model.enums.Destinations;
 import com.example.airlinereservation.data.model.enums.TravelClass;
+import com.example.airlinereservation.data.model.flight.Flight;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
 import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;

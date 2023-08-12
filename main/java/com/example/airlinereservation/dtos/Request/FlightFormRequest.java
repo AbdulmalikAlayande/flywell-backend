@@ -1,7 +1,7 @@
 package com.example.airlinereservation.dtos.Request;
 
 
-import com.example.airlinereservation.data.model.Flight;
+import com.example.airlinereservation.data.model.flight.Flight;
 import com.example.airlinereservation.data.model.Passenger;
 import lombok.Builder;
 import lombok.Data;

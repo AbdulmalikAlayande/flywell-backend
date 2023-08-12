@@ -1,7 +1,7 @@
 package com.example.airlinereservation.services.userservice;
 
-import com.example.airlinereservation.data.model.Address;
-import com.example.airlinereservation.data.model.UserBioData;
+import com.example.airlinereservation.data.model.persons.Address;
+import com.example.airlinereservation.data.model.persons.UserBioData;
 import com.example.airlinereservation.data.model.persons.Admin;
 import com.example.airlinereservation.data.repositories.AddressRepository;
 import com.example.airlinereservation.data.repositories.AdminRepository;

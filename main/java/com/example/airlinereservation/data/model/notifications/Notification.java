@@ -10,7 +10,11 @@ import java.util.List;
 @Data
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Entity
+<<<<<<< HEAD
 public class Notification {
+=======
+public abstract class Notification {
+>>>>>>> c8e585d94722ddf734983c172a75c3ec06233d13
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;

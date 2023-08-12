@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AirCraftResponse {
 	
+	private String hangerId;
 	private String airCraftName;
 	private String model;
 	private String message;

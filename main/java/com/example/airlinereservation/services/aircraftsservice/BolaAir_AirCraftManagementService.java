@@ -21,7 +21,10 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 	public AirCraftResponse addAircraftToHanger(AirCraftRequest airCraftRequest) {
 		AirCraft airCraft = new AirCraft();
 		mapper.map(airCraftRequest, airCraft);
-		return null;
+		airCraft.setAvailable(true);
+		AirCraftResponse airCraftResponse = new AirCraftResponse();
+		mapper.map(airCraft, airCraftResponse);
+		return airCraftResponse;
 	}
 	
 	@Override

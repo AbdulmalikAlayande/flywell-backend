@@ -17,6 +17,8 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 	private final Set<AirCraft> hanger = new HashSet<>();
 	private ModelMapper mapper;
 	
+	// FIXME: 8/13/2023 the code does not check for null fields
+	// TODO: 8/13/2023 write implementation to check for null fields and also check for duplicates
 	@Override
 	public AirCraftResponse addAircraftToHanger(AirCraftRequest airCraftRequest) {
 		AirCraft airCraft = new AirCraft();

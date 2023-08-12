@@ -15,6 +15,7 @@ public interface AdminService {
 
     CreateAdminResponse createAdmin(CreateAdminRequest createAdminRequest) throws FailedRegistrationException;
 	AdminInvitationResponse inviteAdmin(AdminInvitationRequest invitationRequest);
+    CreateCrewMemberResponse addCrewMember(CreateCrewMemberRequest createCrewMemberRequest);
 
     Optional<UserBioData> findByUsername(String userName);
 

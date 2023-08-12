@@ -8,8 +8,10 @@ import com.example.airlinereservation.data.repositories.AdminRepository;
 import com.example.airlinereservation.data.repositories.UserBioDataRepository;
 import com.example.airlinereservation.dtos.Request.AdminInvitationRequest;
 import com.example.airlinereservation.dtos.Request.CreateAdminRequest;
+import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
 import com.example.airlinereservation.dtos.Response.AdminInvitationResponse;
 import com.example.airlinereservation.dtos.Response.CreateAdminResponse;
+import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ public class BolaAirAdminService implements AdminService{
     private AdminRepository adminRepository;
     private UserBioDataRepository bioDataRepository;
     private AddressRepository addressRepository;
+    private CrewMemberService crewMemberService;
 
     @Override
     public CreateAdminResponse createAdmin(CreateAdminRequest createAdminRequest) {
@@ -58,6 +61,12 @@ public class BolaAirAdminService implements AdminService{
     public AdminInvitationResponse inviteAdmin(AdminInvitationRequest invitationRequest) {
         return null;
     }
+
+    @Override
+    public CreateCrewMemberResponse addCrewMember(CreateCrewMemberRequest createCrewMemberRequest) {
+        return crewMemberService.createCrewMember(createCrewMemberRequest);
+    }
+
 
     @Override
     public Optional<UserBioData> findByUsername(String userName) {

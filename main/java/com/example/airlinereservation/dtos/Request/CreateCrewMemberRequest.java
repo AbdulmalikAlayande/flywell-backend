@@ -24,6 +24,17 @@ public class CreateCrewMemberRequest {
     private String email;
     @NotBlank
     private String phoneNumber;
-    
+    @NotBlank
+    private String firstName;
+    @NotEmpty
+    private String lastName;
+    private String fullName;
+    private String country;
+    private String state;
+    private String postalCode;
+    private String streetName;
+    private String streetNumber;
+    private String houseNumber;
+
 }
 

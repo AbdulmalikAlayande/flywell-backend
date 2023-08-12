@@ -1,10 +1,15 @@
 
 package com.example.airlinereservation.services.userservice;
+
+
 import com.example.airlinereservation.data.model.persons.UserBioData;
+
 import com.example.airlinereservation.dtos.Request.AdminInvitationRequest;
 import com.example.airlinereservation.dtos.Request.CreateAdminRequest;
 import com.example.airlinereservation.dtos.Response.AdminInvitationResponse;
 import com.example.airlinereservation.dtos.Response.CreateAdminResponse;
+import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
+import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -85,10 +90,17 @@ class AdminServiceTest {
 	@Test void testThatFindAdminByUsernameWIthInvalidUsername_InvalidRequestExceptionIsThrown(){
 	
 	}
-	
+	@Test void testThatACrewHasToExistBeforeTheyCanBeAssignedToAFlight(){
+
+	}
+
 	@Test void testThatAdminCanAddCrewMember(){
+		//CrewMember crewMember = new CrewMember();
+		//adminService.addCrewMember();
+
 	
 	}
+
 	
 	@Test void testThatAdminCanAssignCrewMember(){
 	

@@ -26,6 +26,8 @@ class AdminServiceTest {
 	
 	@BeforeEach
 	void setUp() {
+		createAdminRequest = new CreateAdminRequest();
+		createAdminResponse = new CreateAdminResponse();
 	}
 	
 	@AfterEach

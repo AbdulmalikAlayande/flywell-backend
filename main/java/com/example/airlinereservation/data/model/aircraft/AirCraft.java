@@ -1,6 +1,7 @@
 package com.example.airlinereservation.data.model.aircraft;
 
 import com.example.airlinereservation.data.model.Seat;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 @Builder
 @Data
@@ -21,7 +23,7 @@ import java.util.Objects;
 public class AirCraft {
 	@Id
 	private String id;
-	private String hangerId;
+	private UUID hangerId = UUID.randomUUID();
 	private String airCraftName;
 	private String model;
 	private LocalDate datePurchased;

@@ -4,6 +4,9 @@ import com.example.airlinereservation.data.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +20,29 @@ public class CrewMember extends Person{
 	private String id;
 	@Enumerated(EnumType.STRING)
 	private Role role;
-	@OneToOne
-	private UserBioData bioData;
+	//@OneToOne
+	//private UserBioData bioData;
 	private boolean available;
+
+
+	@NotBlank
+	private String password;
+	@NotBlank
+	private String userName;
+	@NotBlank
+	private String email;
+	@NotBlank
+	private String phoneNumber;
+	@NotBlank
+	private String firstName;
+	@NotEmpty
+	private String lastName;
+	private String fullName;
+	private String country;
+	private String state;
+	private String postalCode;
+	private String streetName;
+	private String streetNumber;
+	private String houseNumber;
+
 }

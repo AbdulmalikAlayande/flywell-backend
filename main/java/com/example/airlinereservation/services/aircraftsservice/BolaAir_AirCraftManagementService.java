@@ -4,6 +4,7 @@ import com.example.airlinereservation.data.model.aircraft.AirCraft;
 import com.example.airlinereservation.dtos.Request.AirCraftRequest;
 import com.example.airlinereservation.dtos.Response.AirCraftResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,18 @@ import java.util.Set;
 
 @Service
 @AllArgsConstructor
+<<<<<<< HEAD
 
 public class BolaAir_AirCraftManagementService implements AirCraftManagementService{
 	private final Set<AirCraft> hanger = new HashSet<>();
 
 
 
+=======
+@Slf4j
+public class BolaAir_AirCraftManagementService implements AirCraftManagementService{
+	private final Set<AirCraft> hanger = new HashSet<>();
+>>>>>>> c606413ba61071a6a32898094523e0fbd5d46bf5
 	private ModelMapper mapper;
 	
 	// FIXME: 8/13/2023 the code does not check for null fields
@@ -28,6 +35,8 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 		AirCraft airCraft = new AirCraft();
 		mapper.map(airCraftRequest, airCraft);
 		airCraft.setAvailable(true);
+		log.info("hanger id:: {}", airCraft.getHangerId());
+		System.out.println("hanger id:: "+airCraft.getHangerId());
 		hanger.add(airCraft);
 		AirCraftResponse airCraftResponse = new AirCraftResponse();
 		mapper.map(airCraft, airCraftResponse);
@@ -42,6 +51,7 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 	
 	@Override
 	public void removeAircraft(AirCraft aircraft) {
+	
 	}
 	
 	@Override

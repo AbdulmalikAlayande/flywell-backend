@@ -17,11 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CrewMemberServiceTest {
     @Autowired
     private CrewMemberService crewMemberService;
+    private CreateCrewMemberRequest createCrewMemberRequest;
 
     @BeforeEach
     @SneakyThrows
     public void startAllTestWith() {
-        buildCrewMember();
+        createCrewMemberRequest = buildCrewMember();
     }
 
     @BeforeEach
@@ -54,18 +55,29 @@ class CrewMemberServiceTest {
                                 .firstName("John")
                                 .lastName("Doe")
                                 .email("johndoe@gmail.com")
-
                                .build();
     }
 
     @SneakyThrows
     @Test void testThatAnExistingCrewMemberCanBeDeletedById(){
-        crewMemberService.createCrewMember(buildCrewMember());
+        crewMemberService.createCrewMember(createCrewMemberRequest);
         crewMemberService.deleteCrewMemberById("1");
 
     }
     @Test void testThatAnExistingCrewMemberCanDeletedByUsername(){
+
         crewMemberService.createCrewMember(buildCrewMember());
        // crewMemberService.deleteCrewMemberByUsername(buildCrewMember().getUserName());
+
+//        Given That I have A crew member
+        CreateCrewMemberResponse response = crewMemberService.createCrewMember(createCrewMemberRequest);
+        long numberOfCrewMembersBefore = crewMemberService.getCountOfCrewMembers();
+//        when I delete a crew member
+        crewMemberService.deleteCrewMemberByUsername(buildCrewMember().getUserName());
+//        I want to assert that the deleted crew member no longer exists
+        assertThat(crewMemberService.existsByUsername(createCrewMemberRequest.getUserName())).isFalse();
+//     // 2.) long numberOfCrewMembersAfter = crewMemberService.getCountOfCrewMembers();
+//        assertThat(numberOfCrewMembersBefore).isGreaterThan(numberOfCrewMembersAfter);
+
     }
 }

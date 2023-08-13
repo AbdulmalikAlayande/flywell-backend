@@ -8,6 +8,7 @@ import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
 import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,6 +22,7 @@ import static com.example.airlinereservation.utils.appUtils.Constants.INVALID_RE
 public class BolaAirCrewMemberService implements CrewMemberService {
 
     private CrewMemberRepository crewMemberRepository;
+    private ModelMapper mapper;
 
     @Override
     public CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) {
@@ -51,5 +53,20 @@ public class BolaAirCrewMemberService implements CrewMemberService {
             throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "Admin", id));
         crewMemberRepository.deleteById(id);
 
+    }
+    
+    @Override
+    public void deleteCrewMemberByUsername(String userName) {
+    
+    }
+    
+    @Override
+    public long getCountOfCrewMembers() {
+        return crewMemberRepository.count();
+    }
+    
+    @Override
+    public boolean existsByUsername(String userName) {
+        return crewMemberRepository.existsByUserName(userName);
     }
 }

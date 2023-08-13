@@ -4,4 +4,5 @@ import com.example.airlinereservation.data.model.persons.CrewMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CrewMemberRepository extends JpaRepository<CrewMember, String> {
+	boolean existsByUserName(String userName);
 }

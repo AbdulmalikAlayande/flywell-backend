@@ -2,7 +2,9 @@ package com.example.airlinereservation.services.userservice;
 
 import com.example.airlinereservation.data.model.persons.CrewMember;
 import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
+import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
+import com.example.airlinereservation.dtos.Response.CrewMemberResponse;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
@@ -21,6 +23,7 @@ class CrewMemberServiceTest {
     @Autowired
     private CrewMemberService crewMemberService;
     private CreateCrewMemberRequest createCrewMemberRequest;
+    private UpdateRequest updateRequest;
 
     @BeforeEach
     @SneakyThrows
@@ -78,8 +81,21 @@ class CrewMemberServiceTest {
     }
 
     @Test void testThatAnExistingCrewMemberCanUpdateRegistrationDetails() throws InvalidRequestException {
-        crewMemberService.createCrewMember(createCrewMemberRequest);
-        crewMemberService.findCrewMemberByUserName(createCrewMemberRequest.getUserName());
+        updateRequest.setEmail("me@gmail.com");
+        updateRequest.setFirstName("chris");
+        updateRequest.setUserName("malik33");
+        updateRequest.setNewUserName("rich123");
+        CrewMemberResponse response = crewMemberService.updateDetailsOfRegisteredCrewMember(updateRequest);
+        assertThat(response).isNotNull();
+        Optional<CrewMember> foundCrewMember = crewMemberService.findCrewMemberByUserName(createCrewMemberRequest.getUserName());
+        assertThat(foundCrewMember).isPresent().isPresent();
+        foundCrewMember.ifPresent(crewMember -> {
+            assertThat(crewMember.getUserName()).isEqualTo(updateRequest.getNewUserName());
+            assertThat(crewMember.getEmail()).isEqualTo(updateRequest.getEmail());
+        });
+
+
+
 
     }
 

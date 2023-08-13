@@ -5,7 +5,9 @@ import com.example.airlinereservation.data.model.flight.FlightInstance;
 import com.example.airlinereservation.data.model.persons.CrewMember;
 import com.example.airlinereservation.data.repositories.CrewMemberRepository;
 import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
+import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
+import com.example.airlinereservation.dtos.Response.CrewMemberResponse;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -87,5 +89,12 @@ public class BolaAirCrewMemberService implements CrewMemberService {
         if(!crewMember)
             throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE,"Crew member", "username", userName));
         return crewMemberRepository.findByUserName(userName);
+    }
+
+    @Override
+    public CrewMemberResponse updateDetailsOfRegisteredCrewMember(UpdateRequest updateRequest) {
+
+
+        return null;
     }
 }

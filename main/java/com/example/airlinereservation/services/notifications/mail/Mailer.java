@@ -7,6 +7,7 @@ import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.*;
@@ -23,7 +24,7 @@ import static com.example.airlinereservation.utils.appUtils.TemplateLoader.loadT
 @Service
 @AllArgsConstructor
 public class Mailer implements MailService{
-
+	
 	private final String brevoApiKey;
 	private final ResourceLoader resourceLoader;
 	private final RestTemplate restTemplate;

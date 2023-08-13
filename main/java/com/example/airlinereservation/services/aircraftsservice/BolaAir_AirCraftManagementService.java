@@ -4,7 +4,6 @@ import com.example.airlinereservation.data.model.aircraft.AirCraft;
 import com.example.airlinereservation.dtos.Request.AirCraftRequest;
 import com.example.airlinereservation.dtos.Response.AirCraftResponse;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -45,9 +43,7 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 	
 	@Override
 	public void removeAircraft(AirCraft aircraft) {
-		Stream<AirCraft> filteredResult = hanger.stream().filter(airCraft -> aircraft == airCraft);
-		AirCraft foundAirCraft = filteredResult.toList().get(0);
-		hanger.remove(foundAirCraft);
+		hanger.removeIf(craft -> craft.equals(aircraft));
 	}
 	
 	@Override
@@ -68,5 +64,10 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 	@Override
 	public UUID getTestHangerId(){
 		return testHangerId;
+	}
+	
+	@Override
+	public long getCountOfAirCraftInHanger() {
+		return hanger.size();
 	}
 }

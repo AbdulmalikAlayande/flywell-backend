@@ -1,6 +1,7 @@
 package com.example.airlinereservation.data.model.aircraft;
 
 import com.example.airlinereservation.data.model.Seat;
+import com.example.airlinereservation.data.model.enums.Destinations;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -28,6 +29,7 @@ public class AirCraft {
 	private String airCraftName;
 	private String model;
 	private LocalDate datePurchased;
+	private Destinations location;
 	private boolean isAvailable;
 	private final int numberOfSeats = BigInteger.valueOf(20).intValue();
 	@Transient

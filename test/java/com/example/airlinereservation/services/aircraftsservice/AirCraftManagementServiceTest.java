@@ -48,7 +48,10 @@ public class AirCraftManagementServiceTest {
 	@Test void removeAirCraftFromHangerTest(){
 		AirCraft airCraft = new AirCraft();
 		airCraft.setHangerId(airAirCraftManagementService.getTestHangerId());
+		long countBefore = airAirCraftManagementService.getCountOfAirCraftInHanger();
 		airAirCraftManagementService.removeAircraft(airCraft);
+		long countAfter = airAirCraftManagementService.getCountOfAirCraftInHanger();
+		assertThat(countBefore).isGreaterThan(countAfter);
 		assertThat(airAirCraftManagementService.hangerContainsAirCraft(airCraft)).isFalse();
 	}
 	

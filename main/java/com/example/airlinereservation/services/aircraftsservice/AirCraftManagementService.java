@@ -20,4 +20,5 @@ public interface AirCraftManagementService {
 	
 	boolean hangerContainsAirCraft(AirCraft airCraft);
 	UUID getTestHangerId();
+	long getCountOfAirCraftInHanger();
 }

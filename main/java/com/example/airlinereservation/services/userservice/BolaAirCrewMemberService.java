@@ -80,4 +80,12 @@ public class BolaAirCrewMemberService implements CrewMemberService {
     public boolean existsByUsername(String userName) {
         return crewMemberRepository.existsByUserName(userName);
     }
+
+    @Override
+    public Optional<CrewMember> findCrewMemberByUserName(String userName) throws InvalidRequestException {
+        boolean crewMember = crewMemberRepository.existsByUserName(userName);
+        if(!crewMember)
+            throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE,"Crew member", "username", userName));
+        return crewMemberRepository.findByUserName(userName);
+    }
 }

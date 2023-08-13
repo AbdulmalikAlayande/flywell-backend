@@ -10,6 +10,12 @@ public interface CrewMemberService {
     CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest);
 
     void deleteCrewMemberById(String id) throws InvalidRequestException;
-
+    
+    void deleteCrewMemberByUsername(String userName);
+    
+    long getCountOfCrewMembers();
+    
+    boolean existsByUsername(String userName);
+    
     // viewFlightSchedule()
 }

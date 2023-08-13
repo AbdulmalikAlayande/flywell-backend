@@ -101,6 +101,8 @@ public class BolaAirCustomerService implements CustomerService {
 		Optional<UserBioData> userBio = userBioDataRepository.findByUserName(updateRequest.getUserName());
 		return userBio.map(userBioData -> {
 				   modelMapper.map(updateRequest, userBioData);
+
+
 				   if (updateRequest.getNewUserName() != null){
 					   userBioData.setUserName(updateRequest.getNewUserName());
 				   }

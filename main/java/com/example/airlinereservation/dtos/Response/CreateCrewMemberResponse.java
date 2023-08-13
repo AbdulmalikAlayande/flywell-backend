@@ -9,6 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateCrewMemberResponse {
     private String message;
-
+    private String departmentId;
 
 }

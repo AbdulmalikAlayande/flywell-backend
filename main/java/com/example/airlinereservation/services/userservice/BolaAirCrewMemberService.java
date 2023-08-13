@@ -1,6 +1,7 @@
 package com.example.airlinereservation.services.userservice;
 
 import com.example.airlinereservation.data.model.enums.Role;
+import com.example.airlinereservation.data.model.flight.FlightInstance;
 import com.example.airlinereservation.data.model.persons.CrewMember;
 import com.example.airlinereservation.data.repositories.CrewMemberRepository;
 import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
@@ -22,6 +23,7 @@ public class BolaAirCrewMemberService implements CrewMemberService {
 
     private CrewMemberRepository crewMemberRepository;
     private ModelMapper mapper;
+    private CrewMemberManagementService managementService;
 
     @Override
     public CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) {
@@ -40,7 +42,8 @@ public class BolaAirCrewMemberService implements CrewMemberService {
         newCrewMember.setPostalCode(createCrewMemberRequest.getPostalCode());
         newCrewMember.setAvailable(true);
         newCrewMember.setState(createCrewMemberRequest.getState());
-        crewMemberRepository.save(newCrewMember);
+        CrewMember savedCrewMember = crewMemberRepository.save(newCrewMember);
+        managementService.addCrewMemberToDepartment(savedCrewMember);
         CreateCrewMemberResponse createCrewMemberResponse = new CreateCrewMemberResponse();
         createCrewMemberResponse.setMessage("Crew member created successfully");
         return createCrewMemberResponse;
@@ -54,7 +57,12 @@ public class BolaAirCrewMemberService implements CrewMemberService {
         crewMemberRepository.deleteById(id);
 
     }
-    
+
+    @Override
+    public FlightInstance assignCrewMember(FlightInstance flightInstance) {
+        return null;
+    }
+
     @Override
     public void deleteCrewMemberByUsername(String userName) throws InvalidRequestException {
         boolean memberExists = crewMemberRepository.existsByUserName(userName);

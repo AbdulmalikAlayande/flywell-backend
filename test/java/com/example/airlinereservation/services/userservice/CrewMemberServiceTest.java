@@ -65,6 +65,10 @@ class CrewMemberServiceTest {
 
     }
     @Test void testThatAnExistingCrewMemberCanDeletedByUsername(){
+
+        crewMemberService.createCrewMember(buildCrewMember());
+       // crewMemberService.deleteCrewMemberByUsername(buildCrewMember().getUserName());
+
 //        Given That I have A crew member
         CreateCrewMemberResponse response = crewMemberService.createCrewMember(createCrewMemberRequest);
         long numberOfCrewMembersBefore = crewMemberService.getCountOfCrewMembers();
@@ -74,5 +78,6 @@ class CrewMemberServiceTest {
         assertThat(crewMemberService.existsByUsername(createCrewMemberRequest.getUserName())).isFalse();
 //     // 2.) long numberOfCrewMembersAfter = crewMemberService.getCountOfCrewMembers();
 //        assertThat(numberOfCrewMembersBefore).isGreaterThan(numberOfCrewMembersAfter);
+
     }
 }

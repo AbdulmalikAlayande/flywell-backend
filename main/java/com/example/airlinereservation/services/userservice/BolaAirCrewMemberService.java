@@ -93,6 +93,10 @@ public class BolaAirCrewMemberService implements CrewMemberService {
 
     @Override
     public CrewMemberResponse updateDetailsOfRegisteredCrewMember(UpdateRequest updateRequest) {
+        CrewMemberResponse crewMemberResponse = new CrewMemberResponse();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        Optional<CrewMember> foundUser = crewMemberRepository.findByUserName(updateRequest.getNewUserName());
 
 
         return null;

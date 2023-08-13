@@ -3,6 +3,7 @@ package com.example.airlinereservation.services.userservice;
 import com.example.airlinereservation.data.model.persons.CrewMember;
 import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
 import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
+import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,6 @@ class CrewMemberServiceTest {
     }
 
     @Test void testThatACrewHasToExistBeforeTheyCanBeAssignedToAFlight(){
-
         CreateCrewMemberResponse createCrewMemberResponse = crewMemberService.createCrewMember(buildCrewMember());
         assertThat(createCrewMemberResponse.getMessage()).isEqualTo("Crew member created successfully");
     }
@@ -58,26 +58,13 @@ class CrewMemberServiceTest {
                                .build();
     }
 
-    @SneakyThrows
-    @Test void testThatAnExistingCrewMemberCanBeDeletedById(){
+    @Test void testThatAnExistingCrewMemberCanDeletedByUsername() throws InvalidRequestException {
         crewMemberService.createCrewMember(createCrewMemberRequest);
-        crewMemberService.deleteCrewMemberById("1");
-
-    }
-    @Test void testThatAnExistingCrewMemberCanDeletedByUsername(){
-
-        crewMemberService.createCrewMember(buildCrewMember());
-       // crewMemberService.deleteCrewMemberByUsername(buildCrewMember().getUserName());
-
-//        Given That I have A crew member
-        CreateCrewMemberResponse response = crewMemberService.createCrewMember(createCrewMemberRequest);
         long numberOfCrewMembersBefore = crewMemberService.getCountOfCrewMembers();
-//        when I delete a crew member
-        crewMemberService.deleteCrewMemberByUsername(buildCrewMember().getUserName());
-//        I want to assert that the deleted crew member no longer exists
+        crewMemberService.deleteCrewMemberByUsername("Dan123");
         assertThat(crewMemberService.existsByUsername(createCrewMemberRequest.getUserName())).isFalse();
-//     // 2.) long numberOfCrewMembersAfter = crewMemberService.getCountOfCrewMembers();
-//        assertThat(numberOfCrewMembersBefore).isGreaterThan(numberOfCrewMembersAfter);
-
+        long numberOfCrewMembersAfter = crewMemberService.getCountOfCrewMembers();
+        assertThat(numberOfCrewMembersBefore).isGreaterThan(numberOfCrewMembersAfter);
     }
+
 }

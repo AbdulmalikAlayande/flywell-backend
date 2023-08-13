@@ -10,9 +10,10 @@ public interface CrewMemberService {
     CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest);
 
     void deleteCrewMemberById(String id) throws InvalidRequestException;
-    
-    void deleteCrewMemberByUsername(String userName);
-    
+
+
+    void deleteCrewMemberByUsername(String userName) throws InvalidRequestException;
+
     long getCountOfCrewMembers();
     
     boolean existsByUsername(String userName);

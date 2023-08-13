@@ -14,18 +14,10 @@ import java.util.Set;
 
 @Service
 @AllArgsConstructor
-<<<<<<< HEAD
-
-public class BolaAir_AirCraftManagementService implements AirCraftManagementService{
-	private final Set<AirCraft> hanger = new HashSet<>();
-
-
-
-=======
 @Slf4j
 public class BolaAir_AirCraftManagementService implements AirCraftManagementService{
 	private final Set<AirCraft> hanger = new HashSet<>();
->>>>>>> c606413ba61071a6a32898094523e0fbd5d46bf5
+
 	private ModelMapper mapper;
 	
 	// FIXME: 8/13/2023 the code does not check for null fields

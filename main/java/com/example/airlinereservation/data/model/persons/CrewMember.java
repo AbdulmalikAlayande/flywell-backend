@@ -13,6 +13,7 @@ import javax.validation.constraints.NotEmpty;
 @Entity
 @Getter
 @Setter
+@ToString
 public class CrewMember extends Person{
 	
 	@Id
@@ -23,11 +24,10 @@ public class CrewMember extends Person{
 	//@OneToOne
 	//private UserBioData bioData;
 	private boolean available;
-
-
 	@NotBlank
 	private String password;
 	@NotBlank
+	@Column(unique = true)
 	private String userName;
 	@NotBlank
 	private String email;

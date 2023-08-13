@@ -1,6 +1,5 @@
 package com.example.airlinereservation.services.userservice;
 
-import com.example.airlinereservation.data.model.Passenger;
 import com.example.airlinereservation.data.model.enums.Role;
 import com.example.airlinereservation.data.model.persons.CrewMember;
 import com.example.airlinereservation.data.repositories.CrewMemberRepository;
@@ -8,6 +7,7 @@ import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
 import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +17,7 @@ import static com.example.airlinereservation.utils.appUtils.Constants.INVALID_RE
 
 @Service
 @AllArgsConstructor
-
-
+@Slf4j
 public class BolaAirCrewMemberService implements CrewMemberService {
 
     private CrewMemberRepository crewMemberRepository;
@@ -28,6 +27,7 @@ public class BolaAirCrewMemberService implements CrewMemberService {
     public CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) {
         CrewMember newCrewMember = new CrewMember();
         newCrewMember.setFirstName(createCrewMemberRequest.getFirstName());
+        newCrewMember.setUserName(createCrewMemberRequest.getUserName());
         newCrewMember.setRole(Role.CREW_MEMBER);
         newCrewMember.setLastName(createCrewMemberRequest.getLastName());
         newCrewMember.setCountry(createCrewMemberRequest.getCountry());
@@ -50,14 +50,17 @@ public class BolaAirCrewMemberService implements CrewMemberService {
     public void deleteCrewMemberById(String id) throws InvalidRequestException {
         Optional<CrewMember> foundCrewMember = crewMemberRepository.findById(id);
         if (foundCrewMember.isEmpty())
-            throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "Admin", id));
+            throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "Crew member", "id", id));
         crewMemberRepository.deleteById(id);
 
     }
     
     @Override
-    public void deleteCrewMemberByUsername(String userName) {
-    
+    public void deleteCrewMemberByUsername(String userName) throws InvalidRequestException {
+        boolean memberExists = crewMemberRepository.existsByUserName(userName);
+        if (!memberExists)
+            throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "Crew member", "username", userName));
+        crewMemberRepository.deleteByUserName(userName);
     }
     
     @Override

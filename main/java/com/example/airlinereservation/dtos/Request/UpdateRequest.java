@@ -19,4 +19,13 @@ public class UpdateRequest {
 	@Nullable private String password;
 	@Nullable private String newUserName;
 	@NotNull private String userName;
+
+	@Nullable private String fullName;
+	@Nullable private String country;
+	@Nullable private String state;
+	@Nullable private String postalCode;
+	@Nullable private String streetName;
+	@Nullable private String streetNumber;
+	@Nullable private String houseNumber;
+
 }

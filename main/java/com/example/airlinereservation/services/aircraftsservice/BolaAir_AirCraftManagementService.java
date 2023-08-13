@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class BolaAir_AirCraftManagementService implements AirCraftManagementService{
 	private final Set<AirCraft> hanger = new HashSet<>();
+
 	private ModelMapper mapper;
 	public UUID testHangerId;
 	
@@ -71,7 +72,7 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 	public boolean hangerContainsAirCraft(AirCraft airCraft) {
 		return hanger.stream().anyMatch(craft -> craft.equals(airCraft));
 	}
-	
+
 	@Override
 	public UUID getTestHangerId(){
 		return testHangerId;

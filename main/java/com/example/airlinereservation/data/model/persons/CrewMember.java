@@ -6,6 +6,8 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.util.Objects;
+import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
@@ -21,6 +23,8 @@ public class CrewMember extends Person{
 	private String id;
 	@Enumerated(EnumType.STRING)
 	private Role role;
+	@Column(unique = true, nullable = false)
+	private UUID departmentId = UUID.randomUUID();
 	//@OneToOne
 	//private UserBioData bioData;
 	private boolean available;
@@ -45,4 +49,16 @@ public class CrewMember extends Person{
 	private String streetNumber;
 	private String houseNumber;
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof CrewMember that)) return false;
+		if (!super.equals(o)) return false;
+		return Objects.equals(getDepartmentId(), that.getDepartmentId()) && Objects.equals(getUserName(), that.getUserName());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), getDepartmentId(), getUserName());
+	}
 }

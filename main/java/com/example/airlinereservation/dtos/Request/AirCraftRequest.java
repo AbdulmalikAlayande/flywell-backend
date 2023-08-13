@@ -19,4 +19,5 @@ public class AirCraftRequest {
 	private String model;
 	@NotBlank
 	private LocalDate datePurchased;
+	private String location;
 }

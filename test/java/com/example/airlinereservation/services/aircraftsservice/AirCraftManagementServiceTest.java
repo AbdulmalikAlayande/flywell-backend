@@ -1,12 +1,16 @@
 package com.example.airlinereservation.services.aircraftsservice;
 
 import com.example.airlinereservation.data.model.aircraft.AirCraft;
+import com.example.airlinereservation.data.model.enums.Destinations;
 import com.example.airlinereservation.dtos.Request.AirCraftRequest;
 import com.example.airlinereservation.dtos.Response.AirCraftResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.math.BigInteger;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,6 +28,8 @@ public class AirCraftManagementServiceTest {
 		airCraftRequest = new AirCraftRequest();
 		airCraftRequest.setAirCraftName("Airliner");
 		airCraftRequest.setModel("Boeing 505");
+		airCraftRequest.setLocation("Abuja");
+		
 		
 		airCraftRequest1 = new AirCraftRequest();
 		airCraftRequest1.setModel("AirBus 727");
@@ -56,11 +62,16 @@ public class AirCraftManagementServiceTest {
 	}
 	
 	@Test void findAvailableAirCraftByLocationAndAvailabilityTest_AirCraftWhichIsAvailableIsReturned(){
-	
+		AirCraft foundAirCraft = airAirCraftManagementService.getAvailableAirCraft(Destinations.valueOf(airCraftRequest.getLocation().toUpperCase()), true);
+		assertThat(foundAirCraft).isNotNull();
+		assertThat(foundAirCraft.getLocation()).isEqualTo(Destinations.valueOf(airCraftRequest.getLocation().toUpperCase()));
+		assertThat(foundAirCraft.isAvailable()).isTrue();
 	}
 	
 	@Test void findAirCraftByModelTest_FoundAirCraftWithSaidModelIsReturned(){
-	
+		List<AirCraft> foundAirCraft = airAirCraftManagementService.getAirCraftByModel("Boeing 505");
+		assertThat(foundAirCraft.size()).isGreaterThan(BigInteger.ZERO.intValue());
+		assertThat(foundAirCraft.stream().findAny().isPresent()).isTrue();
 	}
 	
 	@Test void findAirCraftByHangerIdThatExists_FoundAirCraftIsReturned(){

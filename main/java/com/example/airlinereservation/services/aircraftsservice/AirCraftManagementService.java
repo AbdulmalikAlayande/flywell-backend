@@ -6,6 +6,7 @@ import com.example.airlinereservation.dtos.Response.AirCraftResponse;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public interface AirCraftManagementService {
 
@@ -18,4 +19,5 @@ public interface AirCraftManagementService {
 	boolean hangerContainsAirCraftByModel(String model);
 	
 	boolean hangerContainsAirCraft(AirCraft airCraft);
+	UUID getTestHangerId();
 }

@@ -46,7 +46,8 @@ public class AirCraftManagementServiceTest {
 	}
 	
 	@Test void removeAirCraftFromHangerTest(){
-		AirCraft airCraft = AirCraft.builder().airCraftName("").build();
+		AirCraft airCraft = new AirCraft();
+		airCraft.setHangerId(airAirCraftManagementService.getTestHangerId());
 		airAirCraftManagementService.removeAircraft(airCraft);
 		assertThat(airAirCraftManagementService.hangerContainsAirCraft(airCraft)).isFalse();
 	}

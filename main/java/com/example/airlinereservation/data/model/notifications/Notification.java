@@ -17,9 +17,7 @@ public abstract class Notification {
 	@OneToOne
 	private Sender sender;
 	private LocalDateTime createdOn;
-	@JsonProperty("htmlContent")
 	private String htmlContent;
-	@JsonProperty("to")
 	@OneToMany
 	private List<Recipients> to;
 	private String subject;

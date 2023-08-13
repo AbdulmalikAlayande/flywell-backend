@@ -22,7 +22,7 @@ import org.springframework.web.client.RestTemplate;
 @EnableAutoConfiguration
 public class EmailValidationConfig {
 	
-	public static String PRIVATE_API_KEY = System.getenv("brevoMailApiKey");
+	public static String PRIVATE_API_KEY = System.getenv("BREVO_API_KEY");
 	
 	@Bean
 	public EmailDomainValidator validEmailDomain() {
@@ -40,7 +40,6 @@ public class EmailValidationConfig {
 	
 	@Bean
 	public String brevoApiKey(){
-		System.out.println("api key:: "+PRIVATE_API_KEY);
 		return PRIVATE_API_KEY;
 	}
 	

@@ -13,9 +13,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Slf4j
 public class BolaAir_AirCraftManagementService implements AirCraftManagementService{
@@ -44,7 +45,9 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 	
 	@Override
 	public void removeAircraft(AirCraft aircraft) {
-	
+		Stream<AirCraft> filteredResult = hanger.stream().filter(airCraft -> aircraft == airCraft);
+		AirCraft foundAirCraft = filteredResult.toList().get(0);
+		hanger.remove(foundAirCraft);
 	}
 	
 	@Override
@@ -62,6 +65,7 @@ public class BolaAir_AirCraftManagementService implements AirCraftManagementServ
 		return hanger.stream().anyMatch(craft -> craft.equals(airCraft));
 	}
 	
+	@Override
 	public UUID getTestHangerId(){
 		return testHangerId;
 	}

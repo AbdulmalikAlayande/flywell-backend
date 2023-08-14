@@ -1,8 +1,5 @@
 package com.example.airlinereservation.dtos.Request;
 
-import com.example.airlinereservation.data.model.enums.Role;
-import com.example.airlinereservation.data.model.persons.UserBioData;
-import jakarta.persistence.*;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -13,8 +10,6 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @Getter
 @Setter
-
-
 public class CreateCrewMemberRequest {
     @NotBlank
     private String password;

@@ -2,13 +2,18 @@ package com.example.airlinereservation.services.userservice;
 
 import com.example.airlinereservation.data.model.enums.Role;
 import com.example.airlinereservation.data.model.flight.FlightInstance;
+import com.example.airlinereservation.data.model.persons.Address;
 import com.example.airlinereservation.data.model.persons.CrewMember;
+import com.example.airlinereservation.data.model.persons.UserBioData;
+import com.example.airlinereservation.data.repositories.AddressRepository;
 import com.example.airlinereservation.data.repositories.CrewMemberRepository;
+import com.example.airlinereservation.data.repositories.UserBioDataRepository;
 import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
 import com.example.airlinereservation.dtos.Response.CrewMemberResponse;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -26,29 +31,45 @@ public class BolaAirCrewMemberService implements CrewMemberService {
     private CrewMemberRepository crewMemberRepository;
     private ModelMapper mapper;
     private CrewMemberManagementService managementService;
+    private UserBioDataRepository userBioDataRepository;
+    private AddressRepository addressRepository;
 
     @Override
     public CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) {
+        Address address = buildAddress(createCrewMemberRequest);
+        Address savedAddress = addressRepository.save(address);
+
+        UserBioData userBioData = buildBiodata(createCrewMemberRequest);
+        userBioData.setAddress(savedAddress);
+        UserBioData savedBio = userBioDataRepository.save(userBioData);
+
         CrewMember newCrewMember = new CrewMember();
-        newCrewMember.setFirstName(createCrewMemberRequest.getFirstName());
-        newCrewMember.setUserName(createCrewMemberRequest.getUserName());
+        newCrewMember.setBioData(savedBio);
         newCrewMember.setRole(Role.CREW_MEMBER);
-        newCrewMember.setLastName(createCrewMemberRequest.getLastName());
-        newCrewMember.setCountry(createCrewMemberRequest.getCountry());
-        newCrewMember.setEmail(createCrewMemberRequest.getEmail());
-        newCrewMember.setCountry(createCrewMemberRequest.getCountry());
-        newCrewMember.setFullName(createCrewMemberRequest.getFullName());
-        newCrewMember.setHouseNumber(createCrewMemberRequest.getHouseNumber());
-        newCrewMember.setPassword(createCrewMemberRequest.getPassword());
-        newCrewMember.setPhoneNumber(createCrewMemberRequest.getPhoneNumber());
-        newCrewMember.setPostalCode(createCrewMemberRequest.getPostalCode());
         newCrewMember.setAvailable(true);
-        newCrewMember.setState(createCrewMemberRequest.getState());
         CrewMember savedCrewMember = crewMemberRepository.save(newCrewMember);
+
         managementService.addCrewMemberToDepartment(savedCrewMember);
         CreateCrewMemberResponse createCrewMemberResponse = new CreateCrewMemberResponse();
         createCrewMemberResponse.setMessage("Crew member created successfully");
         return createCrewMemberResponse;
+    }
+
+    private UserBioData buildBiodata(CreateCrewMemberRequest createCrewMemberRequest) {
+        return UserBioData.builder()
+               .lastName(createCrewMemberRequest.getLastName())
+                .build();
+    }
+
+    private Address buildAddress(CreateCrewMemberRequest createCrewMemberRequest) {
+        return Address.builder()
+                      .country(createCrewMemberRequest.getCountry())
+                      .houseNumber(createCrewMemberRequest.getHouseNumber())
+                      .state(createCrewMemberRequest.getState())
+                      .streetNumber(createCrewMemberRequest.getStreetNumber())
+                      .postalCode(createCrewMemberRequest.getPostalCode())
+                      .streetName(createCrewMemberRequest.getStreetName())
+                      .build();
     }
 
     @Override
@@ -92,13 +113,11 @@ public class BolaAirCrewMemberService implements CrewMemberService {
     }
 
     @Override
-    public CrewMemberResponse updateDetailsOfRegisteredCrewMember(UpdateRequest updateRequest) {
+    public CrewMemberResponse updateDetailsOfRegisteredCrewMember(@NotNull UpdateRequest updateRequest) {
         CrewMemberResponse crewMemberResponse = new CrewMemberResponse();
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setSkipNullEnabled(true);
-        Optional<CrewMember> foundUser = crewMemberRepository.findByUserName(updateRequest.getNewUserName());
-
-
-        return null;
+        Optional<CrewMember> crewMemberBio = crewMemberRepository.findByUserName(updateRequest.getNewUserName());
+       return null;
     }
 }

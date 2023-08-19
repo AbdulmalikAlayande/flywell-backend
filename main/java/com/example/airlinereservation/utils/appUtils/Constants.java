@@ -17,7 +17,7 @@ public final class Constants {
 	public static final String BREVO_SEND_EMAIL_API_URL = "https://api.brevo.com/v3/smtp/email";
 	public static final String DUPLICATE_ACCOUNT_REGISTRATION_FAILURE_MESSAGE = "Registration Failed:: Seems Like You Already Have An Account With Us";
 	public static final String EMPTY_FIELD_MESSAGE = "Field %s is null or empty";
-	public static final String INCOMPLETE_DETAILS_MESSAGE = "Incomplete Details\n %s";
+	public static final String INCOMPLETE_DETAILS_MESSAGE = "Incomplete Details:: %s";
 	public static final String INVALID_REQUEST_MESSAGE = "Invalid Request:: %s with %s %s not found";
 	public static final String LOGIN_SUCCESS_MESSAGE = "Login Successful";
 	public static final String LOGIN_FAILURE_MESSAGE = "Login Failed:: You do not have an account with us, Please register to create one";

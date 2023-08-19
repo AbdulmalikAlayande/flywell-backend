@@ -42,20 +42,21 @@ public class BolaAirCustomerService implements CustomerService {
 	
 	
 	@Override
-	public CustomerResponse registerNewCustomer(@NotNull CustomerRequest CustomerRequest) throws FailedRegistrationException {
-		Field[] declaredFields = CustomerRequest.getClass().getDeclaredFields();
+	public CustomerResponse registerNewCustomer(@NotNull CustomerRequest customerRequest) throws FailedRegistrationException {
+		Field[] declaredFields = customerRequest.getClass().getDeclaredFields();
 		CustomerResponse passengerResponse = new CustomerResponse();
-		if (userDoesNotExistBy(CustomerRequest.getUserName())){
+		if (userDoesNotExistBy(customerRequest.getUserName())){
 			try {
-				checkForNullFields(declaredFields, CustomerRequest);
-				validateEmailAndPassword(CustomerRequest.getEmail(), CustomerRequest.getPassword());
+				checkForNullFields(declaredFields, customerRequest);
+				validateEmailAndPassword(customerRequest.getEmail(), customerRequest.getPassword());
 				Passenger passenger = new Passenger();
 				UserBioData biodata = new UserBioData();
-				mapper.map(CustomerRequest, biodata);
-				biodata.setFullName(passengerResponse.getFullName());
+				mapper.map(customerRequest, biodata);
+				biodata.setFullName(customerRequest.getFullName());
 				passenger.setUserBioData(biodata);
 				passengerRepository.save(passenger);
 				mapper.map(passenger.getUserBioData(), passengerResponse);
+				passengerResponse.setMessage(passenger.getFullName()+ "Your Registration Is Successful");
 				return passengerResponse;
 			} catch (Throwable throwable) {
 				throwFailedRegistrationException(throwable);
@@ -80,12 +81,13 @@ public class BolaAirCustomerService implements CustomerService {
 	private void checkForNullFields(Field[] declaredFields, CustomerRequest passengerRequest) {
 		Arrays.stream(declaredFields)
 			  .forEach(field -> {
-				  String errorMessage = String.format(EMPTY_FIELD_MESSAGE, passengerRequest.getUserName());
 				  try {
 					  field.setAccessible(true);
 					  Object accessesField = field.get(passengerRequest);
-					  if (accessesField == null || (accessesField instanceof String && accessesField.toString().isEmpty()))
+					  if (accessesField == null || (accessesField instanceof String && accessesField.toString().isEmpty())) {
+						  String errorMessage = String.format(EMPTY_FIELD_MESSAGE, field.getName());
 						  throw new EmptyFieldException(String.format(INCOMPLETE_DETAILS_MESSAGE, errorMessage));
+					  }
 				  }
 				  catch (Exception e) {
 					  throw new RuntimeException(e);
@@ -206,7 +208,7 @@ public class BolaAirCustomerService implements CustomerService {
 					   })
 				       .orElseThrow(()-> {
 					       try {
-						       return throwInvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, passengerId));
+						       return throwInvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "User", "id", passengerId));
 					       } catch (InvalidRequestException e) {
 						       throw new RuntimeException(e);
 					       }
@@ -249,13 +251,13 @@ public class BolaAirCustomerService implements CustomerService {
 		});
 		if (optionalPassengerResponse.isPresent())
 			return optionalPassengerResponse;
-		throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, userName));
+		throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "User", "username",userName));
 	}
 	
 	@Override public void removeCustomerById(String passengerId) throws InvalidRequestException {
 		Optional<Passenger> foundPassenger = passengerRepository.findById(passengerId);
 		if (foundPassenger.isEmpty())
-			throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, passengerId));
+			throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "Customer", "id", passengerId));
 		passengerRepository.deleteById(passengerId);
 	}
 	
@@ -276,7 +278,7 @@ public class BolaAirCustomerService implements CustomerService {
 		if (optionalBooleanIsDeleted.isPresent()){
 			return optionalBooleanIsDeleted.get();
 		}
-		else throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, userName));
+		else throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "User", "username", userName));
 	}
 	
 	@Override

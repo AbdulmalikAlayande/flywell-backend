@@ -5,6 +5,10 @@ import com.example.airlinereservation.data.model.flight.FlightInstance;
 import com.example.airlinereservation.data.model.persons.Address;
 import com.example.airlinereservation.data.model.persons.CrewMember;
 import com.example.airlinereservation.data.model.persons.UserBioData;
+<<<<<<< HEAD
+=======
+import com.example.airlinereservation.data.repositories.AddressRepository;
+>>>>>>> b088200332ef972da351caa974be1f09d5caafa2
 import com.example.airlinereservation.data.repositories.CrewMemberRepository;
 import com.example.airlinereservation.data.repositories.UserBioDataRepository;
 import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
@@ -17,6 +21,7 @@ import com.example.airlinereservation.services.notifications.Validator;
 import com.example.airlinereservation.utils.exceptions.EmptyFieldException;
 import com.example.airlinereservation.utils.exceptions.FieldInvalidException;
 import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -36,6 +41,7 @@ public class BolaAirCrewMemberService implements CrewMemberService {
     private ModelMapper mapper;
     private CrewMemberManagementService managementService;
     private UserBioDataRepository userBioDataRepository;
+<<<<<<< HEAD
     private Validator validator;
 
     @Override
@@ -50,12 +56,31 @@ public class BolaAirCrewMemberService implements CrewMemberService {
         newCrewMember.setBioData(mappedBio);
         newCrewMember.setAvailable(true);
         newCrewMember.setRole(Role.CREW_MEMBER);
+=======
+    private AddressRepository addressRepository;
+
+    @Override
+    public CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) {
+        Address address = buildAddress(createCrewMemberRequest);
+        Address savedAddress = addressRepository.save(address);
+
+        UserBioData userBioData = buildBiodata(createCrewMemberRequest);
+        userBioData.setAddress(savedAddress);
+        UserBioData savedBio = userBioDataRepository.save(userBioData);
+
+        CrewMember newCrewMember = new CrewMember();
+        newCrewMember.setBioData(savedBio);
+        newCrewMember.setRole(Role.CREW_MEMBER);
+        newCrewMember.setAvailable(true);
+>>>>>>> b088200332ef972da351caa974be1f09d5caafa2
         CrewMember savedCrewMember = crewMemberRepository.save(newCrewMember);
+
         managementService.addCrewMemberToDepartment(savedCrewMember);
         CreateCrewMemberResponse createCrewMemberResponse = new CreateCrewMemberResponse();
         createCrewMemberResponse.setMessage("Registration Successful");
         return createCrewMemberResponse;
     }
+<<<<<<< HEAD
     
     private void checkForNullFields(CreateCrewMemberRequest createCrewMemberRequest) throws IllegalAccessException, EmptyFieldException {
         Field[] declaredFields = createCrewMemberRequest.getClass().getDeclaredFields();
@@ -74,6 +99,26 @@ public class BolaAirCrewMemberService implements CrewMemberService {
         boolean crewMemberExists = crewMemberRepository.existsByUserName(createCrewMemberRequest.getUserName());
     }
     
+=======
+
+    private UserBioData buildBiodata(CreateCrewMemberRequest createCrewMemberRequest) {
+        return UserBioData.builder()
+               .lastName(createCrewMemberRequest.getLastName())
+                .build();
+    }
+
+    private Address buildAddress(CreateCrewMemberRequest createCrewMemberRequest) {
+        return Address.builder()
+                      .country(createCrewMemberRequest.getCountry())
+                      .houseNumber(createCrewMemberRequest.getHouseNumber())
+                      .state(createCrewMemberRequest.getState())
+                      .streetNumber(createCrewMemberRequest.getStreetNumber())
+                      .postalCode(createCrewMemberRequest.getPostalCode())
+                      .streetName(createCrewMemberRequest.getStreetName())
+                      .build();
+    }
+
+>>>>>>> b088200332ef972da351caa974be1f09d5caafa2
     @Override
     public void deleteCrewMemberById(String id) throws InvalidRequestException {
         Optional<CrewMember> foundCrewMember = crewMemberRepository.findById(id);
@@ -115,14 +160,12 @@ public class BolaAirCrewMemberService implements CrewMemberService {
     }
 
     @Override
-    public CrewMemberResponse updateDetailsOfRegisteredCrewMember(UpdateRequest updateRequest) {
+    public CrewMemberResponse updateDetailsOfRegisteredCrewMember(@NotNull UpdateRequest updateRequest) {
         CrewMemberResponse crewMemberResponse = new CrewMemberResponse();
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setSkipNullEnabled(true);
-        Optional<CrewMember> foundUser = crewMemberRepository.findByUserName(updateRequest.getNewUserName());
-
-
-        return null;
+        Optional<CrewMember> crewMemberBio = crewMemberRepository.findByUserName(updateRequest.getNewUserName());
+       return null;
     }
     
     @Override

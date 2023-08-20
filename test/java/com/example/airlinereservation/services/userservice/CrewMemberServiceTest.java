@@ -5,7 +5,6 @@ import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
 import com.example.airlinereservation.dtos.Response.CrewMemberResponse;
-import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class CrewMemberServiceTest {
@@ -39,6 +37,7 @@ class CrewMemberServiceTest {
     void tearDown() {
     }
 
+    @SneakyThrows
     @Test void testThatACrewHasToExistBeforeTheyCanBeAssignedToAFlight(){
         CreateCrewMemberResponse createCrewMemberResponse = crewMemberService.createCrewMember(buildCrewMember());
         assertThat(createCrewMemberResponse.getMessage()).isEqualTo("Crew member created successfully");
@@ -63,7 +62,8 @@ class CrewMemberServiceTest {
                                .build();
     }
 
-    @Test void testThatAnExistingCrewMemberCanBeDeletedByUsername() throws InvalidRequestException {
+    @SneakyThrows
+    @Test void testThatAnExistingCrewMemberCanBeDeletedByUsername() {
         crewMemberService.createCrewMember(createCrewMemberRequest);
         long numberOfCrewMembersBefore = crewMemberService.getCountOfCrewMembers();
         crewMemberService.deleteCrewMemberByUsername("Dan123");
@@ -72,15 +72,17 @@ class CrewMemberServiceTest {
         assertThat(numberOfCrewMembersBefore).isGreaterThan(numberOfCrewMembersAfter);
     }
 
-    @Test void testThatExistingCrewMemberCanBeFoundByUserName() throws InvalidRequestException {
+    @SneakyThrows
+    @Test void testThatExistingCrewMemberCanBeFoundByUserName() {
         crewMemberService.createCrewMember(createCrewMemberRequest);
         Optional<CrewMember> foundCrewMember = crewMemberService.findCrewMemberByUserName(createCrewMemberRequest.getUserName());
         assertThat(foundCrewMember).isPresent();
-        assertThat(foundCrewMember.get().getUserName()).isEqualTo(createCrewMemberRequest.getUserName());
+        assertThat(foundCrewMember.get().getBioData().getUserName()).isEqualTo(createCrewMemberRequest.getUserName());
 
     }
 
-    @Test void testThatAnExistingCrewMemberCanUpdateRegistrationDetails() throws InvalidRequestException {
+    @SneakyThrows
+    @Test void testThatAnExistingCrewMemberCanUpdateRegistrationDetails(){
         updateRequest.setEmail("me@gmail.com");
         updateRequest.setFirstName("chris");
         updateRequest.setUserName("malik33");
@@ -90,8 +92,8 @@ class CrewMemberServiceTest {
         Optional<CrewMember> foundCrewMember = crewMemberService.findCrewMemberByUserName(createCrewMemberRequest.getUserName());
         assertThat(foundCrewMember).isPresent().isPresent();
         foundCrewMember.ifPresent(crewMember -> {
-            assertThat(crewMember.getUserName()).isEqualTo(updateRequest.getNewUserName());
-            assertThat(crewMember.getEmail()).isEqualTo(updateRequest.getEmail());
+            assertThat(crewMember.getBioData().getUserName()).isEqualTo(updateRequest.getNewUserName());
+            assertThat(crewMember.getBioData().getEmail()).isEqualTo(updateRequest.getEmail());
         });
 
 

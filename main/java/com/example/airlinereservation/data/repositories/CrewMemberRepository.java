@@ -13,4 +13,5 @@ public interface CrewMemberRepository extends JpaRepository<CrewMember, String> 
 
     @Transactional
     void deleteByUserName(String userName);
+	
 }

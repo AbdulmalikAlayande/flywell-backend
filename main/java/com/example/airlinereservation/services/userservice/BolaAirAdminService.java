@@ -12,6 +12,8 @@ import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
 import com.example.airlinereservation.dtos.Response.AdminInvitationResponse;
 import com.example.airlinereservation.dtos.Response.CreateAdminResponse;
 import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
+import com.example.airlinereservation.utils.exceptions.EmptyFieldException;
+import com.example.airlinereservation.utils.exceptions.FieldInvalidException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +65,7 @@ public class BolaAirAdminService implements AdminService{
     }
 
     @Override
-    public CreateCrewMemberResponse addCrewMember(CreateCrewMemberRequest createCrewMemberRequest) {
+    public CreateCrewMemberResponse addCrewMember(CreateCrewMemberRequest createCrewMemberRequest) throws EmptyFieldException, IllegalAccessException, FieldInvalidException {
         return crewMemberService.createCrewMember(createCrewMemberRequest);
     }
 

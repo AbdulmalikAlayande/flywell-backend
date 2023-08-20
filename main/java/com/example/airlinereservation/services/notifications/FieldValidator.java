@@ -11,9 +11,11 @@ import java.util.regex.Pattern;
 
 import static com.example.airlinereservation.utils.Exceptions.throwFieldInvalidException;
 import static com.example.airlinereservation.utils.Exceptions.throwInvalidRequestException;
+import static com.example.airlinereservation.utils.appUtils.Constants.*;
 
 @Slf4j
 public class FieldValidator implements Validator {
+	
 	private final String[] validDomains = {"gmail.com", "outlook.com", "yahoo.com", "native.semicolon.africa"};
 	private final Character[] validSpecialCharacters = {'@', '!', '#', '$', '%', '(', ')', '.', '^'};
 	private String email;
@@ -25,11 +27,11 @@ public class FieldValidator implements Validator {
 		String regexPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 		Pattern compiledPattern = Pattern.compile(regexPattern);
 		if (!compiledPattern.matcher(email).matches())
-			throwInvalidRequestException("Email pattern is not valid:: Please enter a valid email format");
+			throwInvalidRequestException(INVALID_EMAIL_FORMAT);
 		String part = splitEmailToObtainDomain();
 		boolean emailMatchesADomain = domains.stream().anyMatch(domain -> domain.equals(part));
 		if (!emailMatchesADomain) {
-			String fomattedMessage = new Formatter().format("The domain part %s of %s is invalid", part, email).toString();
+			String fomattedMessage = new Formatter().format(INVALID_DOMAIN, part, email).toString();
 			throwFieldInvalidException(fomattedMessage);
 			log.info("The domain part {} of {} is invalid", part, this.email);
 		}
@@ -43,7 +45,7 @@ public class FieldValidator implements Validator {
 	@Override
 	public void validatePassword(String password) throws FieldInvalidException {
 		Formatter formatter = new Formatter();
-		Formatter formatMessage = formatter.format("Password %s length is invalid it should be between 8 and 15 characters", password);
+		Formatter formatMessage = formatter.format(INVALID_PASSWORD_LENGTH, password);
 		String invalidLengthMessage = formatMessage.toString();
 		if (!fieldLengthIsValid(password, 8, 15))
 			throwFieldInvalidException(invalidLengthMessage);
@@ -54,12 +56,13 @@ public class FieldValidator implements Validator {
 					if (validSpecialCharacter == password.charAt(indexJ)) {
 						passWordContainsSpecialCharacter = true;
 						break;
+						
 					}
 				}
 			}
 			if (!passWordContainsSpecialCharacter) {
 				Formatter formatter1 = new Formatter();
-				Formatter message = formatter1.format("Password should contain either of the special characters %s", Arrays.toString(validSpecialCharacters));
+				Formatter message = formatter1.format(PASSWORD_DOES_NOT_CONTAIN_EXPECTED_CHARACTER, Arrays.toString(validSpecialCharacters));
 				throwFieldInvalidException(message.toString());
 			}
 		}

@@ -36,7 +36,8 @@ public class AirCraft {
 	private final Seat[] seats = new Seat[numberOfSeats];
 	public final boolean[] aircraftSeats = new boolean[numberOfSeats];
 	
-	public boolean getAircraftSeatsAt(int seatIndex){
+	public boolean
+	getAircraftSeatsAt(int seatIndex){
 		return aircraftSeats[seatIndex];
 	}
 	

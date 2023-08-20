@@ -7,7 +7,9 @@ import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
 import com.example.airlinereservation.dtos.Response.AdminInvitationResponse;
 import com.example.airlinereservation.dtos.Response.CreateAdminResponse;
 import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
+import com.example.airlinereservation.utils.exceptions.EmptyFieldException;
 import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
+import com.example.airlinereservation.utils.exceptions.FieldInvalidException;
 
 import java.util.Optional;
 
@@ -15,7 +17,7 @@ public interface AdminService {
 
     CreateAdminResponse createAdmin(CreateAdminRequest createAdminRequest) throws FailedRegistrationException;
 	AdminInvitationResponse inviteAdmin(AdminInvitationRequest invitationRequest);
-    CreateCrewMemberResponse addCrewMember(CreateCrewMemberRequest createCrewMemberRequest);
+    CreateCrewMemberResponse addCrewMember(CreateCrewMemberRequest createCrewMemberRequest) throws EmptyFieldException, IllegalAccessException, FieldInvalidException;
 
     Optional<UserBioData> findByUsername(String userName);
 

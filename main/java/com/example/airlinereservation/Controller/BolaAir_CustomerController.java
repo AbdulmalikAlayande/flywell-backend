@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 public class BolaAir_CustomerController {
 	
+	public static final String ERROR_MESSAGE = "Error Message:: {}";
 	private CustomerService customerService;
 	
 	@PostMapping("register-customer/")
@@ -36,7 +37,7 @@ public class BolaAir_CustomerController {
 			apiResponse.setStatusCode(HttpStatus.CREATED.value());
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} catch (FailedRegistrationException e) {
-			log.info("Error Message:: {}", e.getMessage());
+			log.info(ERROR_MESSAGE, e.getMessage());
 			log.info("Error:: ", e);
 			response.setMessage(e.getMessage());
 			ApiResponse<CustomerResponse> apiResponse= new ApiResponse<>();

@@ -7,6 +7,10 @@ public final class Constants {
 	public static final String SENDER_FULL_NAME = SENDER_FIRSTNAME + SENDER_LASTNAME;
 	public static final String API_KEY = "api-key";
 	public static final String USER = "user";
+	public static final String PASSWORD_DOES_NOT_CONTAIN_EXPECTED_CHARACTER = "Password should contain either of the special characters %s";
+	public static final String INVALID_EMAIL_FORMAT = "Email pattern is not valid:: Please enter a valid email format";
+	public static final String INVALID_DOMAIN = "The domain part %s of %s is invalid";
+	public static final String INVALID_PASSWORD_LENGTH = "Password %s length is invalid it should be between 8 and 15 characters";
 	public static final String SENDER_EMAIL = "alaabdulmalik03@gmail.com";
 	public static final String MESSAGE_SUCCESSFULLY_SENT = "Email sent successfully";
 	public static final String MESSAGE_FAILED_TO_SEND = "Failed to send email";

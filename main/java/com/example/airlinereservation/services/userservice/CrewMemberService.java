@@ -15,7 +15,7 @@ import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
 import java.util.Optional;
 
 public interface CrewMemberService {
-    CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) throws IllegalAccessException, EmptyFieldException, FieldInvalidException;
+    CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) throws EmptyFieldException, FieldInvalidException;
     void deleteCrewMemberById(String id) throws InvalidRequestException;
     FlightInstance assignCrewMember(FlightInstance flightInstance);
     void deleteCrewMemberByUsername(String userName) throws InvalidRequestException;

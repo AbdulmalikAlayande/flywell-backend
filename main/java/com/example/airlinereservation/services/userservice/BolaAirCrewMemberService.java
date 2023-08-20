@@ -2,24 +2,16 @@ package com.example.airlinereservation.services.userservice;
 
 import com.example.airlinereservation.data.model.enums.Role;
 import com.example.airlinereservation.data.model.flight.FlightInstance;
-import com.example.airlinereservation.data.model.persons.Address;
-import com.example.airlinereservation.data.model.persons.CrewMember;
-import com.example.airlinereservation.data.model.persons.UserBioData;
+import com.example.airlinereservation.data.model.persons.*;
 import com.example.airlinereservation.data.repositories.AddressRepository;
 import com.example.airlinereservation.data.repositories.CrewMemberRepository;
 import com.example.airlinereservation.data.repositories.UserBioDataRepository;
-import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
-import com.example.airlinereservation.dtos.Request.UpdateRequest;
-import com.example.airlinereservation.dtos.Request.ViewFlightScheduleRequest;
-import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
-import com.example.airlinereservation.dtos.Response.CrewMemberResponse;
-import com.example.airlinereservation.dtos.Response.FlightScheduleResponse;
+import com.example.airlinereservation.dtos.Request.*;
+import com.example.airlinereservation.dtos.Response.*;
 import com.example.airlinereservation.services.notifications.Validator;
-import com.example.airlinereservation.utils.exceptions.EmptyFieldException;
-import com.example.airlinereservation.utils.exceptions.FieldInvalidException;
-import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import com.example.airlinereservation.utils.exceptions.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -43,7 +35,7 @@ public class BolaAirCrewMemberService implements CrewMemberService {
     
     
     @Override
-    public CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) throws IllegalAccessException, EmptyFieldException, FieldInvalidException {
+    public CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) throws EmptyFieldException, FieldInvalidException {
         checkForNullFields(createCrewMemberRequest);
         rejectCrewMemberIfCrewMemberAlreadyExists(createCrewMemberRequest);
         validator.validatePassword(createCrewMemberRequest.getPassword());
@@ -62,15 +54,19 @@ public class BolaAirCrewMemberService implements CrewMemberService {
         createCrewMemberResponse.setMessage("Registration Successful");
         return createCrewMemberResponse;
     }
-    private void checkForNullFields(CreateCrewMemberRequest createCrewMemberRequest) throws IllegalAccessException, EmptyFieldException {
-        Field[] declaredFields = createCrewMemberRequest.getClass().getDeclaredFields();
-        for (Field field : declaredFields) {
-            field.setAccessible(true);
-            Object accessedField = field.get(createCrewMemberRequest);
-            if (accessedField == null || (accessedField instanceof String && accessedField.toString().isEmpty())) {
-                String errorMessage = String.format(EMPTY_FIELD_MESSAGE, field.getName());
-                throw new EmptyFieldException(String.format(INCOMPLETE_DETAILS_MESSAGE, errorMessage));
+    private void checkForNullFields(CreateCrewMemberRequest createCrewMemberRequest) throws EmptyFieldException {
+        try {
+            Field[] declaredFields = createCrewMemberRequest.getClass().getDeclaredFields();
+            for (Field field : declaredFields) {
+                field.setAccessible(true);
+                Object accessedField = field.get(createCrewMemberRequest);
+                if (accessedField == null || (accessedField instanceof String && accessedField.toString().isEmpty())) {
+                    String errorMessage = String.format(EMPTY_FIELD_MESSAGE, field.getName());
+                    throw new EmptyFieldException(String.format(INCOMPLETE_DETAILS_MESSAGE, errorMessage));
+                }
             }
+        } catch (Exception e){
+            throw new EmptyFieldException(e.getMessage());
         }
     }
     

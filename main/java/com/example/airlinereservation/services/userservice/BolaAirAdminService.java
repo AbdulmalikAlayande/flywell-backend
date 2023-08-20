@@ -31,34 +31,17 @@ public class BolaAirAdminService implements AdminService{
 
     @Override
     public CreateAdminResponse createAdmin(CreateAdminRequest createAdminRequest) {
-        Admin admin = new Admin();
-        UserBioData bioData = new UserBioData();
-        Address address = new Address();
+	    Admin admin = new Admin();
+	    Address mappedAddress = mapper.map(createAdminRequest, Address.class);
+        Address savedAddress = addressRepository.save(mappedAddress);
         
-        Address mappedAddress = mapper.map(createAdminRequest, Address.class);
-        address.setCountry(createAdminRequest.getCountry());
-        address.setState(createAdminRequest.getState());
-        address.setHouseNumber(createAdminRequest.getHouseNumber());
-        address.setStreetName(createAdminRequest.getStreetName());
-        address.setStreetNumber(createAdminRequest.getStreetNumber());
-        address.setPostalCode(createAdminRequest.getPostalCode());
-
-        Address savedAddress = addressRepository.save(address);
-
-        bioData.setAddress(savedAddress);
-        bioData.setEmail(createAdminRequest.getEmail());
-        bioData.setPassword(createAdminRequest.getPassword());
-        bioData.setFullName(createAdminRequest.getFullName());
-        bioData.setFirstName(createAdminRequest.getFirstName());
-        bioData.setLastName(createAdminRequest.getLastName());
-        bioData.setPhoneNumber(createAdminRequest.getPhoneNumber());
-        bioData.setUserName(createAdminRequest.getUserName());
-
-        UserBioData savedBio = bioDataRepository.save(bioData);
-        admin.setBioData(savedBio);
-        adminRepository.save(admin);
-        return new CreateAdminResponse("Admin created successfully");
-
+        UserBioData mappedBio = mapper.map(createAdminRequest, UserBioData.class);
+	    mappedBio.setAddress(savedAddress);
+        UserBioData saveBioData = bioDataRepository.save(mappedBio);
+        admin.setBioData(saveBioData);
+	    adminRepository.save(admin);
+	    return new CreateAdminResponse("Admin created successfully");
+	    
     }
 
 

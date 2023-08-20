@@ -5,10 +5,7 @@ import com.example.airlinereservation.data.model.flight.FlightInstance;
 import com.example.airlinereservation.data.model.persons.Address;
 import com.example.airlinereservation.data.model.persons.CrewMember;
 import com.example.airlinereservation.data.model.persons.UserBioData;
-<<<<<<< HEAD
-=======
 import com.example.airlinereservation.data.repositories.AddressRepository;
->>>>>>> b088200332ef972da351caa974be1f09d5caafa2
 import com.example.airlinereservation.data.repositories.CrewMemberRepository;
 import com.example.airlinereservation.data.repositories.UserBioDataRepository;
 import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
@@ -41,9 +38,10 @@ public class BolaAirCrewMemberService implements CrewMemberService {
     private ModelMapper mapper;
     private CrewMemberManagementService managementService;
     private UserBioDataRepository userBioDataRepository;
-<<<<<<< HEAD
     private Validator validator;
-
+    private AddressRepository addressRepository;
+    
+    
     @Override
     public CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) throws IllegalAccessException, EmptyFieldException, FieldInvalidException {
         checkForNullFields(createCrewMemberRequest);
@@ -52,36 +50,18 @@ public class BolaAirCrewMemberService implements CrewMemberService {
         CrewMember newCrewMember = new CrewMember();
         Address mappedAddress = mapper.map(createCrewMemberRequest, Address.class);
         UserBioData mappedBio = mapper.map(createCrewMemberRequest, UserBioData.class);
-        mappedBio.setAddress(mappedAddress);
-        newCrewMember.setBioData(mappedBio);
-        newCrewMember.setAvailable(true);
-        newCrewMember.setRole(Role.CREW_MEMBER);
-=======
-    private AddressRepository addressRepository;
-
-    @Override
-    public CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) {
-        Address address = buildAddress(createCrewMemberRequest);
-        Address savedAddress = addressRepository.save(address);
-
-        UserBioData userBioData = buildBiodata(createCrewMemberRequest);
-        userBioData.setAddress(savedAddress);
-        UserBioData savedBio = userBioDataRepository.save(userBioData);
-
-        CrewMember newCrewMember = new CrewMember();
+        Address savedAddress = addressRepository.save(mappedAddress);
+        mappedBio.setAddress(savedAddress);
+        UserBioData savedBio = userBioDataRepository.save(mappedBio);
         newCrewMember.setBioData(savedBio);
-        newCrewMember.setRole(Role.CREW_MEMBER);
         newCrewMember.setAvailable(true);
->>>>>>> b088200332ef972da351caa974be1f09d5caafa2
+        newCrewMember.setRole(Role.CREW_MEMBER);
         CrewMember savedCrewMember = crewMemberRepository.save(newCrewMember);
-
         managementService.addCrewMemberToDepartment(savedCrewMember);
         CreateCrewMemberResponse createCrewMemberResponse = new CreateCrewMemberResponse();
         createCrewMemberResponse.setMessage("Registration Successful");
         return createCrewMemberResponse;
     }
-<<<<<<< HEAD
-    
     private void checkForNullFields(CreateCrewMemberRequest createCrewMemberRequest) throws IllegalAccessException, EmptyFieldException {
         Field[] declaredFields = createCrewMemberRequest.getClass().getDeclaredFields();
         for (Field field : declaredFields) {
@@ -98,27 +78,7 @@ public class BolaAirCrewMemberService implements CrewMemberService {
         Optional<UserBioData> foundBio = userBioDataRepository.findByEmailAndPassword(createCrewMemberRequest.getEmail(), createCrewMemberRequest.getPassword());
         boolean crewMemberExists = crewMemberRepository.existsByUserName(createCrewMemberRequest.getUserName());
     }
-    
-=======
 
-    private UserBioData buildBiodata(CreateCrewMemberRequest createCrewMemberRequest) {
-        return UserBioData.builder()
-               .lastName(createCrewMemberRequest.getLastName())
-                .build();
-    }
-
-    private Address buildAddress(CreateCrewMemberRequest createCrewMemberRequest) {
-        return Address.builder()
-                      .country(createCrewMemberRequest.getCountry())
-                      .houseNumber(createCrewMemberRequest.getHouseNumber())
-                      .state(createCrewMemberRequest.getState())
-                      .streetNumber(createCrewMemberRequest.getStreetNumber())
-                      .postalCode(createCrewMemberRequest.getPostalCode())
-                      .streetName(createCrewMemberRequest.getStreetName())
-                      .build();
-    }
-
->>>>>>> b088200332ef972da351caa974be1f09d5caafa2
     @Override
     public void deleteCrewMemberById(String id) throws InvalidRequestException {
         Optional<CrewMember> foundCrewMember = crewMemberRepository.findById(id);

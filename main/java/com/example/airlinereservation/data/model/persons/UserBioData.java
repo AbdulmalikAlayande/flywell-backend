@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NaturalId;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -29,6 +30,7 @@ public class UserBioData {
 	private String userName;
 	@NotBlank
 	@Column(unique = true)
+	@NaturalId(mutable = true)
 	private String email;
 	@NotBlank
 	private String phoneNumber;

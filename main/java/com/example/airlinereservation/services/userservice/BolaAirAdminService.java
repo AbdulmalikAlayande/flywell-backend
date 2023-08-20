@@ -15,6 +15,7 @@ import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
 import com.example.airlinereservation.utils.exceptions.EmptyFieldException;
 import com.example.airlinereservation.utils.exceptions.FieldInvalidException;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,13 +27,15 @@ public class BolaAirAdminService implements AdminService{
     private UserBioDataRepository bioDataRepository;
     private AddressRepository addressRepository;
     private CrewMemberService crewMemberService;
+    private ModelMapper mapper;
 
     @Override
     public CreateAdminResponse createAdmin(CreateAdminRequest createAdminRequest) {
         Admin admin = new Admin();
         UserBioData bioData = new UserBioData();
         Address address = new Address();
-
+        
+        Address mappedAddress = mapper.map(createAdminRequest, Address.class);
         address.setCountry(createAdminRequest.getCountry());
         address.setState(createAdminRequest.getState());
         address.setHouseNumber(createAdminRequest.getHouseNumber());

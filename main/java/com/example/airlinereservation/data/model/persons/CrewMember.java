@@ -25,11 +25,6 @@ public class CrewMember extends Person{
 	@OneToOne
 	private UserBioData bioData;
 	private boolean available;
-<<<<<<< HEAD
-	
-=======
-
->>>>>>> b088200332ef972da351caa974be1f09d5caafa2
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

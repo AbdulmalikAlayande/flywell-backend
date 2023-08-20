@@ -11,10 +11,10 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @Setter
 public class CreateCrewMemberRequest {
-    @NotBlank
     private String password;
-    @NotBlank
     private String userName;
+    @NotBlank
+    private String role;
     @NotBlank
     private String email;
     @NotBlank

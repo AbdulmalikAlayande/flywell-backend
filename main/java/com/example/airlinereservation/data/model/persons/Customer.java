@@ -4,6 +4,11 @@ import com.example.airlinereservation.data.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.CascadeType.MERGE;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +22,11 @@ public class Customer extends Person{
 	private Long frequentFlyerNumber;
 	@Enumerated(EnumType.STRING)
 	private Role role;
-	@OneToOne
+	@OneToOne(cascade = MERGE)
 	private UserBioData bioData;
+	private LocalDate lastLoggedIn;
+	private boolean expiredToken;
+	private boolean loggedIn;
+	private String token;
 	
 }

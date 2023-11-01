@@ -7,9 +7,9 @@ import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
 import com.example.airlinereservation.dtos.Response.AdminInvitationResponse;
 import com.example.airlinereservation.dtos.Response.CreateAdminResponse;
 import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
-import com.example.airlinereservation.utils.exceptions.EmptyFieldException;
-import com.example.airlinereservation.utils.exceptions.FailedRegistrationException;
-import com.example.airlinereservation.utils.exceptions.FieldInvalidException;
+import com.example.airlinereservation.exceptions.EmptyFieldException;
+import com.example.airlinereservation.exceptions.FailedRegistrationException;
+import com.example.airlinereservation.exceptions.FieldInvalidException;
 
 import java.util.Optional;
 

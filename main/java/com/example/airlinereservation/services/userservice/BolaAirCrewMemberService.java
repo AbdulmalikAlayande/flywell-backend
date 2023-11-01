@@ -8,8 +8,10 @@ import com.example.airlinereservation.data.repositories.CrewMemberRepository;
 import com.example.airlinereservation.data.repositories.UserBioDataRepository;
 import com.example.airlinereservation.dtos.Request.*;
 import com.example.airlinereservation.dtos.Response.*;
+import com.example.airlinereservation.exceptions.EmptyFieldException;
+import com.example.airlinereservation.exceptions.FieldInvalidException;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.services.notifications.Validator;
-import com.example.airlinereservation.utils.exceptions.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.util.Optional;
 
-import static com.example.airlinereservation.utils.appUtils.Constants.*;
+import static com.example.airlinereservation.utils.Constants.*;
 
 @Service
 @AllArgsConstructor
@@ -72,7 +74,7 @@ public class BolaAirCrewMemberService implements CrewMemberService {
     
     private void rejectCrewMemberIfCrewMemberAlreadyExists(CreateCrewMemberRequest createCrewMemberRequest) {
         Optional<UserBioData> foundBio = userBioDataRepository.findByEmailAndPassword(createCrewMemberRequest.getEmail(), createCrewMemberRequest.getPassword());
-        boolean crewMemberExists = crewMemberRepository.existsByUserName(createCrewMemberRequest.getUserName());
+//        boolean crewMemberExists = crewMemberRepository.existsByUserName(createCrewMemberRequest.getUserName());
     }
 
     @Override
@@ -91,10 +93,10 @@ public class BolaAirCrewMemberService implements CrewMemberService {
 
     @Override
     public void deleteCrewMemberByUsername(String userName) throws InvalidRequestException {
-        boolean memberExists = crewMemberRepository.existsByUserName(userName);
-        if (!memberExists)
-            throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "Crew member", "username", userName));
-        crewMemberRepository.deleteByUserName(userName);
+//        boolean memberExists = crewMemberRepository.existsByUserName(userName);
+//        if (!memberExists)
+//            throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "Crew member", "username", userName));
+//        crewMemberRepository.deleteByUserName(userName);
     }
     
     @Override
@@ -104,15 +106,17 @@ public class BolaAirCrewMemberService implements CrewMemberService {
     
     @Override
     public boolean existsByUsername(String userName) {
-        return crewMemberRepository.existsByUserName(userName);
+        return false;
+//        return crewMemberRepository.existsByUserName(userName);
     }
 
     @Override
     public Optional<CrewMember> findCrewMemberByUserName(String userName) throws InvalidRequestException {
-        boolean crewMember = crewMemberRepository.existsByUserName(userName);
-        if(!crewMember)
-            throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE,"Crew member", "username", userName));
-        return crewMemberRepository.findByUserName(userName);
+//        boolean crewMember = crewMemberRepository.existsByUserName(userName);
+//        if(!crewMember)
+//            throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE,"Crew member", "username", userName));
+//        return crewMemberRepository.findByUserName(userName);
+        return Optional.empty();
     }
 
     @Override
@@ -120,7 +124,7 @@ public class BolaAirCrewMemberService implements CrewMemberService {
         CrewMemberResponse crewMemberResponse = new CrewMemberResponse();
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setSkipNullEnabled(true);
-        Optional<CrewMember> crewMemberBio = crewMemberRepository.findByUserName(updateRequest.getNewUserName());
+//        Optional<CrewMember> crewMemberBio = crewMemberRepository.findByUserName(updateRequest.getNewUserName());
        return null;
     }
     

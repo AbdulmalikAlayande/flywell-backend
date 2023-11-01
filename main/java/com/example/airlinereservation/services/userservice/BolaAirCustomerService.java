@@ -1,68 +1,79 @@
 package com.example.airlinereservation.services.userservice;
 
 import com.example.airlinereservation.data.model.Passenger;
+import com.example.airlinereservation.data.model.enums.Gender;
+import com.example.airlinereservation.data.model.persons.Address;
+import com.example.airlinereservation.data.model.persons.Customer;
 import com.example.airlinereservation.data.model.persons.UserBioData;
+import com.example.airlinereservation.data.repositories.AddressRepository;
 import com.example.airlinereservation.data.repositories.CustomerRepository;
 import com.example.airlinereservation.data.repositories.UserBioDataRepository;
-import com.example.airlinereservation.dtos.Request.LoginRequest;
 import com.example.airlinereservation.dtos.Request.CustomerRequest;
+import com.example.airlinereservation.dtos.Request.LoginRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
-import com.example.airlinereservation.dtos.Response.LoginResponse;
 import com.example.airlinereservation.dtos.Response.CustomerResponse;
-import com.example.airlinereservation.utils.appUtils.TokenGenerator;
+import com.example.airlinereservation.dtos.Response.FlightResponse;
+import com.example.airlinereservation.dtos.Response.LoginResponse;
 import com.example.airlinereservation.services.notifications.Validator;
-import com.example.airlinereservation.utils.exceptions.*;
+import com.example.airlinereservation.exceptions.FailedRegistrationException;
+import com.example.airlinereservation.exceptions.FieldInvalidException;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
+import com.example.airlinereservation.exceptions.LoginFailedException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.example.airlinereservation.utils.Exceptions.throwFailedRegistrationException;
-import static com.example.airlinereservation.utils.Exceptions.throwInvalidRequestException;
-import static com.example.airlinereservation.utils.appUtils.Constants.*;
+import static com.example.airlinereservation.data.model.enums.Role.USER;
+import static com.example.airlinereservation.exceptions.Exceptions.throwFailedRegistrationException;
+import static com.example.airlinereservation.exceptions.Exceptions.throwInvalidRequestException;
+import static com.example.airlinereservation.utils.Constants.*;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 public class BolaAirCustomerService implements CustomerService {
 	
-	Validator validator;
-	private CustomerRepository passengerRepository;
+	private Validator validator;
+	private CustomerRepository customerRepository;
 	private UserBioDataRepository userBioDataRepository;
+	private AddressRepository addressRepository;
 	private ModelMapper mapper;
 	
 	
 	@Override
 	public CustomerResponse registerNewCustomer(@NotNull CustomerRequest customerRequest) throws FailedRegistrationException {
-		Field[] declaredFields = customerRequest.getClass().getDeclaredFields();
-		CustomerResponse passengerResponse = new CustomerResponse();
-		if (userDoesNotExistBy(customerRequest.getUserName())){
-			try {
-				checkForNullFields(declaredFields, customerRequest);
-				validateEmailAndPassword(customerRequest.getEmail(), customerRequest.getPassword());
-				Passenger passenger = new Passenger();
-				UserBioData biodata = new UserBioData();
-				mapper.map(customerRequest, biodata);
-				biodata.setFullName(customerRequest.getFullName());
-				passenger.setUserBioData(biodata);
-				passengerRepository.save(passenger);
-				mapper.map(passenger.getUserBioData(), passengerResponse);
-				passengerResponse.setMessage(passenger.getFullName()+ "Your Registration Is Successful");
-				return passengerResponse;
-			} catch (Throwable throwable) {
-				throwFailedRegistrationException(throwable);
-			}
+		CustomerResponse customerResponse = new CustomerResponse();
+		try {
+			validateEmailAndPassword(customerRequest.getEmail(), customerRequest.getPassword());
+			Customer customer = new Customer();
+			Address mappedAddress = mapper.map(customerRequest.getAddressRequest(), Address.class);
+			Address savedAddress = addressRepository.save(mappedAddress);
+			UserBioData biodata = mapper.map(customerRequest, UserBioData.class);
+			biodata.setAddress(savedAddress);
+			biodata.setGender(Gender.valueOf(customerRequest.getGender().toUpperCase()));
+			UserBioData savedBio = userBioDataRepository.save(biodata);
+			customer.setBioData(savedBio);
+			customer.setRole(USER);
+			customerRepository.save(customer);
+			mapper.map(customer.getBioData(), customerResponse);
+			customerResponse.setMessage(customerRequest.getFirstName()+" Your Registration Is Successful");
+		} catch (Throwable throwable) {
+			throwFailedRegistrationException(throwable);
 		}
-		throw new FailedRegistrationException(DUPLICATE_ACCOUNT_REGISTRATION_FAILURE_MESSAGE);
+		return customerResponse;
+	}
+	
+	@Override
+	public List<FlightResponse> viewAvailableFLights() {
+		return null;
 	}
 	
 	private void validateEmailAndPassword(String email, String password) throws FieldInvalidException, InvalidRequestException {
@@ -73,26 +84,7 @@ public class BolaAirCustomerService implements CustomerService {
 	private boolean userDoesNotExistBy(String userName) {
 		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
 		return foundBio.filter(userBioData ->
-				       passengerRepository
-					   .existsByUserBioData(userBioData))
-				       .isEmpty();
-	}
-	
-	private void checkForNullFields(Field[] declaredFields, CustomerRequest passengerRequest) {
-		Arrays.stream(declaredFields)
-			  .forEach(field -> {
-				  try {
-					  field.setAccessible(true);
-					  Object accessesField = field.get(passengerRequest);
-					  if (accessesField == null || (accessesField instanceof String && accessesField.toString().isEmpty())) {
-						  String errorMessage = String.format(EMPTY_FIELD_MESSAGE, field.getName());
-						  throw new EmptyFieldException(String.format(INCOMPLETE_DETAILS_MESSAGE, errorMessage));
-					  }
-				  }
-				  catch (Exception e) {
-					  throw new RuntimeException(e);
-				  }
-			  });
+				       customerRepository.existsByBioData(userBioData)).isEmpty();
 	}
 	
 	@Override
@@ -103,15 +95,13 @@ public class BolaAirCustomerService implements CustomerService {
 		Optional<UserBioData> userBio = userBioDataRepository.findByUserName(updateRequest.getUserName());
 		return userBio.map(userBioData -> {
 				   modelMapper.map(updateRequest, userBioData);
-
-
 				   if (updateRequest.getNewUserName() != null){
 					   userBioData.setUserName(updateRequest.getNewUserName());
 				   }
-				   Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
-				   foundPassenger.ifPresent(passenger -> {
-					   passenger.setUserBioData(userBioData);
-					   passengerRepository.save(passenger);
+				   Optional<Customer> foundCustomer = customerRepository.findByBioData(userBioData);
+				   foundCustomer.ifPresent(passenger -> {
+					   passenger.setBioData(userBioData);
+					   customerRepository.save(passenger);
 				   });
 				   modelMapper.map(userBioData, response);
 				   return response;
@@ -138,13 +128,12 @@ public class BolaAirCustomerService implements CustomerService {
 		Optional<UserBioData> foundUser = userBioDataRepository.findByUserName(username);
 		AtomicReference<LoginResponse> response = new AtomicReference<>();
 		Optional<LoginResponse> optionalResponse = foundUser.map(bioData -> {
-			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(bioData);
-			foundPassenger.ifPresent(passenger -> {
+			Optional<Customer> foundCustomer = customerRepository.findByBioData(bioData);
+			foundCustomer.ifPresent(passenger -> {
 				if (passenger.isLoggedIn())
 					response.set(loginResponse(SESSION_NOT_EXHAUSTED_MESSAGE, username));
 				passenger.setLastLoggedIn(LocalDate.now());
 				passenger.setLoggedIn(true);
-				passenger.setToken(TokenGenerator.generateSessionToken());
 				response.set(loginResponse(LOGIN_SUCCESS_MESSAGE, username));
 			});
 			return response.get();
@@ -158,13 +147,12 @@ public class BolaAirCustomerService implements CustomerService {
 		Optional<UserBioData> foundBio = userBioDataRepository.findByEmailAndPassword(email, password);
 		AtomicReference<LoginResponse> loginResponse = new AtomicReference<>();
 		if (foundBio.isPresent()){
-			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(foundBio.get());
-			Optional<LoginResponse> optionalResponse = foundPassenger.map(passenger -> {
+			Optional<Customer> foundCustomer = customerRepository.findByBioData(foundBio.get());
+			Optional<LoginResponse> optionalResponse = foundCustomer.map(passenger -> {
 				if (passenger.isLoggedIn())
 					return loginResponse(SESSION_NOT_EXHAUSTED_MESSAGE, foundBio.get().getUserName());
 				passenger.setLastLoggedIn(LocalDate.now());
 				passenger.setLoggedIn(true);
-				passenger.setToken(TokenGenerator.generateSessionToken());
 				return loginResponse(LOGIN_SUCCESS_MESSAGE, foundBio.get().getUserName());
 			});
 			if (optionalResponse.isPresent())
@@ -200,8 +188,8 @@ public class BolaAirCustomerService implements CustomerService {
 	
 	@Override public Optional<CustomerResponse> findCustomerById(String passengerId) {
 		CustomerResponse response = new CustomerResponse();
-		Optional<Passenger> foundPassenger = passengerRepository.findById(passengerId);
-		return Optional.of(foundPassenger
+		Optional<Customer> foundCustomer = customerRepository.findById(passengerId);
+		return Optional.of(foundCustomer
 				       .map(passenger -> {
 						   mapper.map(passenger, response);
 						   return response;
@@ -218,10 +206,10 @@ public class BolaAirCustomerService implements CustomerService {
 	@Override
 	public List<CustomerResponse> getAllCustomers() {
 		List<CustomerResponse> responses = new ArrayList<>();
-		List<Passenger> allPassengers = passengerRepository.findAll();
-		allPassengers.forEach(passenger -> {
+		List<Customer> allCustomers = customerRepository.findAll();
+		allCustomers.forEach(passenger -> {
 			CustomerResponse response = new CustomerResponse();
-			mapper.map(passenger.getUserBioData(), response);
+			mapper.map(passenger.getBioData(), response);
 			responses.add(response);
 		});
 		return responses;
@@ -231,8 +219,8 @@ public class BolaAirCustomerService implements CustomerService {
 		Optional<UserBioData> foundBio = userBioDataRepository.findByEmailAndPassword(email, password);
 		CustomerResponse response = new CustomerResponse();
 		foundBio.ifPresent(bioData -> {
-			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(bioData);
-			foundPassenger.ifPresent(passenger -> mapper.map(bioData, response));
+			Optional<Customer> foundCustomer = customerRepository.findByBioData(bioData);
+			foundCustomer.ifPresent(passenger -> mapper.map(bioData, response));
 		});
 		return Optional.of(response);
 	}
@@ -242,8 +230,8 @@ public class BolaAirCustomerService implements CustomerService {
 		AtomicReference<CustomerResponse> response = new AtomicReference<>();
 		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
 		Optional<CustomerResponse> optionalPassengerResponse = foundBio.map(userBioData -> {
-			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
-			foundPassenger.ifPresent(passenger -> {
+			Optional<Customer> foundCustomer = customerRepository.findByBioData(userBioData);
+			foundCustomer.ifPresent(passenger -> {
 				mapper.map(userBioData, passengerResponse);
 				response.set(passengerResponse);
 			});
@@ -254,23 +242,16 @@ public class BolaAirCustomerService implements CustomerService {
 		throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "User", "username",userName));
 	}
 	
-	@Override public void removeCustomerById(String passengerId) throws InvalidRequestException {
-		Optional<Passenger> foundPassenger = passengerRepository.findById(passengerId);
-		if (foundPassenger.isEmpty())
-			throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "Customer", "id", passengerId));
-		passengerRepository.deleteById(passengerId);
-	}
-	
 	@Override public long getCountOfCustomers() {
-		return passengerRepository.count();
+		return customerRepository.count();
 	}
 	
 	@Override public boolean removeCustomerByUserName(String userName) throws InvalidRequestException {
 		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
 		Optional<Boolean> optionalBooleanIsDeleted = foundBio.map(userBioData -> {
-			Optional<Passenger> foundPassenger = passengerRepository.findByUserBioData(userBioData);
-			if (foundPassenger.isPresent()) {
-				passengerRepository.deleteByUserBioData(userBioData);
+			Optional<Customer> foundCustomer = customerRepository.findByBioData(userBioData);
+			if (foundCustomer.isPresent()) {
+				customerRepository.deleteByBioData(userBioData);
 				return true;
 			}
 			return false;
@@ -288,6 +269,7 @@ public class BolaAirCustomerService implements CustomerService {
 	
 	@Override
 	public void removeAll() {
-		passengerRepository.deleteAll();
+		customerRepository.deleteAll();
+		userBioDataRepository.deleteAll();
 	}
 }

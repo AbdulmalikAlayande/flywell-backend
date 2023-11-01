@@ -1,37 +1,36 @@
 package com.example.airlinereservation.dtos.Request;
 
-import com.example.airlinereservation.data.model.annotations.EmailPattern;
 import com.example.airlinereservation.data.model.annotations.EmailDomainValidator;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.example.airlinereservation.data.model.annotations.EmailPattern;
+import lombok.*;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 
+/**
+ * @@author Alayande Abdulmalik
+ */
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomerRequest {
-	@NotBlank
+	
+	@NonNull
 	private String firstName;
-	@NotBlank
+	@NonNull
 	private String lastName;
 	@Email(message = "Please enter a valid email format",
 			regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
 			groups = {EmailDomainValidator.class})
 	@EmailPattern
+	@NonNull
 	private String email;
-	@NotBlank
+	@NonNull
 	private String phoneNumber;
-	@NotBlank
+	@NonNull
 	private String password;
-	@NotBlank
+	@NonNull
 	private String userName;
-	
-	public String getFullName(){
-		return firstName + " " + lastName;
-	}
+	private String gender;
+	private CreateAddressRequest addressRequest;
 }

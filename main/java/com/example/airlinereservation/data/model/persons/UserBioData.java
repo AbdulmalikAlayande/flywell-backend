@@ -1,5 +1,6 @@
 package com.example.airlinereservation.data.model.persons;
 
+import com.example.airlinereservation.data.model.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,8 @@ import org.hibernate.annotations.NaturalId;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+
+import static jakarta.persistence.EnumType.STRING;
 
 @Entity
 @Data
@@ -29,7 +32,7 @@ public class UserBioData {
 	@NotBlank
 	private String userName;
 	@NotBlank
-	@Column(unique = true)
+	@Column(unique = true, nullable = false)
 	@NaturalId(mutable = true)
 	private String email;
 	@NotBlank
@@ -38,8 +41,6 @@ public class UserBioData {
 	private String fullName;
 	@OneToOne
 	private Address address;
-	
-	public String getFullName(){
-		return firstName + " " + lastName;
-	}
+	@Enumerated(STRING)
+	private Gender gender;
 }

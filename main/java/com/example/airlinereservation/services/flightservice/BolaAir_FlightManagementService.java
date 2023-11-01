@@ -22,7 +22,6 @@ public class BolaAir_FlightManagementService {
 				if (responseCode == HttpURLConnection.HTTP_OK) {
 					Reader reader = new InputStreamReader(connection.getInputStream());
 					BufferedReader in = new BufferedReader(reader);
-					
 					String inputLine;
 					StringBuilder response = new StringBuilder();
 					
@@ -31,7 +30,6 @@ public class BolaAir_FlightManagementService {
 						System.out.println(response);
 					}
 					in.close();
-					
 				} else {
 					System.out.println("API Request Failed, Response Code: " + responseCode);
 				}

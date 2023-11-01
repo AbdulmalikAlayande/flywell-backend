@@ -8,21 +8,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Entity
-public abstract class Notification {
+public class Notification {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
-	@OneToOne
 	private Sender sender;
 	private LocalDateTime createdOn;
 	private String htmlContent;
 	@OneToMany
 	private List<Recipients> to;
 	private String subject;
-	@OneToMany
-	private List<NotificationMultipartFile> file;
 	@OneToMany
 	private List<Customer> person;
 }

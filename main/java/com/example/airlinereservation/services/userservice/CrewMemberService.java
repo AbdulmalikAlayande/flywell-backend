@@ -8,9 +8,9 @@ import com.example.airlinereservation.dtos.Request.ViewFlightScheduleRequest;
 import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
 import com.example.airlinereservation.dtos.Response.CrewMemberResponse;
 import com.example.airlinereservation.dtos.Response.FlightScheduleResponse;
-import com.example.airlinereservation.utils.exceptions.EmptyFieldException;
-import com.example.airlinereservation.utils.exceptions.FieldInvalidException;
-import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import com.example.airlinereservation.exceptions.EmptyFieldException;
+import com.example.airlinereservation.exceptions.FieldInvalidException;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 
 import java.util.Optional;
 

@@ -6,12 +6,11 @@ import com.example.airlinereservation.data.model.enums.Destinations;
 import com.example.airlinereservation.data.model.enums.TravelClass;
 import com.example.airlinereservation.data.model.flight.Flight;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
-import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
 import com.example.airlinereservation.dtos.Response.CustomerResponse;
 import com.example.airlinereservation.services.categories.*;
 import com.example.airlinereservation.services.userservice.CustomerService;
-import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.example.airlinereservation.utils.appUtils.Constants.INVALID_DESTINATION;
+import static com.example.airlinereservation.utils.Constants.INVALID_DESTINATION;
 
 
 @Service
@@ -112,7 +111,6 @@ public class BolaAirFlightService implements Bookable {
 	}
 	
 	private Flight newFlightReadyForBooking(Flight flight) {
-		
 		return null;
 	}
 	
@@ -175,16 +173,5 @@ public class BolaAirFlightService implements Bookable {
 		if (arrivalTime == LocalTime.MIDNIGHT)
 			arrivalDate = LocalDate.of(departureDate.getYear(), departureDate.getMonth(), departureDate.getDayOfMonth() + 1);
 		return new Flight();
-	}
-	
-	
-	private FlightRequest buildFlightRequest(LocalTime departureTime, LocalTime arrivalTime, LocalDate arrivaldate) {
-		return FlightRequest.builder()
-				       .Airline("Bola-Air")
-				       .arrivalTime(arrivalTime)
-				       .departureTime(departureTime)
-				       .arrivalDate(arrivaldate)
-				       .departureDate(LocalDate.now())
-				       .build();
 	}
 }

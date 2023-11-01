@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
 public class Recipients {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)

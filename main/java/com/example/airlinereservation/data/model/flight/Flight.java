@@ -20,19 +20,19 @@ public class Flight {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
-	private boolean isFullyBooked;
+	private long flightDuration;
 	@NotBlank
-	private String Airline;
+	private String airline;
+	@Column(unique = true)
 	private String flightNumber;
 	@Column(name = "from_where")
 	private Destinations fromWhere;
 	@Enumerated(EnumType.STRING)
 	@Column(name = "to_where")
 	private Destinations toWhere;
-	private int numberOfPassengers;
-	@Transient
+	@OneToOne
 	private Airport departureAirport;
-	@Transient
+	@OneToOne
 	private Airport arrivalAirport;
 	@OneToMany
 	private List<FlightInstance> flightInstances;

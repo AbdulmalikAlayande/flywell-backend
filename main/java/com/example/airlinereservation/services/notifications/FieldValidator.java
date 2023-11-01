@@ -1,7 +1,7 @@
 package com.example.airlinereservation.services.notifications;
 
-import com.example.airlinereservation.utils.exceptions.FieldInvalidException;
-import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import com.example.airlinereservation.exceptions.FieldInvalidException;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -9,9 +9,9 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.example.airlinereservation.utils.Exceptions.throwFieldInvalidException;
-import static com.example.airlinereservation.utils.Exceptions.throwInvalidRequestException;
-import static com.example.airlinereservation.utils.appUtils.Constants.*;
+import static com.example.airlinereservation.exceptions.Exceptions.throwFieldInvalidException;
+import static com.example.airlinereservation.exceptions.Exceptions.throwInvalidRequestException;
+import static com.example.airlinereservation.utils.Constants.*;
 
 @Slf4j
 public class FieldValidator implements Validator {

@@ -10,12 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class CustomerResponse {
-	private String id;
 	private String message;
-	private String fullName;
-	private String Email;
+	private String email;
 	private String phoneNumber;
 	private String userName;
 	private String firstName;
 	private String lastName;
+	private String gender;
 }

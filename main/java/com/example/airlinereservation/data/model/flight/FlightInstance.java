@@ -20,6 +20,7 @@ public class FlightInstance {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
+	private boolean isFullyBooked;
 	@NotBlank
 	private LocalDate departureDate;
 	@NotBlank

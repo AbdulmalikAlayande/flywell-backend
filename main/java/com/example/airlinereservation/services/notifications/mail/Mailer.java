@@ -3,11 +3,10 @@ package com.example.airlinereservation.services.notifications.mail;
 import com.example.airlinereservation.data.model.notifications.*;
 import com.example.airlinereservation.dtos.Request.NotificationRequest;
 import com.example.airlinereservation.dtos.Response.NotificationResponse;
-import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.*;
@@ -17,8 +16,8 @@ import org.thymeleaf.TemplateEngine;
 
 import java.util.Objects;
 
-import static com.example.airlinereservation.utils.appUtils.Constants.*;
-import static com.example.airlinereservation.utils.appUtils.TemplateLoader.loadTemplateContent;
+import static com.example.airlinereservation.utils.Constants.*;
+import static com.example.airlinereservation.utils.TemplateLoader.loadTemplateContent;
 
 @Slf4j
 @Service
@@ -55,7 +54,7 @@ public class Mailer implements MailService{
 		Resource foundTemplateResource = resourceLoader.getResource(ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL);
 		String templateContent = loadTemplateContent(foundTemplateResource);
 
-		Notification notification = new Email();
+		Notification notification = new Notification();
 		modelMapper.map(notificationRequest, notification);
 		notification.setSender(Sender.builder().name(SENDER_FULL_NAME).email(SENDER_EMAIL).build());
 		notification.setSubject("Activate Your Account");

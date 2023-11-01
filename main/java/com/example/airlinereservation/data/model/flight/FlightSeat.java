@@ -1,6 +1,6 @@
 package com.example.airlinereservation.data.model.flight;
 
-import com.example.airlinereservation.data.model.Seat;
+import com.example.airlinereservation.data.model.aircraft.Seat;
 import com.example.airlinereservation.data.model.enums.SeatStatus;
 import jakarta.persistence.*;
 import lombok.*;

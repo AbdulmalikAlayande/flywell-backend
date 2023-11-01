@@ -1,7 +1,7 @@
 package com.example.airlinereservation.services.notifications;
 
-import com.example.airlinereservation.utils.exceptions.FieldInvalidException;
-import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import com.example.airlinereservation.exceptions.FieldInvalidException;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 
 public interface Validator {
 	

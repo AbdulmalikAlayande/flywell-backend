@@ -1,6 +1,5 @@
 package com.example.airlinereservation.data.model.aircraft;
 
-import com.example.airlinereservation.data.model.Seat;
 import com.example.airlinereservation.data.model.enums.Destinations;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,12 +34,6 @@ public class AirCraft {
 	@Transient
 	private final Seat[] seats = new Seat[numberOfSeats];
 	public final boolean[] aircraftSeats = new boolean[numberOfSeats];
-	
-	public boolean
-	getAircraftSeatsAt(int seatIndex){
-		return aircraftSeats[seatIndex];
-	}
-	
 
 	@Override
 	public boolean equals(Object object){

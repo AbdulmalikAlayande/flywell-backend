@@ -1,7 +1,7 @@
 package com.example.airlinereservation.data.model.annotations;
 
-import com.example.airlinereservation.utils.Exceptions;
-import com.example.airlinereservation.utils.exceptions.InvalidRequestException;
+import com.example.airlinereservation.exceptions.Exceptions;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

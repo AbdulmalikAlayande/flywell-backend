@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.UUID;
 
 @Data
@@ -25,5 +26,6 @@ public class Airport {
 	private String name;
 	private String code;
 	private String airportAddress;
+	@Enumerated(value = STRING)
 	private Destinations airportLocation;
 }

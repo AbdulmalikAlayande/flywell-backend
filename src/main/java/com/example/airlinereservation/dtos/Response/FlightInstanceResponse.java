@@ -1,6 +1,5 @@
 package com.example.airlinereservation.dtos.Response;
 
-import com.example.airlinereservation.data.model.aircraft.AirCraft;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

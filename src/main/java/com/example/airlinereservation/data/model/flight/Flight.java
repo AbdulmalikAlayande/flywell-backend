@@ -2,13 +2,13 @@ package com.example.airlinereservation.data.model.flight;
 
 import com.example.airlinereservation.data.model.Airport;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import java.util.List;
+import static jakarta.persistence.CascadeType.REMOVE;
 
 @Data
 @AllArgsConstructor
@@ -25,8 +25,8 @@ public class Flight {
 	private String airline;
 	@Column(unique = true)
 	private String flightNumber;
-	@OneToOne
+	@OneToOne(cascade = REMOVE)
 	private Airport departureAirport;
-	@OneToOne
+	@OneToOne(cascade = REMOVE)
 	private Airport arrivalAirport;
 }

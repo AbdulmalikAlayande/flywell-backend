@@ -100,6 +100,9 @@ public class BolaAir_FlightService implements FlightService{
 	
 	@Override
 	public void removeAll() {
+		airportRepository.deleteAll();
 		flightRepository.deleteAll();
 	}
+	
+	
 }

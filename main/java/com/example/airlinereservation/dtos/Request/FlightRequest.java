@@ -1,10 +1,7 @@
 package com.example.airlinereservation.dtos.Request;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @AllArgsConstructor
@@ -12,22 +9,26 @@ import lombok.NoArgsConstructor;
 @Data
 public class FlightRequest {
 	
-	@NotNull
-	private long flightNumber;
-	@NotNull
-	private long flightDuration;
-	@NotNull
+	@NonNull
+	private Long flightNumber;
+	@NonNull
+	private Long flightDuration;
+	@NonNull
 	private String arrivalAirportName;
-	@NotNull
+	@NonNull
 	private String arrivalAirportCode;
-	@NotNull
+	@NonNull
 	private String arrivalAirportAddress;
-	@NotNull
+	@NonNull
 	private String departureAirportName;
-	@NotNull
+	@NonNull
 	private String departureAirportCode;
-	@NotNull
+	@NonNull
 	private String departureAirportAddress;
+	@NonNull
+	private String departureState;
+	@NonNull
+	private String arrivalState;
 }
 
 /*	private LocalTime departureTime;

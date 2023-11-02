@@ -64,7 +64,7 @@ class BookableTest {
 		}
 		Flight createdFlight2 = bookable1.createNewFlight("LAGOS");
 		assertThat(createdFlight2).isNotNull();
-		assertThat(createdFlight2.getFromWhere()).isEqualTo(Destinations.LAGOS);
+		assertThat(createdFlight2.getDepartureAirport().getAirportLocation()).isEqualTo(Destinations.LAGOS);
 		assertThat(bookable1.isNotFilled(createdFlight1)).isFalse();
 		assertThat(bookable1.isNotFilled(createdFlight2)).isTrue();
 	}

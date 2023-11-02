@@ -1,10 +1,7 @@
 package com.example.airlinereservation.data.model.aircraft;
 
 import com.example.airlinereservation.data.model.enums.Destinations;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "hanger")
 public class AirCraft {
 	@Id
 	private String id;

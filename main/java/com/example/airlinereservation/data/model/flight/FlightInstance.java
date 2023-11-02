@@ -29,8 +29,10 @@ public class FlightInstance {
 	private LocalDate arrivalDate;
 	@NotBlank
 	private int baggageAllowance;
-	@Transient
+	@OneToOne
 	private AirCraft airCraft;
+	@OneToOne
+	private Flight flight;
 	@OneToMany()
 	private List<FlightSeat> flightSeat;
 }

@@ -6,6 +6,7 @@ public final class Constants {
 	public static final String SENDER_LASTNAME = "Abdulmalik";
 	public static final String SENDER_FULL_NAME = SENDER_FIRSTNAME + SENDER_LASTNAME;
 	public static final String API_KEY = "api-key";
+	public static final String BOLA_AIR = "BOLA AIR";
 	public static final String PASSWORD_DOES_NOT_CONTAIN_EXPECTED_CHARACTER = "Password should contain either of the special characters %s";
 	public static final String INVALID_EMAIL_FORMAT = "Email pattern is not valid:: Please enter a valid email format";
 	public static final String INVALID_DOMAIN = "The domain part %s of %s is invalid";

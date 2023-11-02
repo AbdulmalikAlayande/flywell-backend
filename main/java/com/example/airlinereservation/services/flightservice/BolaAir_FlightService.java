@@ -1,6 +1,7 @@
 package com.example.airlinereservation.services.flightservice;
 
 import com.example.airlinereservation.data.model.Airport;
+import com.example.airlinereservation.data.model.enums.Destinations;
 import com.example.airlinereservation.data.model.flight.Flight;
 import com.example.airlinereservation.data.repositories.AirportRepository;
 import com.example.airlinereservation.data.repositories.FlightRepository;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static com.example.airlinereservation.utils.Constants.BOLA_AIR;
 
 @Service
 @AllArgsConstructor
@@ -31,25 +35,25 @@ public class BolaAir_FlightService implements FlightService{
 			Airport arrivalAirport = buildAirport();
 			arrivalAirport.setCode(flightRequest.getArrivalAirportCode());
 			arrivalAirport.setName(flightRequest.getArrivalAirportName());
+			arrivalAirport.setAirportLocation(Destinations.valueOf(flightRequest.getArrivalState().toUpperCase()));
 			arrivalAirport.setAirportAddress(flightRequest.getArrivalAirportAddress());
 			Airport savedArrivalAirport = airportRepository.save(arrivalAirport);
 			
 			Airport departureAirport = buildAirport();
 			departureAirport.setCode(flightRequest.getDepartureAirportCode());
 			departureAirport.setName(flightRequest.getDepartureAirportName());
+			departureAirport.setAirportLocation(Destinations.valueOf(flightRequest.getDepartureState().toUpperCase()));
 			departureAirport.setAirportAddress(flightRequest.getDepartureAirportAddress());
 			Airport savedDepartureAirport = airportRepository.save(departureAirport);
 			
 			mappedFlight.setArrivalAirport(savedArrivalAirport);
 			mappedFlight.setDepartureAirport(savedDepartureAirport);
-			mappedFlight.setFlightInstances(new ArrayList<>());
-			mappedFlight.setAirline("BOLA_AIR");
+			mappedFlight.setAirline(BOLA_AIR);
 			
 			Flight savedFlight = flightRepository.save(mappedFlight);
 			return buildFlightResponse(savedFlight);
 		}catch(Throwable exception){
 			System.out.println(exception.getMessage());
-			exception.printStackTrace();
 			throw new InvalidRequestException(exception.getMessage(), exception);
 		}
 	}
@@ -77,13 +81,21 @@ public class BolaAir_FlightService implements FlightService{
 	}
 	
 	@Override
-	public long getCountOfAllFlights() {
+	public Long getCountOfAllFlights() {
 		return flightRepository.count();
 	}
 	
 	@Override
 	public List<Flight> getAllFLights() {
 		return null;
+	}
+	
+	@Override
+	public FlightResponse getFlightByArrivalAndDepartureLocation(Destinations arrivalState, Destinations departureState) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvalidRequestException {
+		Optional<Flight> foundFlight = flightRepository.findByArrivalAndDepartureAirportLocation(arrivalState, departureState);
+		if (foundFlight.isPresent())
+			return buildFlightResponse(foundFlight.get());
+		throw new InvalidRequestException("Flight Not Found");
 	}
 	
 	@Override

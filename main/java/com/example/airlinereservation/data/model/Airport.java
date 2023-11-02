@@ -1,5 +1,6 @@
 package com.example.airlinereservation.data.model;
 
+import com.example.airlinereservation.data.model.enums.Destinations;
 import com.example.airlinereservation.data.model.flight.Flight;
 import com.example.airlinereservation.data.model.persons.Address;
 import jakarta.persistence.*;
@@ -24,4 +25,5 @@ public class Airport {
 	private String name;
 	private String code;
 	private String airportAddress;
+	private Destinations airportLocation;
 }

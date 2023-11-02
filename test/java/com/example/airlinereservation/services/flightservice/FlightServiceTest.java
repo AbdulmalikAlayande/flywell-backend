@@ -1,5 +1,6 @@
 package com.example.airlinereservation.services.flightservice;
 
+import com.example.airlinereservation.data.model.enums.Destinations;
 import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
 import lombok.SneakyThrows;
@@ -42,20 +43,32 @@ public class FlightServiceTest {
 	
 	@Test
 	public void createFlightWithEmptyRequiredFields_ExceptionIsThrown(){
-		assertThatThrownBy(()->flightService.addFlight(buildIncompleteFLight())).isInstanceOf(Exception.class);
+		assertThatThrownBy(()->flightService.addFlight(buildIncompleteFlight())).isInstanceOf(Exception.class);
 	}
 	
-	private FlightRequest buildIncompleteFLight() {
+	@Test
+	@SneakyThrows
+	public void createNewFlight_getCreatedFlightBy_ArrivalDestinationAndDepartureDestination(){
+		FlightResponse savedFlightResponse = flightService.addFlight(buildFlightRequest());
+		FlightResponse foundFlight = flightService.getFlightByArrivalAndDepartureLocation(Destinations.LAGOS, Destinations.ABUJA);
+		System.out.println(foundFlight);
+		assertThat(foundFlight).isNotNull();
+		assertThat(foundFlight.getFlightNumber()).isGreaterThan(ZERO.longValue());
+	}
+	
+	private FlightRequest buildIncompleteFlight() {
 		return FlightRequest.builder()
-				       .flightDuration(3)
+				       .flightDuration(3L)
 				       .build();
 	}
 	
 	//	@Test void
 	private static FlightRequest buildFlightRequest() {
 		return FlightRequest.builder()
-				       .flightDuration(3)
-				       .flightNumber(2345)
+				       .flightDuration(3L)
+				       .arrivalState("Lagos")
+				       .departureState("Abuja")
+				       .flightNumber(2345L)
 				       .arrivalAirportCode("23456")
 				       .arrivalAirportName("Murtala Muhammed Airport")
 				       .arrivalAirportAddress("P.0 Box 7654, Lagos, Nigeria")

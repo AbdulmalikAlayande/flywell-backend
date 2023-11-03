@@ -30,7 +30,7 @@ public class BolaAir_FlightInstanceService implements FlightInstanceService{
 		Destinations departureState = Destinations.valueOf(flightInstanceRequest.getDepartureState().toUpperCase());
 		
 		//where status is en-route and destination location is arrivalState
-		flightInstanceRepository.findByFlightDestinationAndFlightMovementStatus(arrivalState, FlightStatus.EN_ROUTE);
+		Optional<FlightInstance> foundInstance = flightInstanceRepository.findByFlightDestinationAndFlightMovementStatus(arrivalState, FlightStatus.EN_ROUTE);
 		
 		Optional<Flight> flightResponse = flightRepository.findByArrivalAndDepartureAirportLocation(arrivalState, departureState);
 		FlightInstance mappedFlight = mapper.map(flightInstanceRequest, FlightInstance.class);

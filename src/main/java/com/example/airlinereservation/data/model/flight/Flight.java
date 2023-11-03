@@ -20,7 +20,7 @@ public class Flight {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
-	private long flightDuration;
+	private long estimatedFlightDurationInMinutes;
 	@NotBlank
 	private String airline;
 	@Column(unique = true)

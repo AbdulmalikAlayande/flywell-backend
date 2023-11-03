@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
+import static jakarta.persistence.EnumType.STRING;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -26,6 +28,7 @@ public class AirCraft {
 	private String airCraftName;
 	private String model;
 	private LocalDate datePurchased;
+	@Enumerated(STRING)
 	private Destinations location;
 	private boolean isAvailable;
 	private final int numberOfSeats = BigInteger.valueOf(20).intValue();

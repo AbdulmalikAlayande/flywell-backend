@@ -35,12 +35,20 @@ class FlightInstanceServiceTest {
 	@Test
 	@SneakyThrows
 	public void createNewFlightInstance_NewFlightIsCreatedTest(){
-		System.out.println("response is ==> "+response);
 		assertThat(response).isNotNull();
+	}
+	
+	@Test public void testThatIfFlightIsFilled_FlightMovementIsScheduledImmediately(){
+	
 	}
 	
 	@Test
 	public void createNewFlightInstance_ProperFlightSpacingIsApplied_ToMaintainSafeDistanceBetweenConsecutiveFlights(){
+		
+	}
+	
+	@Test
+	public void testThatAllFlightHaveAnIntervalOfFiveMinutesBetweenEachOther(){
 	
 	}
 	

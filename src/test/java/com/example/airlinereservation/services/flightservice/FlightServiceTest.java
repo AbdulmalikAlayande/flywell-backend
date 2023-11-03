@@ -58,14 +58,14 @@ public class FlightServiceTest {
 	
 	private FlightRequest buildIncompleteFlight() {
 		return FlightRequest.builder()
-				       .flightDuration(3L)
+				       .estimatedFlightDurationInMinutes(3L)
 				       .build();
 	}
 	
 	//	@Test void
 	private static FlightRequest buildFlightRequest() {
 		return FlightRequest.builder()
-				       .flightDuration(3L)
+				       .estimatedFlightDurationInMinutes(3L)
 				       .arrivalState("Lagos")
 				       .departureState("Abuja")
 				       .flightNumber(2345L)

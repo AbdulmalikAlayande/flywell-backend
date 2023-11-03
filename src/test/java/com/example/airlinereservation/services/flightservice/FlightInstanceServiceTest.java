@@ -9,10 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.Month;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
@@ -23,6 +19,7 @@ class FlightInstanceServiceTest {
 	@Autowired
 	private FlightService flightService;
 	private FlightInstanceResponse response;
+	
 	@BeforeEach
 	@SneakyThrows
 	void startEachTestWith() {
@@ -43,7 +40,9 @@ class FlightInstanceServiceTest {
 	}
 	
 	@Test
+	@SneakyThrows
 	public void createNewFlightInstance_ProperFlightSpacingIsApplied_ToMaintainSafeDistanceBetweenConsecutiveFlights(){
+		FlightInstanceResponse response2 = flightInstanceService.createNewInstance(buildInstance());
 		
 	}
 	
@@ -62,17 +61,14 @@ class FlightInstanceServiceTest {
 	
 	private CreateFlightInstanceRequest buildInstance() {
 		return CreateFlightInstanceRequest.builder()
-				       .arrivalDate(LocalDate.of(2023, Month.DECEMBER, 23))
-				       .departureDate(LocalDate.of(2023, Month.DECEMBER, 22))
 				       .arrivalState("Rivers")
 				       .departureState("Abuja")
-				       .departureTime(LocalTime.of(9, 30, 45))
 				       .build();
 	}
 	
 	private FlightRequest buildFlight() {
 		return FlightRequest.builder()
-				       .flightDuration(3L)
+				       .estimatedFlightDurationInMinutes(360L)
 				       .arrivalState("Rivers")
 				       .departureState("Abuja")
 				       .flightNumber(2345L)

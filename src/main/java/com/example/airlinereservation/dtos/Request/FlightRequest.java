@@ -1,6 +1,5 @@
 package com.example.airlinereservation.dtos.Request;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Builder
@@ -12,7 +11,7 @@ public class FlightRequest {
 	@NonNull
 	private Long flightNumber;
 	@NonNull
-	private Long flightDuration;
+	private Long estimatedFlightDurationInMinutes;
 	@NonNull
 	private String arrivalAirportName;
 	@NonNull

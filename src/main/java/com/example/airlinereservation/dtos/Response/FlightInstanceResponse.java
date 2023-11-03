@@ -15,7 +15,7 @@ import java.time.LocalTime;
 public class FlightInstanceResponse {
 	
 	private int baggageAllowance;
-	private long flightNumber;
+	private Long flightNumber;
 	private long flightDuration;
 	private boolean isFullyBooked;
 	private String departureAirportName;

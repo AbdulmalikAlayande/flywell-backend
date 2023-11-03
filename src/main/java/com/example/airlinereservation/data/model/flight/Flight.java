@@ -3,10 +3,7 @@ package com.example.airlinereservation.data.model.flight;
 import com.example.airlinereservation.data.model.Airport;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import static jakarta.persistence.CascadeType.REMOVE;
 
@@ -20,11 +17,10 @@ public class Flight {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
-	private long estimatedFlightDurationInMinutes;
+	@NonNull
+	private Long estimatedFlightDurationInMinutes;
 	@NotBlank
 	private String airline;
-	@Column(unique = true)
-	private String flightNumber;
 	@OneToOne(cascade = REMOVE)
 	private Airport departureAirport;
 	@OneToOne(cascade = REMOVE)

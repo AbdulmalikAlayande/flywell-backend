@@ -28,12 +28,20 @@ public class BolaAir_FlightInstanceService implements FlightInstanceService{
 	public FlightInstanceResponse createNewInstance(CreateFlightInstanceRequest flightInstanceRequest) throws InvalidRequestException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 		Destinations arrivalState = Destinations.valueOf(flightInstanceRequest.getArrivalState().toUpperCase());
 		Destinations departureState = Destinations.valueOf(flightInstanceRequest.getDepartureState().toUpperCase());
+	
 		Optional<Flight> flightResponse = flightRepository.findByArrivalAndDepartureAirportLocation(arrivalState, departureState);
-		
 		FlightInstance mappedFlight = mapper.map(flightInstanceRequest, FlightInstance.class);
 		mappedFlight.setFlight(flightResponse.orElseThrow());
 		mappedFlight.setFlightSeat(new ArrayList<>());
 		
-		return mapper.map(mappedFlight, FlightInstanceResponse.class);
+		FlightInstanceResponse flightInstanceResponse = mapper.map(mappedFlight, FlightInstanceResponse.class);
+		flightInstanceResponse.setFlightNumber(Long.parseLong(mappedFlight.getFlight().getFlightNumber()));
+		flightInstanceResponse.setArrivalAirportAddress(mappedFlight.getFlight().getArrivalAirport().getAirportAddress());
+		flightInstanceResponse.setArrivalAirportName(mappedFlight.getFlight().getArrivalAirport().getName());
+		flightInstanceResponse.setArrivalAirportCode(mappedFlight.getFlight().getArrivalAirport().getCode());
+		flightInstanceResponse.setDepartureAirportAddress(mappedFlight.getFlight().getDepartureAirport().getAirportAddress());
+		flightInstanceResponse.setDepartureAirportName(mappedFlight.getFlight().getDepartureAirport().getName());
+		flightInstanceResponse.setDepartureAirportCode(mappedFlight.getFlight().getDepartureAirport().getCode());
+		return flightInstanceResponse;
 	}
 }

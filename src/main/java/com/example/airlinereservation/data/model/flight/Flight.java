@@ -2,13 +2,13 @@ package com.example.airlinereservation.data.model.flight;
 
 import com.example.airlinereservation.data.model.Airport;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import java.util.List;
+import static jakarta.persistence.CascadeType.REMOVE;
 
 @Data
 @AllArgsConstructor
@@ -20,13 +20,13 @@ public class Flight {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
-	private long flightDuration;
+	private long estimatedFlightDurationInMinutes;
 	@NotBlank
 	private String airline;
 	@Column(unique = true)
 	private String flightNumber;
-	@OneToOne
+	@OneToOne(cascade = REMOVE)
 	private Airport departureAirport;
-	@OneToOne
+	@OneToOne(cascade = REMOVE)
 	private Airport arrivalAirport;
 }

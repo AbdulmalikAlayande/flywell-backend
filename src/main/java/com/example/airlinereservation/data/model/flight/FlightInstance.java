@@ -1,6 +1,7 @@
 package com.example.airlinereservation.data.model.flight;
 
 import com.example.airlinereservation.data.model.aircraft.AirCraft;
+import com.example.airlinereservation.data.model.enums.FlightStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +11,8 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+
+import static jakarta.persistence.EnumType.STRING;
 
 @Entity
 @Data
@@ -33,6 +36,8 @@ public class FlightInstance {
 	private AirCraft airCraft;
 	@OneToOne
 	private Flight flight;
+	@Enumerated(STRING)
+	private FlightStatus status;
 	@OneToMany()
 	private List<FlightSeat> flightSeat;
 }

@@ -3,6 +3,7 @@ package com.example.airlinereservation.utils;
 public final class Constants {
 	public static final String TEST_IMAGE_LOCATION = "C:\\Users\\USER\\Downloads\\DJANGO 3\\part 1 Uploading Files\\puppy.jpeg";
 	public static final String SENDER_FIRSTNAME = "Alayande";
+	public static final Long FLIGHT_PREPARATION_AND_TURNAROUND_TIME_IN_MINS = 300L;
 	public static final String SENDER_LASTNAME = "Abdulmalik";
 	public static final String SENDER_FULL_NAME = SENDER_FIRSTNAME + SENDER_LASTNAME;
 	public static final String API_KEY = "api-key";

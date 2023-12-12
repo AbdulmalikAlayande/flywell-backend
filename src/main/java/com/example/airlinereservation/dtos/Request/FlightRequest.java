@@ -10,8 +10,7 @@ public class FlightRequest {
 	
 	@NonNull
 	private Long flightNumber;
-	@NonNull
-	private Long estimatedFlightDurationInMinutes;
+	private long estimatedFlightDurationInMinutes;
 	@NonNull
 	private String arrivalAirportName;
 	@NonNull
@@ -25,15 +24,9 @@ public class FlightRequest {
 	@NonNull
 	private String departureAirportAddress;
 	@NonNull
-	private String departureState;
+	private String departureCity;
 	@NonNull
-	private String arrivalState;
+	private String arrivalCity;
+	private Long longitudeOfAirport;
+	private Long latitudeOfAirport;
 }
-
-/*	private LocalTime departureTime;
-	private LocalDate departureDate;
-	private LocalTime arrivalTime;
-	private LocalDate arrivalDate;
-	private String Airline;
-	private int baggageAllowance;
-	private String destination;*/

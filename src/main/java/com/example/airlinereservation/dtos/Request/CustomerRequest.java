@@ -29,8 +29,4 @@ public class CustomerRequest {
 	private String phoneNumber;
 	@NonNull
 	private String password;
-	@NonNull
-	private String userName;
-	private String gender;
-	private CreateAddressRequest addressRequest;
 }

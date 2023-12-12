@@ -1,8 +1,6 @@
 package com.example.airlinereservation.services.userservice;
 
 import com.example.airlinereservation.data.model.Passenger;
-import com.example.airlinereservation.data.model.enums.Gender;
-import com.example.airlinereservation.data.model.persons.Address;
 import com.example.airlinereservation.data.model.persons.Customer;
 import com.example.airlinereservation.data.model.persons.UserBioData;
 import com.example.airlinereservation.data.repositories.AddressRepository;
@@ -14,11 +12,11 @@ import com.example.airlinereservation.dtos.Request.UpdateRequest;
 import com.example.airlinereservation.dtos.Response.CustomerResponse;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
 import com.example.airlinereservation.dtos.Response.LoginResponse;
-import com.example.airlinereservation.services.notifications.Validator;
 import com.example.airlinereservation.exceptions.FailedRegistrationException;
 import com.example.airlinereservation.exceptions.FieldInvalidException;
 import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.exceptions.LoginFailedException;
+import com.example.airlinereservation.services.notifications.Validator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -54,11 +52,7 @@ public class BolaAirCustomerService implements CustomerService {
 		try {
 			validateEmailAndPassword(customerRequest.getEmail(), customerRequest.getPassword());
 			Customer customer = new Customer();
-			Address mappedAddress = mapper.map(customerRequest.getAddressRequest(), Address.class);
-			Address savedAddress = addressRepository.save(mappedAddress);
 			UserBioData biodata = mapper.map(customerRequest, UserBioData.class);
-			biodata.setAddress(savedAddress);
-			biodata.setGender(Gender.valueOf(customerRequest.getGender().toUpperCase()));
 			UserBioData savedBio = userBioDataRepository.save(biodata);
 			customer.setBioData(savedBio);
 			customer.setRole(USER);

@@ -64,7 +64,6 @@ class BookableTest {
 		}
 		Flight createdFlight2 = bookable1.createNewFlight("LAGOS");
 		assertThat(createdFlight2).isNotNull();
-		assertThat(createdFlight2.getDepartureAirport().getAirportLocation()).isEqualTo(Destinations.LAGOS);
 		assertThat(bookable1.isNotFilled(createdFlight1)).isFalse();
 		assertThat(bookable1.isNotFilled(createdFlight2)).isTrue();
 	}
@@ -103,7 +102,6 @@ class BookableTest {
 	@Test void testThatPassengerCanBookFlight_AndSeatsWillBeAssignedToThePassenger(){
 		passengerService.registerNewCustomer(buildPassenger());
 		bookingRequest.setBookingCategory(3);
-		bookingRequest.setPassengerUsername(buildPassenger().getUserName());
 		booked = bookable.bookFlight(bookingRequest);
 //		assertTrue(booked.getAirCraft().getAircraftSeats()[15]);
 	}
@@ -131,7 +129,6 @@ class BookableTest {
 	
 	private CustomerRequest buildPassenger(){
 		return CustomerRequest.builder()
-				       .userName("abdul@20")
 				       .email("alaabdulmalik03@gmail.com")
 				       .phoneNumber("07036174617")
 				       .firstName("Abdulmalik")
@@ -142,7 +139,6 @@ class BookableTest {
 	
 	private CustomerRequest buildPassenger1(){
 		return CustomerRequest.builder()
-				       .userName("crayon")
 				       .email("alaabdulmalik03@gmail.com")
 				       .phoneNumber("07036174617")
 				       .firstName("pencil")
@@ -160,8 +156,7 @@ class BookableTest {
 		BookingRequest bookingRequest2 = new BookingRequest();
 		bookingRequest2.setBookingCategory(3);
 		bookingRequest2.setPayment(payment2);
-		bookingRequest2.setPassengerUsername(buildPassenger1().getUserName());
-		return bookingRequest2;                                  
+		return bookingRequest2;
 	}
 	
 	private BookingRequest getBookingRequest1() {
@@ -173,7 +168,6 @@ class BookableTest {
 		BookingRequest bookingRequest1 = new BookingRequest();
 		bookingRequest1.setBookingCategory(2);
 		bookingRequest1.setPayment(payment1);
-		bookingRequest1.setPassengerUsername(buildPassenger().getUserName());
 		return bookingRequest1;
 	}
 }

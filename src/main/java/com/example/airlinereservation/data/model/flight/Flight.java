@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 @Data
@@ -17,12 +18,13 @@ public class Flight {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
-	@NonNull
-	private Long estimatedFlightDurationInMinutes;
+	private long estimatedFlightDurationInMinutes;
 	@NotBlank
 	private String airline;
-	@OneToOne(cascade = REMOVE)
+	private String arrivalCity;
+	private String departureCity;
+	@OneToOne(cascade = ALL)
 	private Airport departureAirport;
-	@OneToOne(cascade = REMOVE)
+	@OneToOne(cascade = ALL)
 	private Airport arrivalAirport;
 }

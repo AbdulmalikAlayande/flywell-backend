@@ -38,40 +38,23 @@ public class Mailer implements MailService{
 		HttpEntity<NotificationRequest> request = new HttpEntity<>(notificationRequest, headers);
 		return restTemplate.postForEntity(BREVO_CONTACTS_IMPORT_URL, request, NotificationResponse.class);
 	}
-	
 	@Override
-	public ResponseEntity<NotificationResponse> sendReservationConfirmationEmail(NotificationRequest notificationRequest) {
+	public ResponseEntity<NotificationResponse> sendAccountActivationEmail(NotificationRequest notificationRequest) throws InvalidRequestException {
+		return null;
+	}
+	
+	public ResponseEntity<NotificationResponse> sendOtp(){
+		
 		return null;
 	}
 	
 	@Override
-	public ResponseEntity<NotificationResponse> sendAccountActivationEmail(NotificationRequest notificationRequest) throws InvalidRequestException {
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set(API_KEY, brevoApiKey);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		
-		Resource foundTemplateResource = resourceLoader.getResource(ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL);
-		String templateContent = loadTemplateContent(foundTemplateResource);
-
-		Notification notification = new Notification();
-		modelMapper.map(notificationRequest, notification);
-		notification.setSender(Sender.builder().name(SENDER_FULL_NAME).email(SENDER_EMAIL).build());
-		notification.setSubject("Activate Your Account");
-		notification.setHtmlContent(templateContent);
-		HttpEntity<Notification> requestEntity = new HttpEntity<>(notification, headers);
-		ResponseEntity<NotificationResponse> response = restTemplate.postForEntity(
-				BREVO_SEND_EMAIL_API_URL,
-				requestEntity, NotificationResponse.class
-		);                                                               
-		if (response.getStatusCode().is2xxSuccessful())
-			log.info("{} response body:: {}", MESSAGE_SUCCESSFULLY_SENT, Objects.requireNonNull(response.getBody()));
-		else log.error("{} response body:: {}", MESSAGE_FAILED_TO_SEND, Objects.requireNonNull(response.getBody()));
-		return response;
+	public ResponseEntity<NotificationResponse> sendFlightFormAsPdf(NotificationRequest notificationRequest) {
+		return null;
 	}
 	
 	@Override
-	public ResponseEntity<NotificationResponse> sendFlightFormAsPdf(NotificationRequest notificationRequest) {
+	public ResponseEntity<NotificationResponse> sendReservationConfirmationEmail(NotificationRequest notificationRequest) {
 		return null;
 	}
 }

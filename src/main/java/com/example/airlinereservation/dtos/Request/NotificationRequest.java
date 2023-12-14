@@ -11,8 +11,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NotificationRequest {
+	
+	private String firstName;
+	private long OTP;
+	private String lastName;
 	private List<Recipients> to;
 	private List<String> carbonCopyMails;
-	private String phoneNumber;
-	private String username;
 }

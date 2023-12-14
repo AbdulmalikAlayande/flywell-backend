@@ -17,6 +17,7 @@ import com.example.airlinereservation.exceptions.FieldInvalidException;
 import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.exceptions.LoginFailedException;
 import com.example.airlinereservation.services.notifications.Validator;
+import com.example.airlinereservation.utils.OTPGenerator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -58,6 +59,7 @@ public class BolaAirCustomerService implements CustomerService {
 			customer.setRole(USER);
 			customerRepository.save(customer);
 			mapper.map(customer.getBioData(), customerResponse);
+//			OTPGenerator.generateOtp();
 			customerResponse.setMessage(customerRequest.getFirstName()+" Your Registration Is Successful");
 		} catch (Throwable throwable) {
 			throwFailedRegistrationException(throwable);

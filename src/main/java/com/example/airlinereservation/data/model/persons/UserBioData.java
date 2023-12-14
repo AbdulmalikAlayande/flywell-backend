@@ -11,6 +11,8 @@ import org.hibernate.annotations.NaturalId;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
+import java.util.List;
+
 import static jakarta.persistence.EnumType.STRING;
 
 @Entity
@@ -43,4 +45,5 @@ public class UserBioData {
 	private Address address;
 	@Enumerated(STRING)
 	private Gender gender;
+	private int OTP;
 }

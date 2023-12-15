@@ -23,6 +23,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @SpringBootTest()
 class CustomerServiceTest {
 	@Autowired
@@ -36,19 +37,13 @@ class CustomerServiceTest {
 		passengerService.removeAll();
 		updateRequest = new UpdateRequest();
 		passengerService.registerNewCustomer(CustomerRequest
-				        .builder().phoneNumber("567890234").firstName("Alayande")
-				        .build());
-	}
-	
-	private CreateAddressRequest buildAddress() {
-		return CreateAddressRequest.builder()
-				       .country("Nigeria")
-				       .houseNumber("12B")
-				       .postalCode("122134")
-				       .state("Lagos")
-				       .streetName("Harvey Rd")
-				       .streetNumber("12th str.")
-				       .build();
+				                                     .builder()
+				                                     .phoneNumber("567890234")
+				                                     .firstName("Alayande")
+				                                     .lastName("Abdulmalik")
+				                                     .email("alaabdulmalik03@gmail.com")
+				                                     .password("Ayanniyi@20")
+				                                     .build());
 	}
 	
 	@AfterEach
@@ -58,15 +53,14 @@ class CustomerServiceTest {
 	
 	@SneakyThrows
 	@Test void testThatPassengerTriesToRegisterWithIncompleteDetails_ExceptionIsThrown(){
-		assertThatThrownBy(()->passengerService
-				.registerNewCustomer(buildIncompletePassenger()))
-				.as("")
-				.isInstanceOf(NullPointerException.class);
+		assertThatThrownBy(()->passengerService.registerNewCustomer(buildIncompletePassenger()))
+											.as("")
+											.isInstanceOf(NullPointerException.class);
 	}
 	
 	@Test void testThatPassengerTriesToRegisterUsingDetailsWithIncorrectFormat_RegistrationFailedExceptionIsThrown() {
-		assertThatThrownBy(() ->passengerService
-				.registerNewCustomer(buildPassengerWithIncorrectFormatDetails()), "Invalid Email Format")
+		assertThatThrownBy(() ->passengerService.registerNewCustomer(buildPassengerWithIncorrectFormatDetails()),
+				"Invalid Email Format")
 				.as("Please enter a valid email format", "")
 				.isInstanceOf(FailedRegistrationException.class)
 				.hasMessageContaining("Please enter a valid email format");
@@ -78,6 +72,14 @@ class CustomerServiceTest {
 		assertThat(passengerService.getCountOfCustomers()).isNotZero();
 		assertThat(passengerService.getCountOfCustomers()).isGreaterThan(BigInteger.ZERO.intValue());
 		assertThat(passengerResponse).isNotNull();
+	}
+	
+	@Test void testThatOtpIsGenerated_AndSentToTheUserToActivateTheirAccount(){
+		
+	}
+	
+	@Test void testThatAccountActivationIsSuccessful_IfTheOtpEnteredIdCorrect(){
+	
 	}
 	
 	@SneakyThrows
@@ -97,11 +99,11 @@ class CustomerServiceTest {
 			assertThat(passenger.getEmail()).isEqualTo(updateRequest.getEmail());
 		});
 	}
-	
 	private CustomerRequest buildIncompletePassenger() {
 		return CustomerRequest.builder().email("theeniolasamuel@gmail.com").firstName("Samuel")
 				       .lastName("Eniola").password("coco@22").build();
 	}
+	
 	private CustomerRequest buildPassengerWithIncorrectFormatDetails() {
 		return CustomerRequest.builder().password("Obim").email("emailgmail")
 				       .lastName("Obinali").firstName("Goodness").phoneNumber("08045673421").build();
@@ -115,7 +117,6 @@ class CustomerServiceTest {
 				       .email("alayandezainab64@gmail.com")
 				       .build();
 	}
-	
 	private CustomerRequest buildPassenger() {
 		return CustomerRequest.builder()
 				       .password("ayanniyi@20")
@@ -125,12 +126,12 @@ class CustomerServiceTest {
 				       .email("alaabdulmalik03@gmail.com")
 				       .build();
 	}
+	
 	@SneakyThrows
 	@Test void findSavedPassengerWithAUsernameThatDoesNotExist_InvalidRequestExceptionIsThrown(){
 		assertThrowsExactly(InvalidRequestException.class, ()->passengerService.findCustomerByUserName("mithra"),
 				"Request Failed:: Invalid Username");
 	}
-		
 	@SneakyThrows
 	@Test void findSavedPassengerWithUsername_PassengerWithTheSaidUsernameIsFound(){
 		Optional<CustomerResponse> response = passengerService.findCustomerByUserName("mirah");
@@ -155,7 +156,7 @@ class CustomerServiceTest {
 		LoginRequest request = LoginRequest.builder().username("mirah").email("ololadeayandunni@gmail.com").build();
 		assertThrows(LoginFailedException.class, ()-> passengerService.login(request), "Login Failed:: Please provide the full details requested in the correct format");
 	}
-
+	
 	@SneakyThrows
 	@DisplayName("Login is successful when all credentials are valid")
 	@Test void loginTest(){
@@ -169,7 +170,7 @@ class CustomerServiceTest {
 	}
 	
 	@Test void testThatUserTriesToLogInWhenLoginSessionIsStillOn(){
-		
+	
 	}
 	
 	@Test
@@ -177,6 +178,7 @@ class CustomerServiceTest {
 		assertThrowsExactly(RuntimeException.class, ()->passengerService.findCustomerById("892ffr0ilj84aas787t274gf7qwerty8"),
 				"Request Failed:: Invalid Id");
 	}
+	
 	//todo to fail
 	@SneakyThrows
 	@Test
@@ -189,13 +191,12 @@ class CustomerServiceTest {
 			assertThat(passengerResponse.getUserName()).isNotEmpty();
 		});
 	}
-	
-		@SneakyThrows
+	@SneakyThrows
 	@Test void removePassengerByUserNameTest(){
 		passengerService.registerNewCustomer(buildPassenger());
 //		assertTrue(isDeleted);
 	}
-
+	
 	@SneakyThrows
 	@Test void getAllPassengersTest(){
 		List<CustomerResponse> allPassengersPresent = passengerService.getAllCustomers();
@@ -213,5 +214,15 @@ class CustomerServiceTest {
 //		passengerService.removeCustomerById(passengerResponse.getId());
 		assertEquals(BigInteger.TWO.intValue(), passengerService.getCountOfCustomers());
 	}
+	
+	private CreateAddressRequest buildAddress() {
+		return CreateAddressRequest.builder()
+				       .country("Nigeria")
+				       .houseNumber("12B")
+				       .postalCode("122134")
+				       .state("Lagos")
+				       .streetName("Harvey Rd")
+				       .streetNumber("12th str.")
+				       .build();
+	}
 }
-

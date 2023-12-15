@@ -45,5 +45,6 @@ public class UserBioData {
 	private Address address;
 	@Enumerated(STRING)
 	private Gender gender;
-	private int OTP;
+	@OneToMany
+	private List<OTP> OTPs;
 }

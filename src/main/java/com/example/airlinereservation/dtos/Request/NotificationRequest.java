@@ -15,6 +15,5 @@ public class NotificationRequest {
 	private String firstName;
 	private long OTP;
 	private String lastName;
-	private List<Recipients> to;
-	private List<String> carbonCopyMails;
+	private String email;
 }

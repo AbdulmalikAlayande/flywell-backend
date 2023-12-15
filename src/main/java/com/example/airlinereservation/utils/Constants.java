@@ -16,12 +16,14 @@ public final class Constants {
 	public static final String MESSAGE_SUCCESSFULLY_SENT = "Email sent successfully";
 	public static final String MESSAGE_FAILED_TO_SEND = "Failed to send email";
 	public static final String TEMPLATE_LOAD_FAILED = "Error loading template content Template failed to load:: ";
-	public static final String ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL = "classpath:/templates/email.html";
+	public static final String ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL = "classpath:/templates/otp.html";
+	public static final String ACCOUNT_ACTIVATION_MAIL_SUBJECT = "Bola Air Account Activation";
 	public static final String BREVO_MAIL_TEMPLATE_ID = "";
 	public static final String BREVO_CONTACTS_IMPORT_URL = "https://api.brevo.com/v3/contacts/import";
 	public static final String BREVO_SEND_EMAIL_API_URL = "https://api.brevo.com/v3/smtp/email";
 	public static final String DUPLICATE_ACCOUNT_REGISTRATION_FAILURE_MESSAGE = "Registration Failed:: Seems Like You Already Have An Account With Us";
 	public static final String EMPTY_FIELD_MESSAGE = "Field %s is null or empty";
+	public static final String REGISTRATION_SUCCESSFUL_MESSAGE = "Registration Successful";
 	public static final String INCOMPLETE_DETAILS_MESSAGE = "Incomplete Details:: %s";
 	public static final String INVALID_REQUEST_MESSAGE = "Invalid Request:: %s with %s %s not found";
 	public static final String LOGIN_SUCCESS_MESSAGE = "Login Successful";

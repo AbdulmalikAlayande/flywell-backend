@@ -1,10 +1,15 @@
 package com.example.airlinereservation.utils;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.stream.IntStream;
 
 public class OTPGenerator {
+	
+	@Value("${totp.secret.key}")
+	private static String OTPSecret;
 	
 	private static final char[] BASE32_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567".toCharArray();
 	private static final int[] BITS_LOOKUP = new int[128];
@@ -20,10 +25,11 @@ public class OTPGenerator {
 	
 	public static String encodeBase32(String input) {
 		StringBuilder encoded = new StringBuilder();
+		String dataToBeEncoded = OTPSecret + input;
 		int buffer = 0;
 		int bufferLength = 0;
 		
-		for (byte b : input.getBytes()) {
+		for (byte b : dataToBeEncoded.getBytes()) {
 			buffer <<= 8;
 			buffer |= b & 0xFF;
 			bufferLength += 8;
@@ -58,7 +64,7 @@ public class OTPGenerator {
 		return decoded.toString();
 	}
 	
-	public static String generateTOTP(String secretKey, long timeInterval) {
+	private static String generateTOTP(String secretKey, long timeInterval) {
 		try {
 			byte[] decodedKey = decodeBase32(secretKey).getBytes();
 			byte[] timeIntervalBytes = new byte[8];

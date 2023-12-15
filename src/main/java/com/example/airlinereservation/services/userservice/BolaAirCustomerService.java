@@ -1,38 +1,28 @@
 package com.example.airlinereservation.services.userservice;
 
 import com.example.airlinereservation.data.model.Passenger;
-import com.example.airlinereservation.data.model.persons.Customer;
-import com.example.airlinereservation.data.model.persons.UserBioData;
-import com.example.airlinereservation.data.repositories.AddressRepository;
-import com.example.airlinereservation.data.repositories.CustomerRepository;
-import com.example.airlinereservation.data.repositories.UserBioDataRepository;
-import com.example.airlinereservation.dtos.Request.CustomerRequest;
-import com.example.airlinereservation.dtos.Request.LoginRequest;
-import com.example.airlinereservation.dtos.Request.UpdateRequest;
-import com.example.airlinereservation.dtos.Response.CustomerResponse;
-import com.example.airlinereservation.dtos.Response.FlightResponse;
-import com.example.airlinereservation.dtos.Response.LoginResponse;
-import com.example.airlinereservation.exceptions.FailedRegistrationException;
-import com.example.airlinereservation.exceptions.FieldInvalidException;
-import com.example.airlinereservation.exceptions.InvalidRequestException;
-import com.example.airlinereservation.exceptions.LoginFailedException;
+import com.example.airlinereservation.data.model.persons.*;
+import com.example.airlinereservation.data.repositories.*;
+import com.example.airlinereservation.dtos.Request.*;
+import com.example.airlinereservation.dtos.Response.*;
+import com.example.airlinereservation.exceptions.*;
 import com.example.airlinereservation.services.notifications.Validator;
-import com.example.airlinereservation.utils.OTPGenerator;
+import com.example.airlinereservation.services.notifications.mail.MailService;
+import com.example.airlinereservation.utils.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.example.airlinereservation.data.model.enums.Role.USER;
-import static com.example.airlinereservation.exceptions.Exceptions.throwFailedRegistrationException;
-import static com.example.airlinereservation.exceptions.Exceptions.throwInvalidRequestException;
+import static com.example.airlinereservation.exceptions.Exceptions.*;
 import static com.example.airlinereservation.utils.Constants.*;
 
 @Service
@@ -44,32 +34,60 @@ public class BolaAirCustomerService implements CustomerService {
 	private CustomerRepository customerRepository;
 	private UserBioDataRepository userBioDataRepository;
 	private AddressRepository addressRepository;
+	private OTPRepository otpRepository;
 	private ModelMapper mapper;
-	
+	private MailService mailer;
 	
 	@Override
+	@Transactional(rollbackFor = {SQLException.class, FailedRegistrationException.class})
 	public CustomerResponse registerNewCustomer(@NotNull CustomerRequest customerRequest) throws FailedRegistrationException {
 		CustomerResponse customerResponse = new CustomerResponse();
 		try {
 			validateEmailAndPassword(customerRequest.getEmail(), customerRequest.getPassword());
-			Customer customer = new Customer();
 			UserBioData biodata = mapper.map(customerRequest, UserBioData.class);
+			biodata.setOTPs(new ArrayList<>());
 			UserBioData savedBio = userBioDataRepository.save(biodata);
-			customer.setBioData(savedBio);
+			Customer customer = new Customer();
 			customer.setRole(USER);
+			customer.setBioData(savedBio);
 			customerRepository.save(customer);
-			mapper.map(customer.getBioData(), customerResponse);
-//			OTPGenerator.generateOtp();
-			customerResponse.setMessage(customerRequest.getFirstName()+" Your Registration Is Successful");
-		} catch (Throwable throwable) {
-			throwFailedRegistrationException(throwable);
+			
+			OTP createdOTP = createOtp(biodata.getEmail());
+			long otpData = createdOTP.getData();
+			mailer.sendOtp(buildNotificationRequest(biodata.getEmail(), otpData));
+			
+			savedBio.getOTPs().add(createdOTP);
+			userBioDataRepository.save(savedBio);
+			mapper.map(savedBio, customerResponse);
+			customerResponse.setMessage(REGISTRATION_SUCCESSFUL_MESSAGE);
+		} catch (FieldInvalidException | InvalidRequestException exception) {
+			throwFailedRegistrationException(exception);
 		}
 		return customerResponse;
 	}
 	
+	public void activateCustomerAccount(String OTP){
+	
+	}
+	
+	public OTP createOtp(String email){
+		String emailEncoded = OTPGenerator.encodeBase32(email);
+		String generatedOtp = OTPGenerator.generateTOTP(emailEncoded);
+		return otpRepository.save(OTP.builder()
+				       .data(Long.parseLong(generatedOtp))
+				       .build());
+	}
+	
+	private NotificationRequest buildNotificationRequest(String email, long otp){
+		return NotificationRequest.builder()
+				       .email(email)
+				       .OTP(otp)
+				       .build();
+	}
 	@Override
 	public List<FlightResponse> viewAvailableFLights() {
 		return null;
+		
 	}
 	
 	private void validateEmailAndPassword(String email, String password) throws FieldInvalidException, InvalidRequestException {

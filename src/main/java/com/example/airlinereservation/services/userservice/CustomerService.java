@@ -8,6 +8,7 @@ import com.example.airlinereservation.dtos.Response.FlightResponse;
 import com.example.airlinereservation.dtos.Response.LoginResponse;
 import com.example.airlinereservation.dtos.Response.CustomerResponse;
 import com.example.airlinereservation.exceptions.FailedRegistrationException;
+import com.example.airlinereservation.exceptions.FieldInvalidException;
 import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.exceptions.LoginFailedException;
 
@@ -16,7 +17,7 @@ import java.util.Optional;
 public interface CustomerService {
 	
 	
-	CustomerResponse registerNewCustomer(CustomerRequest passengerRequest) throws FailedRegistrationException;
+	CustomerResponse registerNewCustomer(CustomerRequest passengerRequest) throws FailedRegistrationException, FieldInvalidException, InvalidRequestException;
 	List<FlightResponse> viewAvailableFLights();
 	CustomerResponse updateDetailsOfRegisteredCustomer(UpdateRequest updateRequest);
 	LoginResponse login(LoginRequest loginRequest) throws LoginFailedException;

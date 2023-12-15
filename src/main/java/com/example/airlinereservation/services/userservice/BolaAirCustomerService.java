@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.example.airlinereservation.data.model.enums.Role.USER;
@@ -66,8 +67,19 @@ public class BolaAirCustomerService implements CustomerService {
 		return customerResponse;
 	}
 	
-	public void activateCustomerAccount(String OTP){
-	
+	@Override
+	public void activateCustomerAccount(String OTP) throws InvalidRequestException {
+		AtomicBoolean isValidOTPRef = new AtomicBoolean();
+		Optional<OTP> foundOTP = otpRepository.findByData(Long.parseLong(OTP));
+		foundOTP.ifPresent(otp -> {
+			boolean isValid = OTPGenerator.validateTOTP(otp.getSecretKey(), OTP);
+			isValidOTPRef.set(isValid);
+		});
+		if(isValidOTPRef.get()){
+			return;
+		}
+		throw new InvalidRequestException("");
+		
 	}
 	
 	public OTP createOtp(String email){

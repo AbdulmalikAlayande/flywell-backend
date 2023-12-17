@@ -50,7 +50,26 @@ public class BolaAir_CustomerController {
 		}
 	}
 	
-	@PostMapping("login-customer")
+	@PostMapping("activate-account/{TOTP}")
+	public ResponseEntity<?> activateAccount(@PathVariable String TOTP){
+		CustomerResponse customerResponse;
+		try {
+			ApiResponse<CustomerResponse> apiResponse = new ApiResponse<>();
+			customerResponse = customerService.activateCustomerAccount(TOTP);
+			apiResponse.setData(customerResponse);
+			apiResponse.setSuccessful(HttpStatus.CREATED.is2xxSuccessful());
+			apiResponse.setStatusCode(HttpStatus.CREATED.value());
+			return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+		} catch (InvalidRequestException e) {
+			ApiResponse<String> apiResponse = new ApiResponse<>();
+			apiResponse.setSuccessful(false);
+			apiResponse.setData(e.getMessage());
+			apiResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+			return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+		}
+	}
+	
+	@PostMapping("login-customer/")
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
 		try {
 			LoginResponse loginResponse = customerService.login(loginRequest);

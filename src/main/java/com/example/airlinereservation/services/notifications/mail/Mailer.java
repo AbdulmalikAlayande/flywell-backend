@@ -68,7 +68,9 @@ public class Mailer implements MailService{
 	private Notification buildNotification(NotificationRequest notificationRequest) throws InvalidRequestException {
 		Resource resource = resourceLoader.getResource(ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL);
 		String loadedContent = TemplateLoader.loadTemplateContent(resource);
-		String formattedContent = String.format("%s%s%s", loadedContent, notificationRequest.getFirstName(), notificationRequest.getOTP());
+		String formattedContent = String.format(loadedContent, notificationRequest.getFirstName(),
+				notificationRequest.getOTP(), notificationRequest.getOTP());
+		System.out.println("formattedContent ==> "+formattedContent);
 		Recipient recipient = Recipient.builder().email(notificationRequest.getEmail()).build();
 		return Notification.builder()
 				       .subject(ACCOUNT_ACTIVATION_MAIL_SUBJECT)

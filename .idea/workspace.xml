@@ -6,13 +6,20 @@
   <component name="ChangeListManager">
     <list default="true" id="d77c4506-9ae7-42fb-9e8e-f40f00078755" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/airlinereservation/data/model/persons/UserBioData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/airlinereservation/data/model/persons/UserBioData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/airlinereservation/services/notifications/mail/Mailer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/airlinereservation/services/notifications/mail/Mailer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/airlinereservation/services/notifications/mail/Mailer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/airlinereservation/services/notifications/mail/Mailer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/airlinereservation/services/userservice/BolaAirCustomerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/airlinereservation/services/userservice/BolaAirCustomerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/cleanup.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/cleanup.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/otp.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/otp.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -40,10 +47,32 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "project.propCompiler",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Spring Boot.AirlineReservation">
+    <configuration name="CustomerServiceTest.testThatAccountActivationIsSuccessful_IfTheOtpEnteredIdCorrect" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="AirlineReservation" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.airlinereservation.services.userservice.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.example.airlinereservation.services.userservice" />
+      <option name="MAIN_CLASS_NAME" value="com.example.airlinereservation.services.userservice.CustomerServiceTest" />
+      <option name="METHOD_NAME" value="testThatAccountActivationIsSuccessful_IfTheOtpEnteredIdCorrect" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="CustomerServiceTest.testThatPassengerCanRegisterSuccessfully_IfAllChecksArePassed" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="AirlineReservation" />
       <extension name="coverage">
@@ -71,8 +100,24 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="AirlineReservation" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="AirlineReservation" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.airlinereservation.AirlineReservation" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.airlinereservation.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.AirlineReservation" />
+        <item itemvalue="JUnit.CustomerServiceTest.testThatAccountActivationIsSuccessful_IfTheOtpEnteredIdCorrect" />
         <item itemvalue="JUnit.CustomerServiceTest.testThatPassengerCanRegisterSuccessfully_IfAllChecksArePassed" />
       </list>
     </recent_temporary>
@@ -86,7 +131,7 @@
       <option name="presentableId" value="Default" />
       <updated>1702815111152</updated>
       <workItem from="1702815114257" duration="664000" />
-      <workItem from="1702815843473" duration="2163000" />
+      <workItem from="1702815843473" duration="6842000" />
     </task>
     <servers />
   </component>

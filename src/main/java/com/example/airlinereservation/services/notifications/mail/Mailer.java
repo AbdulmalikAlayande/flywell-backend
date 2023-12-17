@@ -50,7 +50,6 @@ public class Mailer implements MailService{
 		HttpHeaders headers = new HttpHeaders();
 		headers.set(API_KEY, validationConfig.getBrevoApiKey());
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		System.out.println("api key ==> "+validationConfig.getBrevoApiKey());
 		
 		Notification notification = buildNotification(notificationRequest);
 		HttpEntity<Notification> requestEntity = new HttpEntity<>(notification, headers);

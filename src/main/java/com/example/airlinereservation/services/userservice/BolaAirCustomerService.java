@@ -91,7 +91,6 @@ public class BolaAirCustomerService implements CustomerService {
 						       .phoneNumber(bioData.getPhoneNumber())
 						       .email(bioData.getEmail())
 						       .userName(bioData.getUserName())
-						       .gender(bioData.getGender().toString())
 						       .build();
 	}
 	

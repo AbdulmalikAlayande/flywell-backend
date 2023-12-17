@@ -1,5 +1,6 @@
 package com.example.airlinereservation.services.notifications.mail;
 
+import com.example.airlinereservation.config.EmailValidationConfig;
 import com.example.airlinereservation.dtos.Request.NotificationRequest;
 import com.example.airlinereservation.dtos.Response.NotificationResponse;
 import com.example.airlinereservation.exceptions.InvalidRequestException;
@@ -25,7 +26,7 @@ import static com.example.airlinereservation.utils.Constants.*;
 @AllArgsConstructor
 public class Mailer implements MailService{
 	
-	private final String brevoApiKey;
+	private final EmailValidationConfig validationConfig;
 	private final ResourceLoader resourceLoader;
 	private final RestTemplate restTemplate;
 	private final TemplateEngine templateEngine;
@@ -35,7 +36,7 @@ public class Mailer implements MailService{
 	public ResponseEntity<NotificationResponse> importContacts(NotificationRequest notificationRequest) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Type", "application/json");
-		headers.set(API_KEY, brevoApiKey);
+		headers.set(API_KEY, validationConfig.getBrevoApiKey());
 		HttpEntity<NotificationRequest> request = new HttpEntity<>(notificationRequest, headers);
 		return restTemplate.postForEntity(BREVO_CONTACTS_IMPORT_URL, request, NotificationResponse.class);
 	}
@@ -47,20 +48,20 @@ public class Mailer implements MailService{
 	@Override
 	public ResponseEntity<NotificationResponse> sendOtp(NotificationRequest notificationRequest) throws InvalidRequestException {
 		HttpHeaders headers = new HttpHeaders();
-		headers.set(API_KEY, brevoApiKey);
+		headers.set(API_KEY, validationConfig.getBrevoApiKey());
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
 		Notification notification = buildNotification(notificationRequest);
 		HttpEntity<Notification> requestEntity = new HttpEntity<>(notification, headers);
 		ResponseEntity<NotificationResponse> response = restTemplate.postForEntity(
 				BREVO_SEND_EMAIL_API_URL,
-				requestEntity, NotificationResponse.class
+				requestEntity,
+				NotificationResponse.class
 		);
 		if (response.getStatusCode().is2xxSuccessful())
 			log.info("{} response body:: {}", MESSAGE_SUCCESSFULLY_SENT, Objects.requireNonNull(response.getBody()));
 		else log.error("{} response body:: {}", MESSAGE_FAILED_TO_SEND, Objects.requireNonNull(response.getBody()));
 		return response;
-		
 	}
 	
 	@NotNull

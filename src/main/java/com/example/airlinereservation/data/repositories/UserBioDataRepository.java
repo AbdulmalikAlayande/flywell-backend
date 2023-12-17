@@ -13,4 +13,6 @@ public interface UserBioDataRepository extends JpaRepository<UserBioData, String
 	Optional<UserBioData> findByEmailAndPassword(String email, String password);
 	
 	boolean existsByEmail(String email);
+	
+	Optional<UserBioData> findByEmail(String userEmail);
 }

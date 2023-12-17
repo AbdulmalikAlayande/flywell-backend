@@ -1,13 +1,18 @@
 package com.example.airlinereservation.services.userservice;
 
+import com.example.airlinereservation.data.model.persons.OTP;
+
 public interface OTPService {
 	
+	OTP saveOTP(OTP otp);
 	
-	String encodeBase32(String input);
+	OTP encodeBase32(String input);
 	
 	String decodeBase32(String base32);
 	
-	String generateTOTP(String secretKey);
+	OTP generateTOTP(OTP otp);
 	
 	boolean validateTOTP(String secretKey, String inputTOTP);
+	
+	String splitSecretKey(String decodedOtp);
 }

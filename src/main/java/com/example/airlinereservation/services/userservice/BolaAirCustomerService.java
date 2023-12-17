@@ -8,7 +8,6 @@ import com.example.airlinereservation.dtos.Response.*;
 import com.example.airlinereservation.exceptions.*;
 import com.example.airlinereservation.services.notifications.Validator;
 import com.example.airlinereservation.services.notifications.mail.MailService;
-import com.example.airlinereservation.utils.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.example.airlinereservation.data.model.enums.Role.USER;
@@ -34,7 +32,6 @@ public class BolaAirCustomerService implements CustomerService {
 	private Validator validator;
 	private CustomerRepository customerRepository;
 	private UserBioDataRepository userBioDataRepository;
-	private AddressRepository addressRepository;
 	private OTPRepository otpRepository;
 	private ModelMapper mapper;
 	private OTPService otpService;
@@ -56,12 +53,13 @@ public class BolaAirCustomerService implements CustomerService {
 			
 			OTP createdOTP = createOtp(biodata.getEmail());
 			long otpData = createdOTP.getData();
-			mailer.sendOtp(buildNotificationRequest(biodata.getEmail(), otpData));
+			mailer.sendOtp(buildNotificationRequest(biodata.getFirstName(), biodata.getEmail(), otpData));
 			
 			savedBio.getOTPs().add(createdOTP);
 			userBioDataRepository.save(savedBio);
 			mapper.map(savedBio, customerResponse);
 			customerResponse.setMessage(REGISTRATION_SUCCESSFUL_MESSAGE);
+			customerResponse.setOtp(otpData);
 		} catch (FieldInvalidException | InvalidRequestException exception) {
 			throwFailedRegistrationException(exception);
 		}
@@ -69,32 +67,45 @@ public class BolaAirCustomerService implements CustomerService {
 	}
 	
 	@Override
-	public void activateCustomerAccount(String OTP) throws InvalidRequestException {
-		AtomicBoolean isValidOTPRef = new AtomicBoolean();
+	@Transactional(rollbackFor = {SQLException.class, FailedRegistrationException.class})
+	public CustomerResponse activateCustomerAccount(String OTP) throws InvalidRequestException {
 		Optional<OTP> foundOTP = otpRepository.findByData(Long.parseLong(OTP));
-		foundOTP.ifPresent(otp -> {
-			boolean isValid = otpService.validateTOTP(otp.getSecretKey(), OTP);
-			isValidOTPRef.set(isValid);
-		});
-		if(isValidOTPRef.get()){
-			return;
+		if(foundOTP.isPresent()){
+			boolean isValid = otpService.validateTOTP(foundOTP.get().getSecretKey(), OTP);
+			if (isValid){
+				String decodedOtp = otpService.decodeBase32(foundOTP.get().getSecretKey());
+				String userEmail = otpService.splitSecretKey(decodedOtp);
+				return userBioDataRepository.findByEmail(userEmail)
+									        .map(userBioData -> buildCustomerResponse(userBioData, SUCCESSFUL_ACTIVATION_MESSAGE))
+									        .orElseThrow(()->new InvalidRequestException("USER WITH EMAIL NOT FOUND"));
+			}
+			else throw new InvalidRequestException("Invalid OTP");
 		}
-		throw new InvalidRequestException("");
-		
+		throw new InvalidRequestException("Invalid OTP");
+	}
+	
+	private CustomerResponse buildCustomerResponse(UserBioData bioData, String message) {
+		return CustomerResponse.builder()
+						       .message(message)
+						       .lastName(bioData.getLastName())
+						       .phoneNumber(bioData.getPhoneNumber())
+						       .email(bioData.getEmail())
+						       .userName(bioData.getUserName())
+						       .gender(bioData.getGender().toString())
+						       .build();
 	}
 	
 	public OTP createOtp(String email){
-		String emailEncoded = otpService.encodeBase32(email);
-		String generatedOtp = otpService.generateTOTP(emailEncoded);
-		return otpRepository.save(OTP.builder()
-				       .data(Long.parseLong(generatedOtp))
-				       .build());
+		OTP emailEncoded = otpService.encodeBase32(email);
+		OTP generatedTotp = otpService.generateTOTP(emailEncoded);
+		return otpService.saveOTP(generatedTotp);
 	}
 	
-	private NotificationRequest buildNotificationRequest(String email, long otp){
+	private NotificationRequest buildNotificationRequest(String firstName, String email, long otp){
 		return NotificationRequest.builder()
 				       .email(email)
 				       .OTP(otp)
+				       .firstName(firstName)
 				       .build();
 	}
 	@Override
@@ -148,10 +159,10 @@ public class BolaAirCustomerService implements CustomerService {
 		checkIfUserExists(loginRequest);
 		if (loginRequest.getUsername() == null)
 			return logInViaEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
-		return loginViaUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+		return loginViaUsernameAndPassword(loginRequest.getUsername());
 	}
 	
-	private @NotNull LoginResponse loginViaUsernameAndPassword(String username, String password) throws LoginFailedException {
+	private @NotNull LoginResponse loginViaUsernameAndPassword(String username) throws LoginFailedException {
 		Optional<UserBioData> foundUser = userBioDataRepository.findByUserName(username);
 		AtomicReference<LoginResponse> response = new AtomicReference<>();
 		Optional<LoginResponse> optionalResponse = foundUser.map(bioData -> {

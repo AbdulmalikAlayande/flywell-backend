@@ -37,6 +37,7 @@ public class BolaAirCustomerService implements CustomerService {
 	private AddressRepository addressRepository;
 	private OTPRepository otpRepository;
 	private ModelMapper mapper;
+	private OTPService otpService;
 	private MailService mailer;
 	
 	@Override
@@ -72,7 +73,7 @@ public class BolaAirCustomerService implements CustomerService {
 		AtomicBoolean isValidOTPRef = new AtomicBoolean();
 		Optional<OTP> foundOTP = otpRepository.findByData(Long.parseLong(OTP));
 		foundOTP.ifPresent(otp -> {
-			boolean isValid = OTPGenerator.validateTOTP(otp.getSecretKey(), OTP);
+			boolean isValid = otpService.validateTOTP(otp.getSecretKey(), OTP);
 			isValidOTPRef.set(isValid);
 		});
 		if(isValidOTPRef.get()){
@@ -83,8 +84,8 @@ public class BolaAirCustomerService implements CustomerService {
 	}
 	
 	public OTP createOtp(String email){
-		String emailEncoded = OTPGenerator.encodeBase32(email);
-		String generatedOtp = OTPGenerator.generateTOTP(emailEncoded);
+		String emailEncoded = otpService.encodeBase32(email);
+		String generatedOtp = otpService.generateTOTP(emailEncoded);
 		return otpRepository.save(OTP.builder()
 				       .data(Long.parseLong(generatedOtp))
 				       .build());

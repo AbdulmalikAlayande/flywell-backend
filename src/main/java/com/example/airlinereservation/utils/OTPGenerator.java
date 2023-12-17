@@ -1,12 +1,17 @@
 package com.example.airlinereservation.utils;
 
+import com.example.airlinereservation.services.userservice.OTPService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.stream.IntStream;
 
-public class OTPGenerator {
+@Service
+@AllArgsConstructor
+public class OTPGenerator implements OTPService {
 	
 	@Value("${totp.secret.key}")
 	private static String OTPSecret;
@@ -23,12 +28,12 @@ public class OTPGenerator {
 		}
 	}
 	
-	public static String encodeBase32(String input) {
+	@Override
+	public String encodeBase32(String input) {
 		StringBuilder encoded = new StringBuilder();
 		String dataToBeEncoded = OTPSecret + input;
 		int buffer = 0;
 		int bufferLength = 0;
-		
 		for (byte b : dataToBeEncoded.getBytes()) {
 			buffer <<= 8;
 			buffer |= b & 0xFF;
@@ -46,8 +51,9 @@ public class OTPGenerator {
 		return encoded.toString();
 	}
 	
-	public static String decodeBase32(String base32) {
-		base32 = base32.toUpperCase().replaceAll("[=]", "");
+	@Override
+	public String decodeBase32(String base32) {
+		base32 = base32.toUpperCase().replaceAll("=", "");
 		StringBuilder decoded = new StringBuilder();
 		int buffer = 0;
 		int bufferLength = 0;
@@ -64,7 +70,7 @@ public class OTPGenerator {
 		return decoded.toString();
 	}
 	
-	private static String generateTOTP(String secretKey, long timeInterval) {
+	private String generateTOTP(String secretKey, long timeInterval) {
 		try {
 			byte[] decodedKey = decodeBase32(secretKey).getBytes();
 			byte[] timeIntervalBytes = new byte[8];
@@ -96,12 +102,14 @@ public class OTPGenerator {
 		return (int) (binaryCode % Math.pow(10, TOTP_LENGTH));
 	}
 	
-	public static String generateTOTP(String secretKey) {
+	@Override
+	public String generateTOTP(String secretKey) {
 		long timeInterval = System.currentTimeMillis() / 1000 / TIME_STEP;
 		return generateTOTP(secretKey, timeInterval);
 	}
 	
-	public static boolean validateTOTP(String secretKey, String inputTOTP) {
+	@Override
+	public boolean validateTOTP(String secretKey, String inputTOTP) {
 		long timeInterval = System.currentTimeMillis() / 1000 / TIME_STEP;
 		return IntStream.of(-1, 0, 1)
 				        .anyMatch(i -> generateTOTP(secretKey, timeInterval + i).equals(inputTOTP));

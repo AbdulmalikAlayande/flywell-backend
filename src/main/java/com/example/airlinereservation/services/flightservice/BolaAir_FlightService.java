@@ -14,7 +14,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,22 +32,21 @@ public class BolaAir_FlightService implements FlightService{
 		try{
 			Flight mappedFlight = mapper.map(flightRequest, Flight.class);
 			Airport arrivalAirport = buildAirport();
-			arrivalAirport.setCode(flightRequest.getArrivalAirportCode());
-			arrivalAirport.setName(flightRequest.getArrivalAirportName());
-			arrivalAirport.setAirportLocation(Destinations.valueOf(flightRequest.getArrivalState().toUpperCase()));
+			arrivalAirport.setIcaoCode(flightRequest.getArrivalAirportCode());
+			arrivalAirport.setAirportName(flightRequest.getArrivalAirportName());
 			arrivalAirport.setAirportAddress(flightRequest.getArrivalAirportAddress());
 			Airport savedArrivalAirport = airportRepository.save(arrivalAirport);
 			
 			Airport departureAirport = buildAirport();
-			departureAirport.setCode(flightRequest.getDepartureAirportCode());
-			departureAirport.setName(flightRequest.getDepartureAirportName());
-			departureAirport.setAirportLocation(Destinations.valueOf(flightRequest.getDepartureState().toUpperCase()));
+			departureAirport.setIcaoCode(flightRequest.getDepartureAirportCode());
+			departureAirport.setAirportName(flightRequest.getDepartureAirportName());
 			departureAirport.setAirportAddress(flightRequest.getDepartureAirportAddress());
 			Airport savedDepartureAirport = airportRepository.save(departureAirport);
 			
 			mappedFlight.setArrivalAirport(savedArrivalAirport);
 			mappedFlight.setDepartureAirport(savedDepartureAirport);
 			mappedFlight.setAirline(BOLA_AIR);
+			mappedFlight.setEstimatedFlightDurationInMinutes(flightRequest.getEstimatedFlightDurationInMinutes());
 			
 			Flight savedFlight = flightRepository.save(mappedFlight);
 			return buildFlightResponse(savedFlight);
@@ -58,16 +56,17 @@ public class BolaAir_FlightService implements FlightService{
 		}
 	}
 	
+
 	private FlightResponse buildFlightResponse(Flight savedFlight) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 		FlightResponse response = FlightResponse.class.getDeclaredConstructor().newInstance();
 		mapper.map(savedFlight, response);
 		response.setArrivalAirportAddress(savedFlight.getArrivalAirport().getAirportAddress());
-		response.setArrivalAirportCode(savedFlight.getArrivalAirport().getCode());
-		response.setArrivalAirportName(savedFlight.getArrivalAirport().getName());
+		response.setArrivalAirportCode(savedFlight.getArrivalAirport().getIcaoCode());
+		response.setArrivalAirportName(savedFlight.getArrivalAirport().getAirportName());
 		
 		response.setDepartureAirportAddress(savedFlight.getDepartureAirport().getAirportAddress());
-		response.setDepartureAirportCode(savedFlight.getDepartureAirport().getCode());
-		response.setDepartureAirportName(savedFlight.getDepartureAirport().getName());
+		response.setDepartureAirportCode(savedFlight.getDepartureAirport().getIcaoCode());
+		response.setDepartureAirportName(savedFlight.getDepartureAirport().getAirportName());
 		return response;
 	}
 	
@@ -92,7 +91,7 @@ public class BolaAir_FlightService implements FlightService{
 	
 	@Override
 	public FlightResponse getFlightByArrivalAndDepartureLocation(Destinations arrivalState, Destinations departureState) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvalidRequestException {
-		Optional<Flight> foundFlight = flightRepository.findByArrivalAndDepartureAirportLocation(arrivalState, departureState);
+		Optional<Flight> foundFlight = flightRepository.findByArrivalAndDepartureAirport("arrivalState", "departureState");
 		if (foundFlight.isPresent())
 			return buildFlightResponse(foundFlight.get());
 		throw new InvalidRequestException("Flight Not Found");
@@ -100,8 +99,8 @@ public class BolaAir_FlightService implements FlightService{
 	
 	@Override
 	public void removeAll() {
-		airportRepository.deleteAll();
 		flightRepository.deleteAll();
+		airportRepository.deleteAll();
 	}
 	
 	

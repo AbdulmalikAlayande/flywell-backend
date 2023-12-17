@@ -1,13 +1,8 @@
 package com.example.airlinereservation.dtos.Request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.validation.constraints.NotBlank;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -15,12 +10,13 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class CreateFlightInstanceRequest {
 	
-	@NotBlank
-	private LocalDate departureDate;
-	@NotBlank
-	private LocalTime departureTime;
-	private LocalTime arrivalTime;
-	private LocalDate arrivalDate;
-	private String arrivalState;
-	private String departureState;
+	private AirportRequest arrivalAirport;
+	private AirportRequest departureAirport;
+	private LocalDateTime departureTime;
+	@NonNull
+	private String arrivalCity;
+	@NonNull
+	private String departureCity;
+	private LocalDateTime departureDate;
+	
 }

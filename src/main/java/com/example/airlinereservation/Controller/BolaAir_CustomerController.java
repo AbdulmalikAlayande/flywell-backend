@@ -5,6 +5,8 @@ import com.example.airlinereservation.dtos.Request.LoginRequest;
 import com.example.airlinereservation.dtos.Response.ApiResponse;
 import com.example.airlinereservation.dtos.Response.CustomerResponse;
 import com.example.airlinereservation.dtos.Response.LoginResponse;
+import com.example.airlinereservation.exceptions.FieldInvalidException;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.services.userservice.CustomerService;
 import com.example.airlinereservation.exceptions.FailedRegistrationException;
 import com.example.airlinereservation.exceptions.LoginFailedException;
@@ -36,10 +38,10 @@ public class BolaAir_CustomerController {
 			apiResponse.setSuccessful(HttpStatus.CREATED.is2xxSuccessful());
 			apiResponse.setStatusCode(HttpStatus.CREATED.value());
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
-		} catch (FailedRegistrationException e) {
-			log.info(ERROR_MESSAGE, e.getMessage());
-			log.info("Error:: ", e);
-			response.setMessage(e.getMessage());
+		} catch (FailedRegistrationException | FieldInvalidException | InvalidRequestException exception) {
+			log.info(ERROR_MESSAGE, exception.getMessage());
+			log.info("Error:: ", exception);
+			response.setMessage(exception.getMessage());
 			ApiResponse<CustomerResponse> apiResponse= new ApiResponse<>();
 			apiResponse.setData(response);
 			apiResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());

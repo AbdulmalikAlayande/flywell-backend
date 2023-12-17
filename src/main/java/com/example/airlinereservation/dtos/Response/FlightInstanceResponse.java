@@ -5,8 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -15,18 +14,16 @@ import java.time.LocalTime;
 public class FlightInstanceResponse {
 	
 	private int baggageAllowance;
-	private long flightNumber;
+	private Long flightNumber;
 	private long flightDuration;
 	private boolean isFullyBooked;
 	private String departureAirportName;
-	private String departureAirportCode;
+	private String departureAirportIcaoCode;
 	private String departureAirportAddress;
 	private String arrivalAirportName;
-	private String arrivalAirportCode;
+	private String arrivalAirportIcaoCode;
 	private String arrivalAirportAddress;
-	private LocalTime departureTime;
-	private LocalTime arrivalTime;
-	private LocalDate departureDate;
-	private LocalDate arrivalDate;
+	private LocalDateTime departureDate;
+	private LocalDateTime arrivalDate;
 	
 }

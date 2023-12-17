@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,14 +27,16 @@ public class AirCraft {
 	private String airCraftName;
 	private String model;
 	private LocalDate datePurchased;
+	@OneToOne
+	private Position position;
 	@Enumerated(STRING)
 	private Destinations location;
 	private boolean isAvailable;
-	private final int numberOfSeats = BigInteger.valueOf(20).intValue();
+	private int numberOfSeats;
 	@Transient
-	private final Seat[] seats = new Seat[numberOfSeats];
-	public final boolean[] aircraftSeats = new boolean[numberOfSeats];
-
+	private Seat[] seats;
+	public boolean[] aircraftSeats;
+	
 	@Override
 	public boolean equals(Object object){
 		if (object == null || object.getClass() != this.getClass())
@@ -43,8 +44,10 @@ public class AirCraft {
 		AirCraft airCraft = (AirCraft) object;
 		return airCraft.getHangerId().equals(this.getHangerId());
 	}
-	
+
 	public int hashCode(){
 		return Objects.hash(hangerId);
 	}
 }
+
+

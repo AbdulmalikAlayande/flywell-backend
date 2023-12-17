@@ -1,29 +1,25 @@
 package com.example.airlinereservation.services.flightservice;
 
-import com.example.airlinereservation.data.model.*;
+import com.example.airlinereservation.data.model.Passenger;
 import com.example.airlinereservation.data.model.aircraft.AirCraft;
-import com.example.airlinereservation.data.model.enums.Destinations;
 import com.example.airlinereservation.data.model.enums.TravelClass;
 import com.example.airlinereservation.data.model.flight.Flight;
 import com.example.airlinereservation.dtos.Request.BookingRequest;
-import com.example.airlinereservation.dtos.Response.FlightResponse;
 import com.example.airlinereservation.dtos.Response.CustomerResponse;
+import com.example.airlinereservation.dtos.Response.FlightResponse;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.services.categories.*;
 import com.example.airlinereservation.services.userservice.CustomerService;
-import com.example.airlinereservation.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static com.example.airlinereservation.utils.Constants.INVALID_DESTINATION;
 
@@ -33,7 +29,6 @@ import static com.example.airlinereservation.utils.Constants.INVALID_DESTINATION
 public class BolaAirFlightService implements Bookable {
 	CustomerService passengerService;
 	ModelMapper mapper;
-	private final AirCraft[] availableAirCrafts = new AirCraft[]{};
 	private final List<Flight> availableFlights = new ArrayList<>();
 	
 	private final List<BookingCategory> bookingCategories = List.of(
@@ -53,8 +48,7 @@ public class BolaAirFlightService implements Bookable {
 	
 	@NotNull
 	private Flight availableFlight(String destination) {
-		Stream<Flight> availableFlight = availableFlights.stream().filter(flight -> flight.getDepartureAirport().getAirportLocation() == Destinations.valueOf(destination.toUpperCase()));
-		return availableFlight.findAny().orElseThrow();
+		return new Flight();
 	}
 	
 	public FlightResponse checkAvailableFlight(String destination) throws InvalidRequestException {
@@ -91,7 +85,6 @@ public class BolaAirFlightService implements Bookable {
 	@Override
 	public Flight createNewFlight(String destination) {
 		Flight flight = new Flight();
-		flight.getDepartureAirport().setAirportLocation(Destinations.valueOf(destination.toUpperCase()));
 		AirCraft availableAirCraft = getAvailableAirCraft();
 		return flight;
 	}
@@ -102,12 +95,7 @@ public class BolaAirFlightService implements Bookable {
 	
 	@Override
 	public void assignSeatToPassenger(Passenger passenger, String destination, int category) {
-		for (Flight flight : availableFlights) {
-			if (flight.getArrivalAirport().getAirportLocation() == Destinations.valueOf(destination.toUpperCase())) {
-				BookingCategory bookingClass = bookingCategories.get(category);
-				bookingClass.assignSeat(passenger, flight);
-			}
-		}
+	
 	}
 	
 	private Flight newFlightReadyForBooking(Flight flight) {
@@ -151,10 +139,8 @@ public class BolaAirFlightService implements Bookable {
 	}
 	
 	private boolean bookingRequestIsValid(BookingRequest bookingRequest) {
-		boolean isInvalidBookingRequest = bookingRequest.getBookingCategory() < 0 && bookingRequest.getBookingCategory() > 3;
-		if (!isInvalidBookingRequest && isValidTravelClass(bookingRequest)) return true;
-		else if (isInvalidBookingRequest) throw new IllegalArgumentException("Invalid Booking Category");
-		return false;
+		boolean isInvalidBookingRequest = false;
+		return !isInvalidBookingRequest && isValidTravelClass(bookingRequest);
 	}
 	
 	private boolean isValidTravelClass(BookingRequest bookingRequest) {
@@ -166,12 +152,6 @@ public class BolaAirFlightService implements Bookable {
 	}
 	
 	private Flight newFlightReadyForBooking() {
-		LocalTime departureTime = LocalTime.now();
-		LocalDate departureDate = LocalDate.now();
-		LocalTime arrivalTime = LocalTime.of(departureTime.getHour() + 5, departureTime.getMinute());
-		LocalDate arrivalDate = null;
-		if (arrivalTime == LocalTime.MIDNIGHT)
-			arrivalDate = LocalDate.of(departureDate.getYear(), departureDate.getMonth(), departureDate.getDayOfMonth() + 1);
 		return new Flight();
 	}
 }

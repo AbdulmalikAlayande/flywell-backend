@@ -6,10 +6,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static jakarta.persistence.EnumType.STRING;
@@ -24,12 +24,13 @@ public class FlightInstance {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
 	private boolean isFullyBooked;
+	@Column(unique = true)
+	@NonNull
+	private Long flightNumber;
 	@NotBlank
-	private LocalDate departureDate;
+	private LocalDateTime departureTime;
 	@NotBlank
-	private LocalTime departureTime;
-	private LocalTime arrivalTime;
-	private LocalDate arrivalDate;
+	private LocalDateTime arrivalDate;
 	@NotBlank
 	private int baggageAllowance;
 	@OneToOne

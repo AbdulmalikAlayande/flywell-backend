@@ -10,5 +10,8 @@ public interface  MailService {
 	ResponseEntity<NotificationResponse> importContacts(NotificationRequest notificationRequest);
 	ResponseEntity<NotificationResponse> sendReservationConfirmationEmail(NotificationRequest notificationRequest);
 	ResponseEntity<NotificationResponse> sendAccountActivationEmail(NotificationRequest notificationRequest) throws InvalidRequestException;
+	
+	ResponseEntity<NotificationResponse> sendOtp(NotificationRequest notificationRequest) throws InvalidRequestException;
+	
 	ResponseEntity<NotificationResponse> sendFlightFormAsPdf(NotificationRequest notificationRequest);
 }

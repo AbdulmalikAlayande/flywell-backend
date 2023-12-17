@@ -58,23 +58,23 @@ public class FlightServiceTest {
 	
 	private FlightRequest buildIncompleteFlight() {
 		return FlightRequest.builder()
-				       .flightDuration(3L)
+				       .estimatedFlightDurationInMinutes(3L)
 				       .build();
 	}
 	
 	//	@Test void
 	private static FlightRequest buildFlightRequest() {
 		return FlightRequest.builder()
-				       .flightDuration(3L)
-				       .arrivalState("Lagos")
-				       .departureState("Abuja")
+				       .estimatedFlightDurationInMinutes(3L)
+				       .arrivalCity("Lagos, Nigeria")
+				       .departureCity("Abuja, Nigeria")
 				       .flightNumber(2345L)
 				       .arrivalAirportCode("23456")
 				       .arrivalAirportName("Murtala Muhammed Airport")
-				       .arrivalAirportAddress("P.0 Box 7654, Lagos, Nigeria")
+				       .arrivalAirportAddress("Lagos, Nigeria")
 				       .departureAirportCode("45632")
 				       .departureAirportName("Nnamdi Azikwe International Airport")
-				       .departureAirportAddress("P.O Box 5213, Abuja, Nigeria")
+				       .departureAirportAddress("Abuja, Nigeria")
 				       .build();
 	}
 }

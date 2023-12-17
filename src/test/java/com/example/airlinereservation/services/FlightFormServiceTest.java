@@ -25,8 +25,7 @@ public class FlightFormServiceTest {
 	@SneakyThrows
 	@BeforeEach void startAllTestWith(){
 		passengerRequest = CustomerRequest.builder()
-				                   .userName("dende")
-				                   .email("alaabdulmalik03@gmail.com")
+ 				                   .email("alaabdulmalik03@gmail.com")
 				                   .firstName("Abdulmalik")
 				                   .lastName("Alayande")
 				                   .password("ayanniyi@20")

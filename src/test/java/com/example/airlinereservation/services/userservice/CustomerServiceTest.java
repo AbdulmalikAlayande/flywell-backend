@@ -19,6 +19,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.airlinereservation.utils.Constants.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
@@ -77,11 +78,14 @@ class CustomerServiceTest {
 	
 	@SneakyThrows
 	@Test void testThatOtpIsGenerated_AndSentToTheUserToActivateTheirAccount(){
-		customerService.activateCustomerAccount(String.valueOf(customerResponse.getOtp()));
 	}
 	
-	@Test void testThatAccountActivationIsSuccessful_IfTheOtpEnteredIdCorrect(){
-	
+	@Test
+	@SneakyThrows
+	void testThatAccountActivationIsSuccessful_IfTheOtpEnteredIdCorrect(){
+		CustomerResponse response = customerService.activateCustomerAccount(String.valueOf(customerResponse.getOtp()));
+		assertThat(response).isNotNull();
+		assertThat(response.getMessage()).isEqualTo(SUCCESSFUL_ACTIVATION_MESSAGE);
 	}
 	
 	@SneakyThrows
@@ -196,7 +200,6 @@ class CustomerServiceTest {
 	@SneakyThrows
 	@Test void removePassengerByUserNameTest(){
 		customerService.registerNewCustomer(buildPassenger());
-//		assertTrue(isDeleted);
 	}
 	
 	@SneakyThrows
@@ -213,18 +216,7 @@ class CustomerServiceTest {
 	@SneakyThrows
 	@Disabled
 	@Test void removePassengerByIdTest(){
-//		passengerService.removeCustomerById(passengerResponse.getId());
 		assertEquals(BigInteger.TWO.intValue(), customerService.getCountOfCustomers());
 	}
 	
-	private CreateAddressRequest buildAddress() {
-		return CreateAddressRequest.builder()
-				       .country("Nigeria")
-				       .houseNumber("12B")
-				       .postalCode("122134")
-				       .state("Lagos")
-				       .streetName("Harvey Rd")
-				       .streetNumber("12th str.")
-				       .build();
-	}
 }

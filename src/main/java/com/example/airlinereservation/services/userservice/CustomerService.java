@@ -19,7 +19,7 @@ public interface CustomerService {
 	
 	CustomerResponse registerNewCustomer(CustomerRequest passengerRequest) throws FailedRegistrationException, FieldInvalidException, InvalidRequestException;
 	
-	void activateCustomerAccount(String OTP) throws InvalidRequestException;
+	CustomerResponse activateCustomerAccount(String OTP) throws InvalidRequestException;
 	
 	List<FlightResponse> viewAvailableFLights();
 	CustomerResponse updateDetailsOfRegisteredCustomer(UpdateRequest updateRequest);

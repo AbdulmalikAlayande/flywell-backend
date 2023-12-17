@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d77c4506-9ae7-42fb-9e8e-f40f00078755" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/airlinereservation/services/notifications/mail/Mailer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/airlinereservation/services/notifications/mail/Mailer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/airlinereservation/services/notifications/mail/Mailer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/airlinereservation/services/notifications/mail/Mailer.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +86,7 @@
       <option name="presentableId" value="Default" />
       <updated>1702815111152</updated>
       <workItem from="1702815114257" duration="664000" />
-      <workItem from="1702815843473" duration="1479000" />
+      <workItem from="1702815843473" duration="2163000" />
     </task>
     <servers />
   </component>

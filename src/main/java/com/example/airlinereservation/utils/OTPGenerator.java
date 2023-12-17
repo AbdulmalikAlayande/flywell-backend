@@ -1,20 +1,26 @@
 package com.example.airlinereservation.utils;
 
+import com.example.airlinereservation.config.EmailValidationConfig;
+import com.example.airlinereservation.data.model.persons.OTP;
+import com.example.airlinereservation.data.repositories.OTPRepository;
 import com.example.airlinereservation.services.userservice.OTPService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 @Service
 @AllArgsConstructor
 public class OTPGenerator implements OTPService {
 	
-	@Value("${totp.secret.key}")
-	private static String OTPSecret;
+	private EmailValidationConfig validationConfig;
+	private OTPRepository otpRepository;
 	
 	private static final char[] BASE32_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567".toCharArray();
 	private static final int[] BITS_LOOKUP = new int[128];
@@ -29,9 +35,15 @@ public class OTPGenerator implements OTPService {
 	}
 	
 	@Override
-	public String encodeBase32(String input) {
+	public OTP saveOTP(OTP otp) {
+		return otpRepository.save(otp);
+	}
+	
+	@Override
+	public OTP encodeBase32(String input) {
 		StringBuilder encoded = new StringBuilder();
-		String dataToBeEncoded = OTPSecret + input;
+		String dataToBeEncoded = validationConfig.getTotpSecret() + input;
+		
 		int buffer = 0;
 		int bufferLength = 0;
 		for (byte b : dataToBeEncoded.getBytes()) {
@@ -48,7 +60,9 @@ public class OTPGenerator implements OTPService {
 		while (encoded.length() % 8 != 0) {
 			encoded.append('=');
 		}
-		return encoded.toString();
+		return OTP.builder()
+				       .secretKey(encoded.toString())
+				       .build();
 	}
 	
 	@Override
@@ -57,18 +71,31 @@ public class OTPGenerator implements OTPService {
 		StringBuilder decoded = new StringBuilder();
 		int buffer = 0;
 		int bufferLength = 0;
+		
 		for (char c : base32.toCharArray()) {
 			buffer <<= 5;
 			buffer |= BITS_LOOKUP[c];
 			bufferLength += 5;
+			
 			while (bufferLength >= 8) {
 				byte b = (byte) (buffer >> (bufferLength - 8));
 				decoded.append((char) b);
 				bufferLength -= 8;
 			}
 		}
+		
 		return decoded.toString();
 	}
+	
+	
+	@Override
+	public OTP generateTOTP(OTP otp) {
+		long timeInterval = System.currentTimeMillis() / 1000 / TIME_STEP;
+		String generatedOTP = generateTOTP(otp.getSecretKey(), timeInterval);
+		otp.setData(Long.parseLong(generatedOTP));
+		return otp;
+	}
+	
 	
 	private String generateTOTP(String secretKey, long timeInterval) {
 		try {
@@ -103,15 +130,26 @@ public class OTPGenerator implements OTPService {
 	}
 	
 	@Override
-	public String generateTOTP(String secretKey) {
-		long timeInterval = System.currentTimeMillis() / 1000 / TIME_STEP;
-		return generateTOTP(secretKey, timeInterval);
-	}
-	
-	@Override
 	public boolean validateTOTP(String secretKey, String inputTOTP) {
 		long timeInterval = System.currentTimeMillis() / 1000 / TIME_STEP;
 		return IntStream.of(-1, 0, 1)
-				        .anyMatch(i -> generateTOTP(secretKey, timeInterval + i).equals(inputTOTP));
+				       .anyMatch(i -> generateTOTP(secretKey, timeInterval + i).equals(inputTOTP));
+	}
+	
+	@Override
+	public String splitSecretKey(String decodedOtp) {
+		String[] decodedOtpSplit = decodedOtp.split("@");
+		List<String> builtEmailList = new ArrayList<>(Arrays.stream(decodedOtpSplit)
+				                                             .filter(value -> !Objects.equals(value, "Bola-Air_SecretKey_For_User"))
+				                                             .toList());
+		StringBuilder emailBuilder = new StringBuilder();
+		for (int index = 0; index < builtEmailList.size(); index++) {
+			if (index>0){
+				emailBuilder.append("@").append(builtEmailList.get(index));
+			}
+			else emailBuilder.append(builtEmailList.get(index));
+		}
+		return emailBuilder+"m";
 	}
 }
+	

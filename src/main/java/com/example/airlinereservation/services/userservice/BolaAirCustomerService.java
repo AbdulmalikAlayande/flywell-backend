@@ -56,12 +56,13 @@ public class BolaAirCustomerService implements CustomerService {
 			
 			OTP createdOTP = createOtp(biodata.getEmail());
 			long otpData = createdOTP.getData();
-			mailer.sendOtp(buildNotificationRequest(biodata.getEmail(), otpData));
+			mailer.sendOtp(buildNotificationRequest(biodata.getFirstName(), biodata.getEmail(), otpData));
 			
 			savedBio.getOTPs().add(createdOTP);
 			userBioDataRepository.save(savedBio);
 			mapper.map(savedBio, customerResponse);
 			customerResponse.setMessage(REGISTRATION_SUCCESSFUL_MESSAGE);
+			customerResponse.setOtp(otpData);
 		} catch (FieldInvalidException | InvalidRequestException exception) {
 			throwFailedRegistrationException(exception);
 		}
@@ -69,32 +70,36 @@ public class BolaAirCustomerService implements CustomerService {
 	}
 	
 	@Override
+	@Transactional(rollbackFor = {SQLException.class, FailedRegistrationException.class})
 	public void activateCustomerAccount(String OTP) throws InvalidRequestException {
-		AtomicBoolean isValidOTPRef = new AtomicBoolean();
 		Optional<OTP> foundOTP = otpRepository.findByData(Long.parseLong(OTP));
+		AtomicBoolean userExistsRef = new AtomicBoolean();
 		foundOTP.ifPresent(otp -> {
 			boolean isValid = otpService.validateTOTP(otp.getSecretKey(), OTP);
-			isValidOTPRef.set(isValid);
+			if (isValid){
+				String decodedOtp = otpService.decodeBase32(otp.getSecretKey());
+				String userEmail = otpService.splitSecretKey(decodedOtp);
+				userExistsRef.set(userBioDataRepository.existsByEmail(userEmail));
+			}
 		});
-		if(isValidOTPRef.get()){
-			return;
+		if (userExistsRef.get()){
+		
 		}
 		throw new InvalidRequestException("");
 		
 	}
 	
 	public OTP createOtp(String email){
-		String emailEncoded = otpService.encodeBase32(email);
-		String generatedOtp = otpService.generateTOTP(emailEncoded);
-		return otpRepository.save(OTP.builder()
-				       .data(Long.parseLong(generatedOtp))
-				       .build());
+		OTP emailEncoded = otpService.encodeBase32(email);
+		OTP generatedTotp = otpService.generateTOTP(emailEncoded);
+		return otpService.saveOTP(generatedTotp);
 	}
 	
-	private NotificationRequest buildNotificationRequest(String email, long otp){
+	private NotificationRequest buildNotificationRequest(String firstName, String email, long otp){
 		return NotificationRequest.builder()
 				       .email(email)
 				       .OTP(otp)
+				       .firstName(firstName)
 				       .build();
 	}
 	@Override

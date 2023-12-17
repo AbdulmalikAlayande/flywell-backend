@@ -4,12 +4,12 @@ import com.example.airlinereservation.data.model.annotations.EmailPattern;
 import com.example.airlinereservation.data.model.annotations.EmailDomainValidator;
 import com.example.airlinereservation.services.notifications.FieldValidator;
 import com.example.airlinereservation.services.notifications.Validator;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -20,9 +20,13 @@ import org.springframework.web.client.RestTemplate;
 					EmailDomainValidator.class
 				})
 @EnableAutoConfiguration
+@Getter
 public class EmailValidationConfig {
+	@Value("${totp.secret.key}")
+	private String totpSecret;
 	
-	public static String PRIVATE_API_KEY = System.getenv("BREVO_API_KEY");
+	@Value("${mail.api.key}")
+	private String brevoApiKey;
 	
 	@Bean
 	public EmailDomainValidator validEmailDomain() {
@@ -36,11 +40,6 @@ public class EmailValidationConfig {
 	@Bean
 	public EmailValidationConfig validationConfig(){
 		return new EmailValidationConfig();
-	}
-	
-	@Bean
-	public String brevoApiKey(){
-		return PRIVATE_API_KEY;
 	}
 	
 	@Bean

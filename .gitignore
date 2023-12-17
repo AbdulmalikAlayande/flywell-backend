@@ -27,5 +27,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
-
-secret.properties
+/src/main/resources/secret.properties

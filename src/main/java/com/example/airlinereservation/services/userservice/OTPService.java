@@ -1,6 +1,7 @@
 package com.example.airlinereservation.services.userservice;
 
 import com.example.airlinereservation.data.model.persons.OTP;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 
 public interface OTPService {
 	
@@ -8,5 +9,5 @@ public interface OTPService {
 	
 	OTP generateTOTP(String input);
 	
-	boolean validateTOTP(String secretKey, String inputTOTP);
+	boolean validateTOTP(String inputTotp) throws InvalidRequestException;
 }

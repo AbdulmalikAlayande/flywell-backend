@@ -3,11 +3,13 @@ package com.example.airlinereservation.services.userservice;
 import com.example.airlinereservation.config.EmailValidationConfig;
 import com.example.airlinereservation.data.model.persons.OTP;
 import com.example.airlinereservation.data.repositories.OTPRepository;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.Optional;
 
 import static java.math.BigInteger.valueOf;
 import static org.codehaus.plexus.util.TypeFormat.parseInt;
@@ -85,8 +87,25 @@ public class BolaAIr_OTPService implements OTPService {
 	}
 	
 	@Override
-	public boolean validateTOTP(String secretKey, String inputTOTP) {
-		return false;
+	public boolean validateTOTP(String inputTotp) throws InvalidRequestException {
+		Optional<OTP> foundOTPRef = otpRepository.findByData(Long.parseLong(inputTotp));
+		return foundOTPRef.map(otp -> {
+			long currentTimeInMilliSeconds = System.currentTimeMillis();
+			// FIXME: 12/18/2023 THE EXPIRY SHOULD NOT BE SET HERE NORMALLY,
+			//  IT SHOULD BE SOMETHING THAT EXPIRES ITSELF ONCE THE TIME IS EQUAL TO THE SYSTEM CURRENT TIME
+			//  IN MILLISECONDS
+			if (otp.getStaleTime() > currentTimeInMilliSeconds){
+				otp.setExpired(true);
+				otpRepository.save(otp);
+				throw new RuntimeException("OTP Has Expired");
+			}
+			if (otp.isUsed()) throw new RuntimeException("OTP Has Been Used");
+			else {
+				otp.setUsed(true);
+				otpRepository.save(otp);
+				return true;
+			}
+		}).orElseThrow(()->new InvalidRequestException("Invalid Otp"));
 	}
 	
 	public static void main(String[] args) {

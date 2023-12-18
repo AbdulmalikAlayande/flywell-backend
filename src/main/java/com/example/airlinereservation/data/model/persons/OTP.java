@@ -25,4 +25,5 @@ public class OTP {
 	private long staleTime;
 	private boolean isExpired;
 	private boolean isUsed;
+	
 }

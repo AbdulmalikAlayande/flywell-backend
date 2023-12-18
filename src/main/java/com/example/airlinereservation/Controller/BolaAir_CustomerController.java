@@ -29,7 +29,7 @@ public class BolaAir_CustomerController {
 	private CustomerService customerService;
 	
 	@PostMapping("register-customer/")
-	public ResponseEntity<?> registerCustomer(@RequestBody CustomerRequest customerRequest){
+	public ApiResponse<?> registerCustomer(@RequestBody CustomerRequest customerRequest){
 		CustomerResponse response = new CustomerResponse();
 		try {
 			response = customerService.registerNewCustomer(customerRequest);
@@ -37,7 +37,8 @@ public class BolaAir_CustomerController {
 			apiResponse.setData(response);
 			apiResponse.setSuccessful(HttpStatus.CREATED.is2xxSuccessful());
 			apiResponse.setStatusCode(HttpStatus.CREATED.value());
-			return new ResponseEntity<>(response, HttpStatus.CREATED);
+			System.out.println(apiResponse);
+			return apiResponse;
 		} catch (FailedRegistrationException | FieldInvalidException | InvalidRequestException exception) {
 			log.info(ERROR_MESSAGE, exception.getMessage());
 			log.info("Error:: ", exception);
@@ -46,12 +47,13 @@ public class BolaAir_CustomerController {
 			apiResponse.setData(response);
 			apiResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
 			apiResponse.setSuccessful(HttpStatus.BAD_REQUEST.is4xxClientError());
-			return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+			System.out.println(apiResponse);
+			return apiResponse;
 		}
 	}
 	
 	@PostMapping("activate-account/{TOTP}")
-	public ResponseEntity<?> activateAccount(@PathVariable String TOTP){
+	public ApiResponse<?> activateAccount(@PathVariable String TOTP){
 		CustomerResponse customerResponse;
 		try {
 			ApiResponse<CustomerResponse> apiResponse = new ApiResponse<>();
@@ -59,13 +61,14 @@ public class BolaAir_CustomerController {
 			apiResponse.setData(customerResponse);
 			apiResponse.setSuccessful(HttpStatus.CREATED.is2xxSuccessful());
 			apiResponse.setStatusCode(HttpStatus.CREATED.value());
-			return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+			System.out.println("api response at activate account =="+apiResponse);
+			return apiResponse;
 		} catch (InvalidRequestException e) {
 			ApiResponse<String> apiResponse = new ApiResponse<>();
 			apiResponse.setSuccessful(false);
 			apiResponse.setData(e.getMessage());
 			apiResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
-			return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+			return apiResponse;
 		}
 	}
 	

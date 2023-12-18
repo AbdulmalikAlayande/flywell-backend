@@ -73,11 +73,11 @@ public class BolaAirCustomerService implements CustomerService {
 		if(foundOTP.isPresent()){
 			boolean isValid = otpService.validateTOTP(foundOTP.get().getSecretKey(), OTP);
 			if (isValid){
-				String decodedOtp = otpService.decodeBase32(foundOTP.get().getSecretKey());
-				String userEmail = otpService.splitSecretKey(decodedOtp);
-				return userBioDataRepository.findByEmail(userEmail)
-									        .map(userBioData -> buildCustomerResponse(userBioData, SUCCESSFUL_ACTIVATION_MESSAGE))
-									        .orElseThrow(()->new InvalidRequestException("USER WITH EMAIL NOT FOUND"));
+//				String decodedOtp = otpService.decodeBase32(foundOTP.get().getSecretKey());
+//				String userEmail = otpService.splitSecretKey(decodedOtp);
+//				return userBioDataRepository.findByEmail(userEmail)
+//									        .map(userBioData -> buildCustomerResponse(userBioData, SUCCESSFUL_ACTIVATION_MESSAGE))
+//									        .orElseThrow(()->new InvalidRequestException("USER WITH EMAIL NOT FOUND"));
 			}
 			else throw new InvalidRequestException("Invalid OTP");
 		}
@@ -95,8 +95,8 @@ public class BolaAirCustomerService implements CustomerService {
 	}
 	
 	public OTP createOtp(String email){
-		OTP emailEncoded = otpService.encodeBase32(email);
-		OTP generatedTotp = otpService.generateTOTP(emailEncoded);
+		OTP emailEncoded = otpService.generateTOTP(email);
+		OTP generatedTotp = otpService.generateTOTP("emailEncoded");
 		return otpService.saveOTP(generatedTotp);
 	}
 	

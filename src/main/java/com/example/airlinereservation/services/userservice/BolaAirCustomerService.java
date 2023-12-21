@@ -69,19 +69,10 @@ public class BolaAirCustomerService implements CustomerService {
 	@Override
 	@Transactional(rollbackFor = {SQLException.class, FailedRegistrationException.class})
 	public CustomerResponse activateCustomerAccount(String OTP) throws InvalidRequestException {
-		Optional<OTP> foundOTP = otpRepository.findByData(Long.parseLong(OTP));
-		if(foundOTP.isPresent()){
-			boolean isValid = otpService.validateTOTP(foundOTP.get().getSecretKey(), OTP);
-			if (isValid){
-//				String decodedOtp = otpService.decodeBase32(foundOTP.get().getSecretKey());
-//				String userEmail = otpService.splitSecretKey(decodedOtp);
-//				return userBioDataRepository.findByEmail(userEmail)
-//									        .map(userBioData -> buildCustomerResponse(userBioData, SUCCESSFUL_ACTIVATION_MESSAGE))
-//									        .orElseThrow(()->new InvalidRequestException("USER WITH EMAIL NOT FOUND"));
-			}
-			else throw new InvalidRequestException("Invalid OTP");
-		}
-		throw new InvalidRequestException("Invalid OTP");
+		OTP otp = otpService.verifiedOtp(OTP);
+		return userBioDataRepository.findByEmail(otp.getUserEmail())
+								    .map(userBioData -> buildCustomerResponse(userBioData, SUCCESSFUL_ACTIVATION_MESSAGE))
+								    .orElseThrow(()->new InvalidRequestException("USER WITH EMAIL NOT FOUND"));
 	}
 	
 	private CustomerResponse buildCustomerResponse(UserBioData bioData, String message) {

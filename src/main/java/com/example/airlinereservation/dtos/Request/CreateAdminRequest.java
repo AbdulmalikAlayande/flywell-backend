@@ -18,19 +18,9 @@ public class CreateAdminRequest {
     @NotEmpty
     private String lastName;
     @NotBlank
-    private String userName;
-    @NotBlank
     private String phoneNumber;
     @NotBlank
     private String password;
-    @NotBlank
-    private String fullName;
-    private String country;
-    private String state;
-    private String postalCode;
-    private String streetName;
-    private String streetNumber;
-    private String houseNumber;
 
 
 }

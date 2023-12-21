@@ -12,4 +12,6 @@ public class NotificationRequest {
 	private long OTP;
 	private String lastName;
 	private String email;
+	private String mailPath;
+	private String mailSubject;
 }

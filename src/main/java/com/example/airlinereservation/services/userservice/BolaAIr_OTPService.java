@@ -5,7 +5,6 @@ import com.example.airlinereservation.data.model.persons.OTP;
 import com.example.airlinereservation.data.repositories.OTPRepository;
 import com.example.airlinereservation.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -16,7 +15,6 @@ import static org.codehaus.plexus.util.TypeFormat.parseInt;
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor
 public class BolaAIr_OTPService implements OTPService {
 	
 	private EmailValidationConfig validationConfig;
@@ -53,6 +51,7 @@ public class BolaAIr_OTPService implements OTPService {
 		return saveOTP(OTP.builder()
 			               .staleTime(System.currentTimeMillis()+TIME_STEP)
 			               .secretKey(secretKey)
+				           .userEmail(input)
 			               .data(Long.parseLong(stingOfLengthSix))
 			               .build());
 	}
@@ -87,14 +86,14 @@ public class BolaAIr_OTPService implements OTPService {
 	}
 	
 	@Override
-	public boolean validateTOTP(String inputTotp) throws InvalidRequestException {
+	public OTP validatedTOTP(String inputTotp) throws InvalidRequestException {
 		Optional<OTP> foundOTPRef = otpRepository.findByData(Long.parseLong(inputTotp));
 		return foundOTPRef.map(otp -> {
 			long currentTimeInMilliSeconds = System.currentTimeMillis();
 			// FIXME: 12/18/2023 THE EXPIRY SHOULD NOT BE SET HERE NORMALLY,
 			//  IT SHOULD BE SOMETHING THAT EXPIRES ITSELF ONCE THE TIME IS EQUAL TO THE SYSTEM CURRENT TIME
 			//  IN MILLISECONDS
-			if (otp.getStaleTime() > currentTimeInMilliSeconds){
+			if (currentTimeInMilliSeconds > otp.getStaleTime()){
 				otp.setExpired(true);
 				otpRepository.save(otp);
 				throw new RuntimeException("OTP Has Expired");
@@ -102,15 +101,14 @@ public class BolaAIr_OTPService implements OTPService {
 			if (otp.isUsed()) throw new RuntimeException("OTP Has Been Used");
 			else {
 				otp.setUsed(true);
-				otpRepository.save(otp);
-				return true;
+				return otpRepository.save(otp);
 			}
 		}).orElseThrow(()->new InvalidRequestException("Invalid Otp"));
 	}
 	
-	public static void main(String[] args) {
-		BolaAIr_OTPService service = new BolaAIr_OTPService();
-		System.out.println(service.generateTOTP("alaabdumalik03@gmailahgshuirihtuwhg3h;wqoehnfibhou5g3hort.com344323848y34y91785y9"));
+	@Override
+	public OTP verifiedOtp(String totp) throws InvalidRequestException {
+		return validatedTOTP(totp);
 	}
 }
 	

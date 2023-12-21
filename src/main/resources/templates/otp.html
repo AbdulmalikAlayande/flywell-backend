@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -149,7 +148,7 @@
         <div class="Account-Activation-Header-Frame">
             <h1>Activate Your Account</h1>
         </div>
-        <h1>Hi %s</h1>
+        <h1>Hi ${firstName}</h1>
         <div class="Main-Message-Body-Inner-Frame">
             <p>
                 Welcome To Bola-Air, We Are Very Pleased To Have You<br/>
@@ -159,8 +158,8 @@
                 Activate Your Account By Entering The OTP Below In The Input Fields Provided On Our Account Activation Page.
             </p>
             <p class="OTP-Tag"> Your One Time Password Is: 
-                <span>%s</span>
-                <button onclick={copyOTP("%s")}>Copy OTP</button>
+                <span>${code}</span>
+                <button onclick={copyOTP(`${code}`)}>Copy OTP</button>
             </p>
             <h3>Please Do Not Share This Code With Anyone</h3>
         </div>

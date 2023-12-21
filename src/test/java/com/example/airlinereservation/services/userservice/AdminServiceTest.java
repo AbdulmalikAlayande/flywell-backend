@@ -17,8 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
@@ -41,6 +39,7 @@ class AdminServiceTest {
 	
 	@Test void testThatAdminCanBeInvitedToOurApplication(){
 		AdminInvitationRequest invitationRequest = new AdminInvitationRequest();
+		invitationRequest.setAdminEmail("alaabdulmalik03@gmail.com");
 		AdminInvitationResponse response = adminService.inviteAdmin(invitationRequest);
 		
 	}
@@ -55,10 +54,8 @@ class AdminServiceTest {
 
 	public static CreateAdminRequest buildAdmin(){
         return CreateAdminRequest.builder()
-								.country("Nigeria").email("rich@gmail.com").state("Lagos").firstName("Malik")
-						        .lastName("Alhaji").phoneNumber("08081493711").houseNumber("No 2")
-						        .password("password").postalCode("1234").streetName("Wallstreet")
-						        .streetNumber("No 2").userName("Farooq").build();
+						        .lastName("Alhaji").phoneNumber("08081493711")
+						        .password("password").build();
 	}
 	
 	@Test void testThatAdminTriesToCreateAccountTwiceInvalidRequestExceptionIsThrown(){
@@ -69,27 +66,10 @@ class AdminServiceTest {
 	
 	}
 	
-	@Test void testThatTextMessageIsSentToAdminAfterAdminHasBeenCreated(){
-	
-	}
-	
 	@Test void testThatAdminTriesToCreateAccountWithInvalidData_ExceptionIsThrown(){
 	
 	}
-
-	@SneakyThrows
-	@Test void testFindAdminByUsername_AdminIsFound(){
-		adminService.createAdmin(buildAdmin());
-		Optional<UserBioData> foundAdmin = adminService.findByUsername(buildAdmin().getUserName());
-		assertThat(foundAdmin.isPresent()).isTrue();
-		foundAdmin.ifPresent(admin->{
-			assertThat(admin.getUserName()).isEqualTo(buildAdmin().getUserName());
-		});
-	}
 	
-	@Test void testThatFindAdminByUsernameWIthInvalidUsername_InvalidRequestExceptionIsThrown(){
-	
-	}
 	@Test void testThatACrewHasToExistBeforeTheyCanBeAssignedToAFlight(){
 
 	}

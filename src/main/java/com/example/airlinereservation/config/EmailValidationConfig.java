@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+import org.thymeleaf.context.Context;
 
 
 @Configuration
@@ -32,6 +33,12 @@ public class EmailValidationConfig {
 	public EmailDomainValidator validEmailDomain() {
 		return new EmailDomainValidator();
 	}
+@Bean
+	public Context context() {
+		return new Context();
+	}
+	
+	
 	
 	@Bean
 	public Validator getValidator(){

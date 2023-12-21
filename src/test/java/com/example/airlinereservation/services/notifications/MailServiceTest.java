@@ -11,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Collections;
-import java.util.List;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
@@ -32,7 +29,7 @@ public class MailServiceTest {
 	@SneakyThrows
 	@Test void sendEmailTest(){
 	
-		ResponseEntity<NotificationResponse> response = mailService.sendAccountActivationEmail(notificationRequest);
+		ResponseEntity<NotificationResponse> response = mailService.sendAdminInvitationEmail(notificationRequest);
 		assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
 		assertThat(response.getBody()).isNotNull();
 	}

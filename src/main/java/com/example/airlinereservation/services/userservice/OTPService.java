@@ -9,5 +9,7 @@ public interface OTPService {
 	
 	OTP generateTOTP(String input);
 	
-	boolean validateTOTP(String inputTotp) throws InvalidRequestException;
+	OTP validatedTOTP(String inputTotp) throws InvalidRequestException;
+	
+	OTP verifiedOtp(String totp) throws InvalidRequestException;
 }

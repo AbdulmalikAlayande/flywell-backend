@@ -6,19 +6,15 @@ import com.example.airlinereservation.data.model.persons.Admin;
 import com.example.airlinereservation.data.repositories.AddressRepository;
 import com.example.airlinereservation.data.repositories.AdminRepository;
 import com.example.airlinereservation.data.repositories.UserBioDataRepository;
-import com.example.airlinereservation.dtos.Request.AdminInvitationRequest;
-import com.example.airlinereservation.dtos.Request.CreateAdminRequest;
-import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
-import com.example.airlinereservation.dtos.Request.FlightRequest;
-import com.example.airlinereservation.dtos.Response.AdminInvitationResponse;
-import com.example.airlinereservation.dtos.Response.CreateAdminResponse;
-import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
-import com.example.airlinereservation.dtos.Response.FlightResponse;
+import com.example.airlinereservation.dtos.Request.*;
+import com.example.airlinereservation.dtos.Response.*;
 import com.example.airlinereservation.exceptions.EmptyFieldException;
 import com.example.airlinereservation.exceptions.FieldInvalidException;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.services.notifications.mail.MailService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -52,9 +48,21 @@ public class BolaAirAdminService implements AdminService{
 
 
     @Override
-    public AdminInvitationResponse inviteAdmin(AdminInvitationRequest invitationRequest) {
-        String generatedCode = generateAdminCode(invitationRequest.getAdminEmail());
-        return null;
+    public AdminInvitationResponse inviteAdmin(AdminInvitationRequest invitationRequest) throws InvalidRequestException {
+        System.out.println("Admin Email is ==> "+invitationRequest.getAdminEmail());
+        ResponseEntity<NotificationResponse> response = mailService.sendAdminInvitationEmail(buildNotificationRequest(invitationRequest));
+        return AdminInvitationResponse.builder()
+                       .message("An Invitation Mail Has Been Sent To "+invitationRequest.getAdminEmail())
+                       .build();
+    }
+    
+    private NotificationRequest buildNotificationRequest(AdminInvitationRequest invitationRequest) {
+        return NotificationRequest
+                       .builder()
+                       .email(invitationRequest.getAdminEmail())
+                       .code(generateAdminCode(invitationRequest.getAdminEmail()))
+                       .mailPath("adminInvitationMail")
+                       .build();
     }
     
     private String generateAdminCode(String adminEmail) {

@@ -32,7 +32,6 @@ public class BolaAirCustomerService implements CustomerService {
 	private Validator validator;
 	private CustomerRepository customerRepository;
 	private UserBioDataRepository userBioDataRepository;
-	private OTPRepository otpRepository;
 	private ModelMapper mapper;
 	private OTPService otpService;
 	private MailService mailer;
@@ -86,15 +85,16 @@ public class BolaAirCustomerService implements CustomerService {
 	}
 	
 	public OTP createOtp(String email){
-		OTP emailEncoded = otpService.generateTOTP(email);
-		OTP generatedTotp = otpService.generateTOTP("emailEncoded");
+		OTP generatedTotp = otpService.generateTOTP(email);
 		return otpService.saveOTP(generatedTotp);
 	}
 	
 	private NotificationRequest buildNotificationRequest(String firstName, String email, long otp){
 		return NotificationRequest.builder()
 				       .email(email)
+				       .code(String.valueOf(otp))
 				       .OTP(otp)
+				       .mailPath("otp")
 				       .firstName(firstName)
 				       .build();
 	}

@@ -12,13 +12,14 @@ import com.example.airlinereservation.dtos.Response.FlightResponse;
 import com.example.airlinereservation.exceptions.EmptyFieldException;
 import com.example.airlinereservation.exceptions.FailedRegistrationException;
 import com.example.airlinereservation.exceptions.FieldInvalidException;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 
 import java.util.Optional;
 
 public interface AdminService {
 
     CreateAdminResponse createAdmin(CreateAdminRequest createAdminRequest) throws FailedRegistrationException;
-	AdminInvitationResponse inviteAdmin(AdminInvitationRequest invitationRequest);
+	AdminInvitationResponse inviteAdmin(AdminInvitationRequest invitationRequest) throws InvalidRequestException;
     CreateCrewMemberResponse addCrewMember(CreateCrewMemberRequest createCrewMemberRequest) throws EmptyFieldException, IllegalAccessException, FieldInvalidException;
     Optional<UserBioData> findByUsername(String userName);
 	FlightResponse addNewFlight(FlightRequest flightRequest);

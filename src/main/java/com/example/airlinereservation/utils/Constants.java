@@ -15,7 +15,7 @@ public final class Constants {
 	public static final String SENDER_EMAIL = "alaabdulmalik03@gmail.com";
 	public static final String MESSAGE_SUCCESSFULLY_SENT = "Email sent successfully";
 	public static final String SUCCESSFUL_ACTIVATION_MESSAGE = "Account Activation Successful";
-	
+	public static final String ERROR_MESSAGE = "Error Message:: {}";
 	public static final String MESSAGE_FAILED_TO_SEND = "Failed to send email";
 	public static final String TEMPLATE_LOAD_FAILED = "Error loading template content Template failed to load:: ";
 	public static final String ACCOUNT_ACTIVATION_EMAIL_TEMPLATE_URL = "classpath:/templates/otp.html";

@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import static com.example.airlinereservation.utils.Constants.ERROR_MESSAGE;
+
 @RestController
 @Controller
 @RequestMapping("bola-air/api/v3/")
@@ -25,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 public class BolaAir_CustomerController {
 	
-	public static final String ERROR_MESSAGE = "Error Message:: {}";
 	private CustomerService customerService;
 	
 	@PostMapping("register-customer/")

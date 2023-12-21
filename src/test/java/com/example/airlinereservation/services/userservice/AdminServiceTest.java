@@ -37,6 +37,7 @@ class AdminServiceTest {
 	void tearDown() {
 	}
 	
+	@SneakyThrows
 	@Test void testThatAdminCanBeInvitedToOurApplication(){
 		AdminInvitationRequest invitationRequest = new AdminInvitationRequest();
 		invitationRequest.setAdminEmail("alaabdulmalik03@gmail.com");

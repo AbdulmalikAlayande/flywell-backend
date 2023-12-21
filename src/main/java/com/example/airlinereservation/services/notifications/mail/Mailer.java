@@ -46,7 +46,7 @@ public class Mailer implements MailService{
 		Map<String, Object> contextVariables = new HashMap<>();
 		contextVariables.put("firstName", notificationRequest.getFirstName());
 		contextVariables.put("lastName", notificationRequest.getLastName());
-		contextVariables.put("code", notificationRequest.getOTP());
+		contextVariables.put("code", notificationRequest.getCode());
 		return contextVariables;
 	}
 	
@@ -82,6 +82,7 @@ public class Mailer implements MailService{
 	
 	@Override
 	public ResponseEntity<NotificationResponse> sendAdminInvitationEmail(NotificationRequest notificationRequest) {
+		System.out.println(notificationRequest.toString());
 		Map<String, Object> contextVariables = getContextVariables(notificationRequest);
 		context.setVariables(contextVariables);
 		String email = templateEngine.process(notificationRequest.getMailPath(), context);

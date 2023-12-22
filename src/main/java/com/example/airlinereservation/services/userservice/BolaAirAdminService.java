@@ -1,5 +1,6 @@
 package com.example.airlinereservation.services.userservice;
 
+import com.example.airlinereservation.data.model.enums.Role;
 import com.example.airlinereservation.data.model.persons.Address;
 import com.example.airlinereservation.data.model.persons.UserBioData;
 import com.example.airlinereservation.data.model.persons.Admin;
@@ -12,12 +13,16 @@ import com.example.airlinereservation.exceptions.EmptyFieldException;
 import com.example.airlinereservation.exceptions.FieldInvalidException;
 import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.services.notifications.mail.MailService;
+import jakarta.validation.ConstraintViolationException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.sql.SQLException;
 import java.util.Optional;
 
 @Service
@@ -32,24 +37,22 @@ public class BolaAirAdminService implements AdminService{
     private ModelMapper mapper;
 
     @Override
+    @Transactional(rollbackFor = {SQLException.class, DataIntegrityViolationException.class, ConstraintViolationException.class})
     public CreateAdminResponse createAdmin(CreateAdminRequest createAdminRequest) {
 	    Admin admin = new Admin();
-	    Address mappedAddress = mapper.map(createAdminRequest, Address.class);
-        Address savedAddress = addressRepository.save(mappedAddress);
-        
         UserBioData mappedBio = mapper.map(createAdminRequest, UserBioData.class);
-	    mappedBio.setAddress(savedAddress);
         UserBioData saveBioData = bioDataRepository.save(mappedBio);
         admin.setBioData(saveBioData);
+        admin.setRole(Role.ADMIN);
 	    adminRepository.save(admin);
-	    return new CreateAdminResponse("Admin created successfully");
-	    
+        CreateAdminResponse response = mapper.map(saveBioData, CreateAdminResponse.class);
+        response.setMessage("Admin created successfully");
+	    return response;
     }
 
 
     @Override
     public AdminInvitationResponse inviteAdmin(AdminInvitationRequest invitationRequest) throws InvalidRequestException {
-        System.out.println("Admin Email is ==> "+invitationRequest.getAdminEmail());
         ResponseEntity<NotificationResponse> response = mailService.sendAdminInvitationEmail(buildNotificationRequest(invitationRequest));
         return AdminInvitationResponse.builder()
                        .message("An Invitation Mail Has Been Sent To "+invitationRequest.getAdminEmail())
@@ -61,7 +64,7 @@ public class BolaAirAdminService implements AdminService{
                        .builder()
                        .email(invitationRequest.getAdminEmail())
                        .code(generateAdminCode(invitationRequest.getAdminEmail()))
-                       .mailPath("adminInvitationMail")
+                       .mailPath("invitationMail")
                        .build();
     }
     

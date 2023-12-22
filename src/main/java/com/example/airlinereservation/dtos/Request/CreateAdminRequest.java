@@ -12,8 +12,8 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 
 public class CreateAdminRequest {
-    private String email;
     @NotBlank
+    private String email;
     private String firstName;
     @NotEmpty
     private String lastName;
@@ -21,6 +21,7 @@ public class CreateAdminRequest {
     private String phoneNumber;
     @NotBlank
     private String password;
-
+    @NotBlank
+    private String adminCode;
 
 }

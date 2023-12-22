@@ -8,120 +8,55 @@
             navigator.clipboard.writeText(value)
         }
     </script>
-    <style>
-        body{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .Main-Frame{
-            width: 40%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-style: solid;
-            border-width: 1px;
-        }
-        .Head-Part{
-            width: 100%;
-            border-style: solid;
-            border-width: 1px;
-            background-color: black;
-            font-size: 30px;
-            color: cornsilk;
-            display: flex;
-            align-items: center;
-            justify-content: space-evenly;
-            column-gap: 7%;
-        }
-        .Head-Part img{
-            height: 150px;
-            width: 150px;
-        }
-        .Main-Message-Body{
-            width: 97%;
-            font-size: 20px;
-            font-family: "Arial Nova Light",cursive;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: space-evenly;
-        }
-        .Main-Message-Body button{
-            height: 30px;
-            border-radius: 10px;
-            font-size: 18px;
-            background-color: cornflowerblue;
-        }
-        .Main-Message-Body button:hover {
-            color: cornsilk;
-            background-color: teal;
-        }                              
-        .Main-Message-Body button:focus{
-            background-color: limegreen;
-            
-        }
-        .Footer-Frame{
-            width: 100%;
-            color: blanchedalmond;
-            font-size: 20px;
-            background-color: black;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-evenly;
-        }
-        .Social_Media_Handles-Frame, .Contact-Frame{
-            width: 97%;
-        }
-        .Social_Media_Handles-Frame button{
-            background: none;
-            border: none;
-        }
-        .Social_Media_Handles-Frame img{
-            height: 35px;
-            width: 35px;
-        }
-    </style>
 </head>
-<body>
-    <div class="Main-Frame">
-        <div class="Head-Part">
-            <img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703181369/cloudinary_images/bola_air/static_assets/logo-no-background_ka2dnt.svg" alt="Logo"/>
+<body style="display: flex; align-items: center; justify-content: center;">
+    <div style="width: 40%; display: flex; flex-direction: column; align-items: center; justify-content: center; border-style: solid; border-width: 1px;" class="Main-Frame">
+        <div style="width: 100%; border-style: solid; border-width: 1px; background-color: black; font-size: 30px; color: cornsilk; display: flex; align-items: center; justify-content: space-evenly; column-gap: 7%;" class="Head-Part">
+            <img style="height: 150px;width: 150px;" src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703181369/cloudinary_images/bola_air/static_assets/logo-no-background_ka2dnt.svg" alt="Logo"/>
             <p>Fly Anywhere You Want</p>
         </div>
-        <div class="Main-Message-Body">
+        <div style="width: 97%; font-size: 20px; font-family: 'Arial Nova Light',cursive; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly;" class="Main-Message-Body">
             <h1>Welcome To Bola-Air</h1>
             <p>You Were Invited By One Of Our Admin Officers, To Create An Admin Account On Our Platform,
                You Will Need An Admin Code To Sign Up As An Admin, You Received This Email Because 
                Your Email ${email} Was Provided To The Admin Officer That Invited You</p>
             <p>Please Copy The Code Below And Click The Button Below To Accept Invitation And Sign Up</p>
-            <p>Your Admin Code Is: ${code} <button onclick={copyOTP('${code}')}>Copy Code</button></p>
-            <a href="https://"><button>Accept Invite</button></a>
-
+            <p>Your Admin Code Is: ${code} 
+                <button onclick={copyOTP('${code}')} onfocus="this.style.backgroundColor='limegreen'" onmouseover="this.style.color='cornsilk'; this.style.backgroundColor='teal';" style="height: 30px; border-radius: 10px; font-size: 18px; background-color: cornflowerblue;">Copy Code</button>
+            </p>
+            <a href="https://">
+                <button onfocus="this.style.backgroundColor='limegreen'" onmouseover="this.style.color='cornsilk'; this.style.backgroundColor='teal';" style="height: 30px; border-radius: 10px; font-size: 18px; background-color: cornflowerblue;">Accept Invite</button>
+            </a>
             <p>Note: You Will Always Need The Admin Code To Sign In, Any Time Your Account Is Logged Out</p>
         </div>
 
-        <div class="Footer-Frame">
-            <div class="Contact-Frame">
+        <div style="width: 100%; color: blanchedalmond; font-size: 20px; background-color: black; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly;" class="Footer-Frame">
+            <div style="width: 97%;" class="Contact-Frame">
                 <p>For More Information: </p>
                 <p>Email Bola at <a href="">alaabdulmalik03@gmailcom</a> or</p>
                 <p> Message Bola On Whatsapp <a href="">at 07036174617</a></p>
                 <p>Our Social Media Handles Are Below</p>
             </div>
-            <div class="Social_Media_Handles-Frame">
+            <div style="width: 97%;" class="Social_Media_Handles-Frame">
                 <a href="https://www.instagram.com/blaq_mhee/">
-                    <button><img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703181368/cloudinary_images/bola_air/static_assets/instagram_logo_ogssr5.svg" alt="instagram image"></button>
+                    <button style="background: none; border: none;">
+                        <img style="height: 35px; width: 35px;" src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703181368/cloudinary_images/bola_air/static_assets/instagram_logo_ogssr5.svg" alt="instagram image">
+                    </button>
                 </a>
                 <a href="https://www.facebook.com/abdulmalik.alayande.39">
-                    <button><img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703181368/cloudinary_images/bola_air/static_assets/facebook_logo_an4tfv.svg" alt="facebook image"></button>
+                    <button style="background: none; border: none;">
+                        <img style="height: 35px; width: 35px;" src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703181368/cloudinary_images/bola_air/static_assets/facebook_logo_an4tfv.svg" alt="facebook image">
+                    </button>
                 </a>
                 <a href="https://twitter.com/The_good_man02">
-                    <button><img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703181709/cloudinary_images/bola_air/static_assets/twitter_logo_xqqqzj.svg" alt="twitter image"></button>
+                    <button style="background: none; border: none;">
+                        <img style="height: 35px; width: 35px;" src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703181709/cloudinary_images/bola_air/static_assets/twitter_logo_xqqqzj.svg" alt="twitter image">
+                    </button>
                 </a>
                 <a href="https://www.linkedin.com/in/abdulmalik-alayande-b49814250/">
-                    <button><img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703181368/cloudinary_images/bola_air/static_assets/linkedIn_logo_d7b23d.svg" alt="linkedIn image"></button>
+                    <button style="background: none; border: none;">
+                        <img style="height: 35px; width: 35px;" src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703181368/cloudinary_images/bola_air/static_assets/linkedIn_logo_d7b23d.svg" alt="linkedIn image">
+                    </button>
                 </a>
 
             </div>

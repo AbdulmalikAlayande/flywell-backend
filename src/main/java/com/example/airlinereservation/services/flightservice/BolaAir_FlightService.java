@@ -12,6 +12,7 @@ import com.example.airlinereservation.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -28,19 +29,15 @@ public class BolaAir_FlightService implements FlightService{
 	private ModelMapper mapper;
 	
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public FlightResponse addFlight(FlightRequest flightRequest) throws InvalidRequestException {
 		try{
 			Flight mappedFlight = mapper.map(flightRequest, Flight.class);
-			Airport arrivalAirport = buildAirport();
-			arrivalAirport.setIcaoCode(flightRequest.getArrivalAirportCode());
-			arrivalAirport.setAirportName(flightRequest.getArrivalAirportName());
-			arrivalAirport.setAirportAddress(flightRequest.getArrivalAirportAddress());
+			
+			Airport arrivalAirport = mapper.map(flightRequest.getArrivalAirportRequest(), Airport.class);
 			Airport savedArrivalAirport = airportRepository.save(arrivalAirport);
 			
-			Airport departureAirport = buildAirport();
-			departureAirport.setIcaoCode(flightRequest.getDepartureAirportCode());
-			departureAirport.setAirportName(flightRequest.getDepartureAirportName());
-			departureAirport.setAirportAddress(flightRequest.getDepartureAirportAddress());
+			Airport departureAirport = mapper.map(flightRequest.getDepartureAirportRequest(), Airport.class);
 			Airport savedDepartureAirport = airportRepository.save(departureAirport);
 			
 			mappedFlight.setArrivalAirport(savedArrivalAirport);
@@ -68,10 +65,6 @@ public class BolaAir_FlightService implements FlightService{
 		response.setDepartureAirportCode(savedFlight.getDepartureAirport().getIcaoCode());
 		response.setDepartureAirportName(savedFlight.getDepartureAirport().getAirportName());
 		return response;
-	}
-	
-	private Airport buildAirport() {
-		return Airport.builder().build();
 	}
 	
 	@Override

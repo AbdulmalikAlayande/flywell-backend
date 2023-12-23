@@ -1,13 +1,10 @@
 package com.example.airlinereservation.data.model;
-
-import com.example.airlinereservation.data.model.enums.Destinations;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.UUID;
 
 @Data

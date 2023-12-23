@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script>
+    function copyOTP(value) {
+      navigator.clipboard.writeText(value)
+    }
+  </script>
+  <style >
+      body{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .Main-Frame {
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-style: solid;
+        border-width: 1px;
+      }
+      
+      .Head-Part {
+        width: 100%;
+        border-style: solid;
+        border-width: 1px;
+        background-color: black;
+        font-size: 30px;
+        color: cornsilk;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        column-gap: 7%;
+      }
+      .Head-Part img{
+        height: 150px;
+        width: 150px;
+      }
+      .Main-Message-Body {
+        width: 97%;
+        font-size: 20px;
+        font-family: 'Arial Nova',serif;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-evenly;
+      }
+      .Main-Message-Body button {
+        height: 30px;
+        border-radius: 10px;
+        font-size: 18px;
+        background-color: cornflowerblue;
+      }
+      .Main-Message-Body button:hover, .Main-Message-Body button:focus{
+        color: cornsilk;
+        background-color: teal;
+      }
+      .Footer-Frame, .Footer-Frame-1{
+        width: 100%;
+        color: blanchedalmond;
+        font-size: 20px;
+        background-color: black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+      }
+      .Contact-Frame {
+        width: 97%;
+      }
+      .Contact-Frame a{
+        color: cornsilk;
+        cursor: pointer;
+      }
+      .Social_Media_Handles-Frame {
+        width: 97%;
+      }
+      .Social_Media_Handles-Frame button{
+        background: none; 
+        border: none;
+      }
+      .Social_Media_Handles-Frame img {
+        color: white;
+        height: 35px;
+        width: 35px;
+      }
+    </style>
+</head>
+<body>
+<table class="Main-Frame">
+  <tr class="Head-Part">
+    <td><img src="https://asset.cloudinary.com/dxqpdqzue/f8abf9d5a1de37bbd4fbc16b93f4fc50" alt="Logo"/></td>
+    <td>Fly Anywhere You Want</td>
+  </tr>
+  <tr class="Main-Message-Body">
+    <td>
+      <h1>Welcome To Bola-Air</h1>
+      <p>You Were Invited By One Of Our Admin Officers, To Create An Admin Account On Our Platform,
+        You Will Need An Admin Code To Sign Up As An Admin, You Received This Email Because
+        Your Email ${email} Was Provided To The Admin Officer That Invited You</p>
+      <p>Please Copy The Code Below And Click The Button Below To Accept Invitation And Sign Up</p>
+      <p>Your Admin Code Is: ${code}
+        <button onclick={copyOTP('${code}')}>Copy Code</button>
+      </p>
+      <a href="http://localhost:3000/admin-signup">
+        <button>Accept Invite</button>
+      </a>
+      <p>Note: You Will Always Need The Admin Code To Sign In, Any Time Your Account Is Logged Out</p>
+    </td>
+  </tr>
+  <tr class="Footer-Frame">
+    <td class="Contact-Frame">
+      <p>For More Information: </p>
+      <p>Email Bola at <a href="mailto:alaabdulmalik03@gmail.com">alaabdulmalik03@gmailcom</a> or</p>
+      <p> Message Bola On Whatsapp at <a href="https://wa.me/2347036174617">07036174617</a></p>
+      <p>Our Social Media Handles Are Below</p>
+    </td>
+  </tr>
+  <tr class="Footer-Frame-1">
+    <td class="Social_Media_Handles-Frame">
+      <a href="https://www.instagram.com/blaq_mhee/">
+        <button>
+          <img src="https://asset.cloudinary.com/dxqpdqzue/5cd7ce79e81748e40e8764639b85ec10" alt="instagram image">
+        </button>
+      </a>
+      <a href="https://www.facebook.com/abdulmalik.alayande.39">
+        <button>
+          <img src="https://asset.cloudinary.com/dxqpdqzue/5bc2382d8f34c1152d6d8b7403906d31" alt="facebook image">
+        </button>
+      </a>
+      <a href="https://twitter.com/The_good_man02">
+        <button>
+          <img src="https://asset.cloudinary.com/dxqpdqzue/58dda1fb9e575274aca2179ca02adaba" alt="twitter image">
+        </button>
+      </a>
+      <a href="https://www.linkedin.com/in/abdulmalik-alayande-b49814250/">
+        <button>
+          <img src="https://asset.cloudinary.com/dxqpdqzue/69f1e34bef88ad6376779dbb82829577" alt="linkedIn image">
+        </button>
+      </a>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

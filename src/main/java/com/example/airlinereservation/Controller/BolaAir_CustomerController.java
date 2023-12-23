@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import static com.example.airlinereservation.utils.Constants.ERROR_MESSAGE;
+
 @RestController
 @Controller
 @RequestMapping("bola-air/api/v3/")
@@ -25,11 +27,10 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 public class BolaAir_CustomerController {
 	
-	public static final String ERROR_MESSAGE = "Error Message:: {}";
 	private CustomerService customerService;
 	
 	@PostMapping("register-customer/")
-	public ResponseEntity<?> registerCustomer(@RequestBody CustomerRequest customerRequest){
+	public ApiResponse<?> registerCustomer(@RequestBody CustomerRequest customerRequest){
 		CustomerResponse response = new CustomerResponse();
 		try {
 			response = customerService.registerNewCustomer(customerRequest);
@@ -37,7 +38,8 @@ public class BolaAir_CustomerController {
 			apiResponse.setData(response);
 			apiResponse.setSuccessful(HttpStatus.CREATED.is2xxSuccessful());
 			apiResponse.setStatusCode(HttpStatus.CREATED.value());
-			return new ResponseEntity<>(response, HttpStatus.CREATED);
+			System.out.println(apiResponse);
+			return apiResponse;
 		} catch (FailedRegistrationException | FieldInvalidException | InvalidRequestException exception) {
 			log.info(ERROR_MESSAGE, exception.getMessage());
 			log.info("Error:: ", exception);
@@ -46,11 +48,32 @@ public class BolaAir_CustomerController {
 			apiResponse.setData(response);
 			apiResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
 			apiResponse.setSuccessful(HttpStatus.BAD_REQUEST.is4xxClientError());
-			return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+			System.out.println(apiResponse);
+			return apiResponse;
 		}
 	}
 	
-	@PostMapping("login-customer")
+	@PostMapping("activate-account/{TOTP}")
+	public ApiResponse<?> activateAccount(@PathVariable String TOTP){
+		CustomerResponse customerResponse;
+		try {
+			ApiResponse<CustomerResponse> apiResponse = new ApiResponse<>();
+			customerResponse = customerService.activateCustomerAccount(TOTP);
+			apiResponse.setData(customerResponse);
+			apiResponse.setSuccessful(HttpStatus.CREATED.is2xxSuccessful());
+			apiResponse.setStatusCode(HttpStatus.CREATED.value());
+			System.out.println("api response at activate account =="+apiResponse);
+			return apiResponse;
+		} catch (InvalidRequestException e) {
+			ApiResponse<String> apiResponse = new ApiResponse<>();
+			apiResponse.setSuccessful(false);
+			apiResponse.setData(e.getMessage());
+			apiResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+			return apiResponse;
+		}
+	}
+	
+	@PostMapping("login-customer/")
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
 		try {
 			LoginResponse loginResponse = customerService.login(loginRequest);

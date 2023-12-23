@@ -1,7 +1,6 @@
 package com.example.airlinereservation.services.notifications;
 
 import com.example.airlinereservation.exceptions.FieldInvalidException;
-import com.example.airlinereservation.exceptions.InvalidRequestException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.example.airlinereservation.exceptions.Exceptions.throwFieldInvalidException;
-import static com.example.airlinereservation.exceptions.Exceptions.throwInvalidRequestException;
 import static com.example.airlinereservation.utils.Constants.*;
 
 @Slf4j
@@ -21,13 +19,13 @@ public class FieldValidator implements Validator {
 	private String email;
 	
 	@Override
-	public void validateEmail(String email) throws InvalidRequestException, FieldInvalidException {
+	public void validateEmail(String email) throws FieldInvalidException {
 		this.email = email;
 		List<String> domains = Arrays.stream(validDomains).toList();
 		String regexPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 		Pattern compiledPattern = Pattern.compile(regexPattern);
 		if (!compiledPattern.matcher(email).matches())
-			throwInvalidRequestException(INVALID_EMAIL_FORMAT);
+			throwFieldInvalidException(INVALID_EMAIL_FORMAT);
 		String part = splitEmailToObtainDomain();
 		boolean emailMatchesADomain = domains.stream().anyMatch(domain -> domain.equals(part));
 		if (!emailMatchesADomain) {

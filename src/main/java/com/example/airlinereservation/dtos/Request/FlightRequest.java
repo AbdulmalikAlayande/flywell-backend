@@ -2,6 +2,8 @@ package com.example.airlinereservation.dtos.Request;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -9,24 +11,19 @@ import lombok.*;
 public class FlightRequest {
 	
 	@NonNull
+	@NotBlank
 	private Long flightNumber;
+	@NotBlank
 	private long estimatedFlightDurationInMinutes;
 	@NonNull
-	private String arrivalAirportName;
+	@NotBlank
+	private String arrivalCity;
 	@NonNull
-	private String arrivalAirportCode;
-	@NonNull
-	private String arrivalAirportAddress;
-	@NonNull
-	private String departureAirportName;
-	@NonNull
-	private String departureAirportCode;
-	@NonNull
-	private String departureAirportAddress;
-	@NonNull
+	@NotBlank
 	private String departureCity;
 	@NonNull
-	private String arrivalCity;
-	private Long longitudeOfAirport;
-	private Long latitudeOfAirport;
+	private AirportRequest arrivalAirportRequest;
+	@NonNull
+	@NotBlank
+	private AirportRequest departureAirportRequest;
 }

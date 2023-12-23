@@ -10,6 +10,9 @@ public class NotificationRequest {
 	
 	private String firstName;
 	private long OTP;
+	private String code;
 	private String lastName;
 	private String email;
+	private String mailPath;
+	private String mailSubject;
 }

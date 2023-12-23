@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title th:remove="all">Invitation Email</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script th:inline="javascript">
+        function copyOtp(value) {
+            navigator.clipboard.writeText(value)
+        }
+    </script>
+    <style>
+            body{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .Main-Frame {
+                width: 60%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border-style: solid;
+                border-width: 1px;
+            }
+
+            .Head-Part {
+                width: 100%;
+                border-style: solid;
+                border-width: 1px;
+                background-color: black;
+                font-size: 30px;
+                color: cornsilk;
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+                column-gap: 5%;
+            }
+            .Head-Part img{
+                height: 100px;
+                width: 130px;
+            }
+            .Main-Message-Body {
+                width: 97%;
+                font-size: 20px;
+                font-family: 'Arial Nova',serif;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: space-evenly;
+            }
+            .Main-Message-Body button {
+                cursor: pointer;
+                height: 30px;
+                border-radius: 10px;
+                font-size: 18px;
+                background-color: cornflowerblue;
+            }
+            .Main-Message-Body button:hover, .Main-Message-Body button:focus{
+                color: cornsilk;
+                background-color: teal;
+            }
+            .Main-Message-Body span{
+                color: teal;
+            }
+            .Admin-Code-PTag{
+                display: flex;
+                justify-content: flex-start;
+                column-gap: 2%;
+            }
+            .Footer-Frame, .Footer-Frame-1{
+                width: 100%;
+                color: blanchedalmond;
+                font-size: 20px;
+                background-color: black;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: space-evenly;
+            }
+            .Contact-Frame {
+                width: 97%;
+            }
+            .Contact-Frame a{
+                color: cornsilk;
+                cursor: pointer;
+            }
+            .Social_Media_Handles-Frame {
+                width: 97%;
+            }
+            .Social_Media_Handles-Frame button{
+                cursor: pointer;
+                background: none;
+                border: none;
+            }
+            .Social_Media_Handles-Frame img {
+                color: white;
+                height: 35px;
+                width: 35px;
+            }
+    </style>
+</head>
+<body>
+    <table class="Main-Frame">
+        <tr class="Head-Part">
+            <td><img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703337350/cloudinary_images/bola_air/static_assets/logo-no-background_1_oo7qni.png" alt="Logo"/></td>
+            <td>Fly Anywhere You Want</td>
+        </tr>
+        <tr class="Main-Message-Body">
+            <td>
+                <h1>Welcome To Bola-Air</h1>
+                <p>You Were Invited By One Of Our Admin Officers, To Create An Admin Account On Our Platform,
+                    You Will Need An Admin Code To Sign Up As An Admin, You Received This Email Because
+                    Your Email <span th:text="${email}">${email}</span> Was Provided To The Admin Officer That Invited You</p>
+                <p>Please Copy The Code Below And Click The Accept Invite Button To Accept The Invitation And Sign Up</p>
+                <p class="Admin-Code-PTag">Your Admin Code Is:
+                    <span th:text="${code}">${code}</span>
+                    <button th:attr="onclick=|copyOtp('${code}')|">Copy Code</button>
+                </p>
+                <a href="http://localhost:3000/admin-signup">
+                    <button>Accept Invite</button>
+                </a>
+                <p>Note: You Will Always Need The Admin Code To Sign In, Any Time Your Account Is Logged Out</p>
+            </td>
+        </tr>
+        <tr class="Footer-Frame">
+            <td class="Contact-Frame">
+                <p>For More Information: </p>
+                <p>Email Bola at <a href="mailto:alaabdulmalik03@gmail.com">alaabdulmalik03@gmailcom</a> or</p>
+                <p> Message Bola On Whatsapp at <a href="https://wa.me/2347036174617">07036174617</a></p>
+                <p>Our Social Media Handles Are Below</p>
+            </td>
+        </tr>
+        <tr class="Footer-Frame-1">
+            <td class="Social_Media_Handles-Frame">
+                <a href="https://www.instagram.com/blaq_mhee/">
+                    <button>
+                        <img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703335728/cloudinary_images/bola_air/static_assets/instagram_x4vtkb.png" alt="instagram image">
+                    </button>
+                </a>
+                <a href="https://www.facebook.com/abdulmalik.alayande.39">
+                    <button>
+                        <img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703335733/cloudinary_images/bola_air/static_assets/facebook_ryw7yw.png" alt="facebook image">
+                    </button>
+                </a>
+                <a href="https://twitter.com/The_good_man02">
+                    <button>
+                        <img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703336988/cloudinary_images/bola_air/static_assets/twitter_1_gir56t.png" alt="twitter image">
+                    </button>
+                </a>
+                <a href="https://www.linkedin.com/in/abdulmalik-alayande-b49814250/">
+                    <button>
+                        <img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703335729/cloudinary_images/bola_air/static_assets/linkedin_dipapn.png" alt="linkedIn image">
+                    </button>
+                </a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

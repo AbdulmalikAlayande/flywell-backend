@@ -1,0 +1,86 @@
+POST http://localhost:8081/bola-air/admin/invite-admin/
+Content-Type: application/json
+Content-Length: 84
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "adminEmail": "alaabdulmalik03@gmail.com",
+  "adminPhoneNumber": "07036174617"
+}
+
+<> 2023-12-21T163451.200.json
+
+###
+
+POST http://localhost:8081/bola-air/admin/invite-admin/
+Content-Type: application/json
+Content-Length: 83
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "adminEmail": "alaabdulmalik03@gmail.com",
+  "adminPhoneNumber": "07036174617"
+}
+
+<> 2023-12-21T161015.200.json
+
+###
+
+POST http://localhost:8081/bola-air/admin/invite-admin/
+Content-Type: application/json
+
+{
+  "adminEmail": "alaabdulmalik03@gmail.com",
+  "adminPhoneNumber": "07036174617"
+}
+###
+
+POST http://localhost:8081/bola-air/admin/invite-admin/
+Content-Type: application/json
+
+{
+  "adminEmail": "alaabdulmalik03@gmail.com",
+  "adminPhoneNumber": "07036174617"
+}
+
+###
+
+POST http://localhost:8081/bola-air/api/v3/activate-account/127893
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-12-21T103918.500.json
+
+###
+
+POST http://localhost:8081/bola-air/api/v3/activate-account/127893
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-12-20T221121.500.json
+
+###
+
+POST http://localhost:8081/bola-air/api/v3/register-customer/
+Content-Type: application/json
+
+{
+  "firstName": "firstName_10c45d7a8efd",
+  "lastName": "lastName_d1b06884f4b4",
+  "email": "ololadeayandunni2008@gmail.com",
+  "phoneNumber": "phoneNumber_c1b8ae8753d8",
+  "password": "P@ssword"
+}
+
+###
+

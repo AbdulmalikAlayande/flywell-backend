@@ -10,7 +10,16 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.client.RestTemplate;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import org.thymeleaf.templateresolver.ITemplateResolver;
+
+import java.util.Collections;
 
 
 @Configuration
@@ -22,6 +31,8 @@ import org.springframework.web.client.RestTemplate;
 @EnableAutoConfiguration
 @Getter
 public class EmailValidationConfig {
+	public static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
+	
 	@Value("${totp.secret.key}")
 	private String totpSecret;
 	
@@ -29,8 +40,38 @@ public class EmailValidationConfig {
 	private String brevoApiKey;
 	
 	@Bean
+	public ResourceBundleMessageSource emailMessageSource() {
+		final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+		messageSource.setBasename("mail/MailMessages");
+		return messageSource;
+	}
+	@Bean
+	public TemplateEngine emailTemplateEngine() {
+		final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+		templateEngine.addTemplateResolver(templateResolver());
+		templateEngine.setTemplateEngineMessageSource(emailMessageSource());
+		return templateEngine;
+	}
+	
+	private ITemplateResolver templateResolver(){
+		final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+		templateResolver.setOrder(2);
+		templateResolver.setResolvablePatterns(Collections.singleton("html/*"));
+		templateResolver.setPrefix("/mail/");
+		templateResolver.setSuffix(".html");
+		templateResolver.setTemplateMode(TemplateMode.HTML);
+		templateResolver.setCharacterEncoding(EMAIL_TEMPLATE_ENCODING);
+		templateResolver.setCacheable(false);
+		return templateResolver;
+	}
+	
+	@Bean
 	public EmailDomainValidator validEmailDomain() {
 		return new EmailDomainValidator();
+	}
+@Bean
+	public Context context() {
+		return new Context();
 	}
 	
 	@Bean

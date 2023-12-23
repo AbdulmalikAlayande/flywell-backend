@@ -15,7 +15,6 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class FlightResponse {
 	private String message;
-	private long flightNumber;
 	private long flightDuration;
 	private String arrivalAirportName;
 	private String arrivalAirportCode;
@@ -24,12 +23,3 @@ public class FlightResponse {
 	private String departureAirportCode;
 	private String departureAirportAddress;
 }
-/*
- 	private LocalTime departureTime;
-	private LocalDate departureDate;
-	private LocalTime arrivalTime;
-	private LocalDate arrivalDate;
-	private String Airline;
-	private int baggageAllowance;
-	private String destination;
-*/

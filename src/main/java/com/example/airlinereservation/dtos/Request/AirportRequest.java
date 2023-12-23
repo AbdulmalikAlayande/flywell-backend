@@ -13,5 +13,8 @@ public class AirportRequest {
 	
 	private long longitude;
 	private long latitude;
+	private String icaoCode;
+	private String iataCode;
+	private String countryName;
 	private String airportName;
 }

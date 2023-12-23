@@ -22,5 +22,9 @@ public class OTP {
 	private String id;
 	private long data;
 	private String secretKey;
+	private long staleTime;
+	private boolean isExpired;
 	private boolean isUsed;
+	private String userEmail;
+	
 }

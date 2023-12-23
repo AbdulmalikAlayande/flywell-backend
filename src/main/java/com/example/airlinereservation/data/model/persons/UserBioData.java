@@ -45,6 +45,6 @@ public class UserBioData {
 	private Address address;
 	@Enumerated(STRING)
 	private Gender gender;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<OTP> OTPs;
 }

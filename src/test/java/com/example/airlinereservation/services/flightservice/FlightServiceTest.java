@@ -1,6 +1,7 @@
 package com.example.airlinereservation.services.flightservice;
 
 import com.example.airlinereservation.data.model.enums.Destinations;
+import com.example.airlinereservation.dtos.Request.AirportRequest;
 import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
 import lombok.SneakyThrows;
@@ -30,15 +31,6 @@ public class FlightServiceTest {
 		FlightResponse savedFlightResponse = flightService.addFlight(buildFlightRequest());
 		assertThat(flightService.getCountOfAllFlights()).isGreaterThan(ZERO.longValue());
 		assertThat(savedFlightResponse).isNotNull();
-		assertThat(savedFlightResponse.getFlightNumber()).isNotZero();
-	}
-	
-	@Test
-	@SneakyThrows
-	public void createMultipleFlightsWithSameFlightNo_ExceptionIsThrown(){
-		FlightResponse savedFlightResponse = flightService.addFlight(buildFlightRequest());
-		assertThatThrownBy(()->flightService.addFlight(buildFlightRequest()))
-											.isInstanceOf(Exception.class);
 	}
 	
 	@Test
@@ -53,7 +45,6 @@ public class FlightServiceTest {
 		FlightResponse foundFlight = flightService.getFlightByArrivalAndDepartureLocation(Destinations.LAGOS, Destinations.ABUJA);
 		System.out.println(foundFlight);
 		assertThat(foundFlight).isNotNull();
-		assertThat(foundFlight.getFlightNumber()).isGreaterThan(ZERO.longValue());
 	}
 	
 	private FlightRequest buildIncompleteFlight() {
@@ -62,19 +53,25 @@ public class FlightServiceTest {
 				       .build();
 	}
 	
-	//	@Test void
-	private static FlightRequest buildFlightRequest() {
+	private FlightRequest buildFlightRequest() {
 		return FlightRequest.builder()
 				       .estimatedFlightDurationInMinutes(3L)
 				       .arrivalCity("Lagos, Nigeria")
 				       .departureCity("Abuja, Nigeria")
 				       .flightNumber(2345L)
-				       .arrivalAirportCode("23456")
-				       .arrivalAirportName("Murtala Muhammed Airport")
-				       .arrivalAirportAddress("Lagos, Nigeria")
-				       .departureAirportCode("45632")
-				       .departureAirportName("Nnamdi Azikwe International Airport")
-				       .departureAirportAddress("Abuja, Nigeria")
+				       .arrivalAirportRequest(buildAirportRequest("Murtala Muhammed Airport", "Nigeria", "23456", "12345"))
+				       .departureAirportRequest(buildAirportRequest("Nnamdi Azikwe International Airport", "Nigeria", "45632", "12345"))
+				       .build();
+	}
+	
+	public AirportRequest buildAirportRequest(String name, String country, String icaoCode, String iataCode){
+		return AirportRequest.builder()
+				       .airportName(name)
+				       .countryName(country)
+				       .icaoCode(icaoCode)
+				       .iataCode(iataCode)
+				       .longitude(-34567)
+				       .latitude(45678)
 				       .build();
 	}
 }

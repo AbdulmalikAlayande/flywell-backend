@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.CascadeType.REMOVE;
 
 @Data
 @AllArgsConstructor
@@ -23,6 +22,7 @@ public class Flight {
 	private String airline;
 	private String arrivalCity;
 	private String departureCity;
+	private String displayImageName;
 	@OneToOne(cascade = ALL)
 	private Airport departureAirport;
 	@OneToOne(cascade = ALL)

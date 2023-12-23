@@ -16,7 +16,7 @@ public interface AdminService {
 	AdminInvitationResponse inviteAdmin(AdminInvitationRequest invitationRequest) throws InvalidRequestException, FieldInvalidException, EmptyFieldException;
     CreateCrewMemberResponse addCrewMember(CreateCrewMemberRequest createCrewMemberRequest) throws EmptyFieldException, IllegalAccessException, FieldInvalidException;
     GetUserResponse findByEmail(String email);
-	FlightResponse addNewFlight(FlightRequest flightRequest);
+	FlightResponse addNewFlight(FlightRequest flightRequest) throws InvalidRequestException;
 	
 	void deleteAll();
 }

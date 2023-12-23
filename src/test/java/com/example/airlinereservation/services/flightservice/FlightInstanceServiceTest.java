@@ -82,12 +82,6 @@ class FlightInstanceServiceTest {
 				       .arrivalCity("Rivers")
 				       .departureCity("Abuja")
 				       .flightNumber(2345L)
-				       .arrivalAirportCode("23456")
-				       .arrivalAirportName("Port Harcourt International Airport")
-				       .arrivalAirportAddress("P.0 Box 7654, Lagos, Nigeria")
-				       .departureAirportCode("45632")
-				       .departureAirportName("Nnamdi Azikwe International Airport")
-				       .departureAirportAddress("P.O Box 5213, Abuja, Nigeria")
 				       .build();
 	}
 }

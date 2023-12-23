@@ -11,12 +11,12 @@ import com.example.airlinereservation.exceptions.EmptyFieldException;
 import com.example.airlinereservation.exceptions.FieldInvalidException;
 import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.exceptions.UserNotFoundException;
+import com.example.airlinereservation.services.flightservice.FlightService;
 import com.example.airlinereservation.services.notifications.Validator;
 import com.example.airlinereservation.services.notifications.mail.MailService;
 import jakarta.validation.ConstraintViolationException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.bytebuddy.dynamic.scaffold.RecordComponentRegistry;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -37,6 +37,7 @@ public class BolaAirAdminService implements AdminService{
     private Validator validator;
     private MailService mailService;
     private ModelMapper mapper;
+    private FlightService flightService;
 
     @Override
     @Transactional(rollbackFor = {SQLException.class, DataIntegrityViolationException.class, ConstraintViolationException.class})
@@ -111,8 +112,8 @@ public class BolaAirAdminService implements AdminService{
     }
     
     @Override
-    public FlightResponse addNewFlight(FlightRequest flightRequest) {
-        return null;
+    public FlightResponse addNewFlight(FlightRequest flightRequest) throws InvalidRequestException {
+        return flightService.addFlight(flightRequest);
     }
     
     @Override

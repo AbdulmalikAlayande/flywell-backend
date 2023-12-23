@@ -58,7 +58,6 @@ public class FlightServiceTest {
 				       .estimatedFlightDurationInMinutes(3L)
 				       .arrivalCity("Lagos, Nigeria")
 				       .departureCity("Abuja, Nigeria")
-				       .flightNumber(2345L)
 				       .arrivalAirportRequest(buildAirportRequest("Murtala Muhammed Airport", "Nigeria", "23456", "12345"))
 				       .departureAirportRequest(buildAirportRequest("Nnamdi Azikwe International Airport", "Nigeria", "45632", "12345"))
 				       .build();

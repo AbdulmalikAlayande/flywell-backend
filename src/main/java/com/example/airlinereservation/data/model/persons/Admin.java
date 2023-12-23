@@ -4,6 +4,8 @@ import com.example.airlinereservation.data.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import static jakarta.persistence.CascadeType.ALL;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +19,8 @@ public class Admin extends Person{
 	private String id;
 	@Enumerated(EnumType.STRING)
 	private Role role;
-	@OneToOne
+	private String adminCode;
+	private String email;
+	@OneToOne(cascade = ALL)
 	private UserBioData bioData;
 }

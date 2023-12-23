@@ -3,6 +3,7 @@ package com.example.airlinereservation.services.notifications.mail;
 import com.example.airlinereservation.config.EmailValidationConfig;
 import com.example.airlinereservation.dtos.Request.NotificationRequest;
 import com.example.airlinereservation.dtos.Response.NotificationResponse;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -12,8 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,10 +27,10 @@ import static com.example.airlinereservation.utils.Constants.*;
 @Service
 @AllArgsConstructor
 public class Mailer implements MailService{
-	
+
 	private final EmailValidationConfig validationConfig;
 	private final RestTemplate restTemplate;
-	private final SpringTemplateEngine templateEngine;
+	private final TemplateEngine templateEngine;
 	private final Context context;
 	
 	
@@ -40,13 +41,11 @@ public class Mailer implements MailService{
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		return headers;
 	}
-	
 	@NotNull
 	private static Map<String, Object> getContextVariables(NotificationRequest notificationRequest) {
 		Map<String, Object> contextVariables = new HashMap<>();
 		contextVariables.put("firstName", notificationRequest.getFirstName());
-		contextVariables.put("lastName", notificationRequest.getLastName());
-		contextVariables.put("code", notificationRequest.getCode());
+		contextVariables.put("email", notificationRequest.getEmail());
 		return contextVariables;
 	}
 	
@@ -61,17 +60,21 @@ public class Mailer implements MailService{
 	}
 	
 	@NotNull
-	private ResponseEntity<NotificationResponse> sendNotification(NotificationRequest notificationRequest, String email) {
+	private ResponseEntity<NotificationResponse> sendNotification(NotificationRequest notificationRequest, String email) throws InvalidRequestException {
 		HttpEntity<Notification> requestEntity = new HttpEntity<>(buildNotification(email, notificationRequest.getEmail()), getHttpHeaders());
 		ResponseEntity<NotificationResponse> response = restTemplate.postForEntity(
 				BREVO_SEND_EMAIL_API_URL,
 				requestEntity,
 				NotificationResponse.class
 		);
-		if (response.getStatusCode().is2xxSuccessful())
+		if (response.getStatusCode().is2xxSuccessful()){
 			log.info("{} response body:: {}", MESSAGE_SUCCESSFULLY_SENT, Objects.requireNonNull(response.getBody()));
-		else log.error("{} response body:: {}", MESSAGE_FAILED_TO_SEND, Objects.requireNonNull(response.getBody()));
-		return response;
+			return response;
+		}
+		else {
+			log.error("{} response body:: {}", MESSAGE_FAILED_TO_SEND, Objects.requireNonNull(response.getBody()));
+			throw new InvalidRequestException("Error " + response.getStatusCode());
+		}
 	}
 	
 	@Override
@@ -81,19 +84,24 @@ public class Mailer implements MailService{
 	}
 	
 	@Override
-	public ResponseEntity<NotificationResponse> sendAdminInvitationEmail(NotificationRequest notificationRequest) {
+	public ResponseEntity<NotificationResponse> sendAdminInvitationEmail(NotificationRequest notificationRequest) throws InvalidRequestException {
 		System.out.println(notificationRequest.toString());
-		Map<String, Object> contextVariables = getContextVariables(notificationRequest);
-		context.setVariables(contextVariables);
+		System.out.println(notificationRequest.getFirstName());
+		context.setVariable("firstName", notificationRequest.getFirstName());
+		context.setVariable("email", notificationRequest.getEmail());
+		context.setVariable("code", notificationRequest.getCode());
+		
 		String email = templateEngine.process(notificationRequest.getMailPath(), context);
+		System.out.println(email);
 		return sendNotification(notificationRequest, email);
 	}
 	
 	@Override
-	public ResponseEntity<NotificationResponse> sendOtp(NotificationRequest notificationRequest) {
+	public ResponseEntity<NotificationResponse> sendOtp(NotificationRequest notificationRequest) throws InvalidRequestException {
 		Map<String, Object> contextVariables = getContextVariables(notificationRequest);
 		context.setVariables(contextVariables);
 		String email = templateEngine.process(notificationRequest.getMailPath(), context);
+		System.out.println(email);
 		return sendNotification(notificationRequest, email);
 	}
 	

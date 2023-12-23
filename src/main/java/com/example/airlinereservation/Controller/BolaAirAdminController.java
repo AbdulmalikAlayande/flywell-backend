@@ -3,6 +3,8 @@ package com.example.airlinereservation.Controller;
 import com.example.airlinereservation.dtos.Request.AdminInvitationRequest;
 import com.example.airlinereservation.dtos.Response.AdminInvitationResponse;
 import com.example.airlinereservation.dtos.Response.ApiResponse;
+import com.example.airlinereservation.exceptions.EmptyFieldException;
+import com.example.airlinereservation.exceptions.FieldInvalidException;
 import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.services.userservice.AdminService;
 import lombok.AllArgsConstructor;
@@ -30,7 +32,7 @@ public class BolaAirAdminController {
 			apiResponse.setSuccessful(HttpStatus.CREATED.is2xxSuccessful());
 			apiResponse.setStatusCode(HttpStatus.CREATED.value());
 			return apiResponse;
-		} catch (InvalidRequestException exception) {
+		} catch (InvalidRequestException | EmptyFieldException | FieldInvalidException exception) {
 			ApiResponse<String> apiResponse = new ApiResponse<>();
 			apiResponse.setData("An Error Occurred"+exception.getMessage());
 			apiResponse.setSuccessful(false);

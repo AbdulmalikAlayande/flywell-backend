@@ -30,3 +30,4 @@ bin/
 /src/main/resources/secret.properties
 target
 .idea
+src/main/resources/http

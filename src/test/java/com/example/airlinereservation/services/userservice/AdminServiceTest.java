@@ -2,14 +2,13 @@
 package com.example.airlinereservation.services.userservice;
 
 
-import com.example.airlinereservation.data.model.persons.UserBioData;
-
 import com.example.airlinereservation.dtos.Request.AdminInvitationRequest;
 import com.example.airlinereservation.dtos.Request.CreateAdminRequest;
 import com.example.airlinereservation.dtos.Response.AdminInvitationResponse;
 import com.example.airlinereservation.dtos.Response.CreateAdminResponse;
-import com.example.airlinereservation.dtos.Request.CreateCrewMemberRequest;
-import com.example.airlinereservation.dtos.Response.CreateCrewMemberResponse;
+import com.example.airlinereservation.dtos.Response.GetUserResponse;
+import com.example.airlinereservation.exceptions.FieldInvalidException;
+import com.example.airlinereservation.exceptions.UserNotFoundException;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static com.example.airlinereservation.utils.Constants.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @SpringBootTest
 class AdminServiceTest {
@@ -26,11 +27,17 @@ class AdminServiceTest {
 	private AdminService adminService;
 	CreateAdminRequest createAdminRequest;
 	CreateAdminResponse createAdminResponse;
+	AdminInvitationResponse response;
 	
 	@BeforeEach
-	void setUp() {
+	@SneakyThrows
+	public void setUp() {
+		adminService.deleteAll();
 		createAdminRequest = new CreateAdminRequest();
 		createAdminResponse = new CreateAdminResponse();
+		AdminInvitationRequest invitationRequest = new AdminInvitationRequest();
+		invitationRequest.setAdminEmail("alaabdulmalik03@gmail.com");
+		response = adminService.inviteAdmin(invitationRequest);
 	}
 	
 	@AfterEach
@@ -39,36 +46,65 @@ class AdminServiceTest {
 	
 	@SneakyThrows
 	@Test void testThatAdminCanBeInvitedToOurApplication(){
+		assertThat(response.getMessage()).isEqualTo("An Invitation Mail Has Been Sent To alaabdulmalik03@gmail.com");
+	}
+	
+	@Test void testThatBeforeInvitation_AdminEmailMustBeCorrect(){
 		AdminInvitationRequest invitationRequest = new AdminInvitationRequest();
-		invitationRequest.setAdminEmail("alaabdulmalik03@gmail.com");
-		AdminInvitationResponse response = adminService.inviteAdmin(invitationRequest);
-		
+		invitationRequest.setAdminEmail("alaabdulmalik03@m");
+		assertThatThrownBy(()-> response = adminService.inviteAdmin(invitationRequest)).isInstanceOf(FieldInvalidException.class)
+																					   .hasMessageContaining(INVALID_EMAIL_FORMAT);
 	}
-
+	@Test void testThatAdminEmailIsSaved_AfterInvitation(){
+		GetUserResponse foundAdminRef = adminService.findByEmail("alaabdulmalik03@gmail.com");
+		assertThat(foundAdminRef).isNotNull();
+		assertThat(foundAdminRef.getEmail()).isEqualTo("alaabdulmalik03@gmail.com");
+	}
 	@SneakyThrows
-	@Test void createAdminTest(){
-		CreateAdminResponse adminResponse = adminService.createAdmin(buildAdmin());
-		assertThat(adminResponse.getMessage()).isEqualTo("Admin created successfully");
-	}
-
-
-
-	public static CreateAdminRequest buildAdmin(){
-        return CreateAdminRequest.builder()
-						        .lastName("Alhaji").phoneNumber("08081493711")
-						        .password("password").build();
+	@Test
+	public void createAdminAccountTest(){
+		CreateAdminResponse adminResponse = adminService.createAdminAccount(buildAdmin());
+		assertThat(adminResponse.getMessage()).isEqualTo("Admin Account created successfully");
 	}
 	
-	@Test void testThatAdminTriesToCreateAccountTwiceInvalidRequestExceptionIsThrown(){
-	
+	@SneakyThrows
+	@Test void createAdminAccount_WithoutInvitation_ExceptionIsThrown(){
+		assertThatThrownBy(()->{
+			CreateAdminResponse adminResponse = adminService.createAdminAccount(buildUninvitedAdmin());
+		})
+		.isInstanceOf(UserNotFoundException.class)
+		.hasMessageContaining("Admin With Email Ahoy@gmail.com Does Not Exist");
 	}
 	
-	@Test void testThatEmailIsSentToAdminWhenAdminHasBeenCreated(){
-	
+	private CreateAdminRequest buildUninvitedAdmin() {
+		return CreateAdminRequest.builder()
+				       .firstName("Hello")
+				       .lastName("Ahoy")
+				       .email("Ahoy@gmail.com")
+				       .adminCode("23456777")
+				       .phoneNumber("07036174617")
+				       .password("P@ssword")
+				       .build();
 	}
 	
 	@Test void testThatAdminTriesToCreateAccountWithInvalidData_ExceptionIsThrown(){
 	
+	}
+	@Test void testThatAdminTriesToCreateAccountTwiceInvalidRequestExceptionIsThrown(){
+	
+	}
+	@Test void testThatAdminCanAddAirCraftToTheListOfAirCraft(){
+	
+	}
+	public CreateAdminRequest buildAdmin(){
+        return CreateAdminRequest.builder()
+					             .lastName("Alhaji")
+		                         .adminCode(response.getCode())
+		                         .firstName("Abdulmalik")
+		                         .email("alaabdulmalik03@gmail.com")
+					             .phoneNumber("08081493711")
+		                         .password("P@assword")
+		                         .build();
 	}
 	
 	@Test void testThatACrewHasToExistBeforeTheyCanBeAssignedToAFlight(){
@@ -86,43 +122,7 @@ class AdminServiceTest {
 	@Test void testThatAdminCanAssignCrewMember(){
 	
 	}
-	
-	@Test void testThatAdminCanAddAirCraftToTheListOfAirCraft(){
-		
-	}
-	
 
-	
-	@Test void testThatAdminBlocksAndAdmin_TheBlockedAdminCannotAccessTheSystemAgain(){
-	
-	}
-	
-	@Test void testThatAdminBlocksCustomer_TheBlockedCustomerNoLongerHaveAccessToTheSystem(){
-	
-	}
-	
-	@Test void testThatAdminCanBlockCrewMember_BlockedCrewMemberCannotAccessTheSystem(){
-	
-	}
-	
-	@Test void testThatAdminCanBlockFrontDeskOfficer_BlockedOfficerNoLongerHasAccessToTheSystem(){
-	
-	}
-	@Test void testThatAdminUnBlocksAndAdmin_TheUnBlockedAdminCanNowHasAccessTheSystemAgain(){
-	
-	}
-	
-	@Test void testThatAdminUnBlocksCustomer_TheUnBlockedCustomerNowHasAccessToTheSystem(){
-	
-	}
-	
-	@Test void testThatAdminCanUnBlockCrewMember_UnBlockedCrewMemberHasAccessToTheSystem(){
-	
-	}
-	
-	@Test void testThatAdminCanUnBlockFrontDeskOfficer_UnBlockedOfficerNowHasAccessToTheSystem(){
-	
-	}
 	
 	@Test void testThatAdminCanAssignCrewMember_AssignedCrewMembersAreNoLongerAvailable(){
 	

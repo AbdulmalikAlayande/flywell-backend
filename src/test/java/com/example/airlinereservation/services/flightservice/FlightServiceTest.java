@@ -4,6 +4,7 @@ import com.example.airlinereservation.data.model.enums.Destinations;
 import com.example.airlinereservation.dtos.Request.AirportRequest;
 import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
+import com.example.airlinereservation.exceptions.InvalidRequestException;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,30 +20,38 @@ public class FlightServiceTest {
 	
 	@Autowired
 	private FlightService flightService;
-	
+	FlightResponse savedFlightResponse;
 	@BeforeEach
+	@SneakyThrows
 	public void startEachTestWith(){
 		flightService.removeAll();
+		savedFlightResponse = flightService.addFlight(buildFlightRequest());
+		
 	}
 	
 	@Test
 	@SneakyThrows
 	public void createNewFlight_NewFlightIsAddedToAirlinesListOfFlightsTest(){
-		FlightResponse savedFlightResponse = flightService.addFlight(buildFlightRequest());
 		assertThat(flightService.getCountOfAllFlights()).isGreaterThan(ZERO.longValue());
 		assertThat(savedFlightResponse).isNotNull();
 	}
 	
 	@Test
+	@SneakyThrows
+	void saveSameFlightTwice_testThat_SameFlightCannotExistInTheDatabase_By_ArrivalLocationAndDepartureLocation(){
+		assertThatThrownBy(()->flightService.addFlight(buildFlightRequest()))
+				.isInstanceOf(InvalidRequestException.class)
+				.hasMessageContaining("Flight Already Existed");
+	}
+	@Test
 	public void createFlightWithEmptyRequiredFields_ExceptionIsThrown(){
-		assertThatThrownBy(()->flightService.addFlight(buildIncompleteFlight())).isInstanceOf(Exception.class);
+		assertThatThrownBy(()->flightService.addFlight(buildIncompleteFlight())).isInstanceOf(NullPointerException.class);
 	}
 	
 	@Test
 	@SneakyThrows
 	public void createNewFlight_getCreatedFlightBy_ArrivalDestinationAndDepartureDestination(){
-		FlightResponse savedFlightResponse = flightService.addFlight(buildFlightRequest());
-		FlightResponse foundFlight = flightService.getFlightByArrivalAndDepartureLocation(Destinations.LAGOS, Destinations.ABUJA);
+		FlightResponse foundFlight = flightService.getFlightByArrivalAndDepartureLocation("Lagos, Nigeria", "Abuja, Nigeria");
 		System.out.println(foundFlight);
 		assertThat(foundFlight).isNotNull();
 	}
@@ -50,6 +59,7 @@ public class FlightServiceTest {
 	private FlightRequest buildIncompleteFlight() {
 		return FlightRequest.builder()
 				       .estimatedFlightDurationInMinutes(3L)
+				       .arrivalCity("China")
 				       .build();
 	}
 	

@@ -31,6 +31,7 @@ public class BolaAir_FlightService implements FlightService{
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public FlightResponse addFlight(FlightRequest flightRequest) throws InvalidRequestException {
+		checkIfFlightExists(flightRequest.getArrivalCity(), flightRequest.getDepartureCity());
 		try{
 			Flight mappedFlight = mapper.map(flightRequest, Flight.class);
 			
@@ -47,13 +48,20 @@ public class BolaAir_FlightService implements FlightService{
 			
 			Flight savedFlight = flightRepository.save(mappedFlight);
 			return buildFlightResponse(savedFlight);
-		}catch(Throwable exception){
+		} catch (InvocationTargetException | InstantiationException |
+		         NoSuchMethodException | IllegalAccessException exception) {
 			System.out.println(exception.getMessage());
 			throw new InvalidRequestException(exception.getMessage(), exception);
 		}
 	}
 	
-
+	private void checkIfFlightExists(String arrivalCity, String departureCity) throws InvalidRequestException {
+		boolean flightExists = flightRepository.existsByArrivalCityAndDepartureCity(arrivalCity, departureCity);
+		if (flightExists)
+			throw new InvalidRequestException("Flight Already Existed");
+	}
+	
+	
 	private FlightResponse buildFlightResponse(Flight savedFlight) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 		FlightResponse response = FlightResponse.class.getDeclaredConstructor().newInstance();
 		mapper.map(savedFlight, response);
@@ -83,8 +91,8 @@ public class BolaAir_FlightService implements FlightService{
 	}
 	
 	@Override
-	public FlightResponse getFlightByArrivalAndDepartureLocation(Destinations arrivalState, Destinations departureState) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvalidRequestException {
-		Optional<Flight> foundFlight = flightRepository.findByArrivalAndDepartureAirport("arrivalState", "departureState");
+	public FlightResponse getFlightByArrivalAndDepartureLocation(String arrivalCity, String departureCity) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvalidRequestException {
+		Optional<Flight> foundFlight = flightRepository.findByArrivalCityAndDepartureCity(arrivalCity, departureCity);
 		if (foundFlight.isPresent())
 			return buildFlightResponse(foundFlight.get());
 		throw new InvalidRequestException("Flight Not Found");

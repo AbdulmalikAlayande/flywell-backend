@@ -81,7 +81,6 @@ class FlightInstanceServiceTest {
 				       .estimatedFlightDurationInMinutes(360)
 				       .arrivalCity("Rivers")
 				       .departureCity("Abuja")
-				       .flightNumber(2345L)
 				       .build();
 	}
 }

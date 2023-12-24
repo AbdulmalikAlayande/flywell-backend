@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.List;
+
 import static jakarta.persistence.CascadeType.ALL;
 
 @Data
@@ -27,4 +29,6 @@ public class Flight {
 	private Airport departureAirport;
 	@OneToOne(cascade = ALL)
 	private Airport arrivalAirport;
+	@OneToMany(cascade = ALL)
+	private List<FlightInstance> flightInstances;
 }

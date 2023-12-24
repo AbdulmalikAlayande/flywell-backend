@@ -30,9 +30,7 @@ public class BolaAir_FlightInstanceService implements FlightInstanceService{
 	
 	@Override
 	public FlightInstanceResponse createNewInstance(CreateFlightInstanceRequest request){
-		AirportRequest arrivalAirport = request.getArrivalAirport();
-		AirportRequest departureAirport = request.getDepartureAirport();
-		Optional<Flight> foundFlight = flightRepository.findByArrivalAndDepartureAirport(arrivalAirport.getAirportName(), departureAirport.getAirportName());
+		Optional<Flight> foundFlight = flightRepository.findByArrivalCityAndDepartureCity(request.getArrivalCity(), request.getDepartureCity());
 		FlightInstance flights = foundFlight.map(flight -> {
 			FlightInstance mappedFlight = mapper.map(request, FlightInstance.class);
 			mappedFlight.setFlight(flight);
@@ -45,7 +43,6 @@ public class BolaAir_FlightInstanceService implements FlightInstanceService{
 	}
 	
 	private FlightInstance performSeparationTechnique(List<FlightInstance> enRouteInstances, FlightInstance mappedFlight) {
-		
 		return new FlightInstance();
 	}
 	
@@ -71,6 +68,12 @@ public class BolaAir_FlightInstanceService implements FlightInstanceService{
 		List<FlightInstance> foundInstances = flightInstanceRepository.findByStatus(status);
 		return foundInstances.stream().map(this::flightInstanceResponse).toList();
 	}
+	
+	@Override
+	public void removeAll() {
+		flightInstanceRepository.deleteAll();
+	}
+	
 	public List<FlightInstanceResponse> findAllBy(LocalDateTime departureDate){
 		return new ArrayList<>();
 	}

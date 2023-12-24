@@ -1,7 +1,6 @@
 package com.example.airlinereservation.services.flightservice;
 
 import com.example.airlinereservation.data.model.Airport;
-import com.example.airlinereservation.data.model.enums.Destinations;
 import com.example.airlinereservation.data.model.flight.Flight;
 import com.example.airlinereservation.data.repositories.AirportRepository;
 import com.example.airlinereservation.data.repositories.FlightRepository;

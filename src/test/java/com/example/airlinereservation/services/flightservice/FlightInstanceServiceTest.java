@@ -1,6 +1,7 @@
 package com.example.airlinereservation.services.flightservice;
 
 import com.example.airlinereservation.data.model.enums.FlightStatus;
+import com.example.airlinereservation.dtos.Request.AirportRequest;
 import com.example.airlinereservation.dtos.Request.CreateFlightInstanceRequest;
 import com.example.airlinereservation.dtos.Request.FlightRequest;
 import com.example.airlinereservation.dtos.Response.FlightInstanceResponse;
@@ -27,6 +28,7 @@ class FlightInstanceServiceTest {
 	@BeforeEach
 	@SneakyThrows
 	void startEachTestWith() {
+		flightInstanceService.removeAll();
 		flightService.removeAll();
 		flightService.addFlight(buildFlight());
 		response = flightInstanceService.createNewInstance(buildInstance());
@@ -79,8 +81,21 @@ class FlightInstanceServiceTest {
 	private FlightRequest buildFlight() {
 		return FlightRequest.builder()
 				       .estimatedFlightDurationInMinutes(360)
+				       .arrivalAirportRequest(buildAirportRequest("Oakland Airport", "U.S.A", "3456", "45678"))
+				       .departureAirportRequest(buildAirportRequest("Orlando Airport", "U.S.A", "4598", "0237"))
 				       .arrivalCity("Rivers")
 				       .departureCity("Abuja")
+				       .build();
+	}
+	
+	public AirportRequest buildAirportRequest(String name, String country, String icaoCode, String iataCode){
+		return AirportRequest.builder()
+				       .airportName(name)
+				       .countryName(country)
+				       .icaoCode(icaoCode)
+				       .iataCode(iataCode)
+				       .longitude(-34567)
+				       .latitude(45678)
 				       .build();
 	}
 }

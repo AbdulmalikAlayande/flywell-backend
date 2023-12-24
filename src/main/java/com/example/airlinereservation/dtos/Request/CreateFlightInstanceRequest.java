@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CreateFlightInstanceRequest {
 	
-	private AirportRequest arrivalAirport;
-	private AirportRequest departureAirport;
 	private LocalDateTime departureTime;
 	@NonNull
 	private String arrivalCity;

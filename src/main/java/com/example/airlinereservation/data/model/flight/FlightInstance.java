@@ -35,7 +35,7 @@ public class FlightInstance {
 	private int baggageAllowance;
 	@OneToOne
 	private AirCraft airCraft;
-	@OneToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Flight flight;
 	@Enumerated(STRING)
 	private FlightStatus status;

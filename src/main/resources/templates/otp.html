@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title th:remove="all">Otp Email</title>
+    <title >Otp Email</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
         body{
@@ -9,7 +9,7 @@
             align-items: center; justify-content: center
         }
         .Inner-Frame{
-            width: 42vw;
+            width: 50%;
             border-width: 1px;
             border-color: black;
             border-style: ridge; display: flex;
@@ -17,20 +17,32 @@
         }
         .Head-Part{
             width: 100%;
-            display: flex; align-items: center;
-            justify-content: center; column-gap: 145px; color: antiquewhite;
-            font-size: 25px; background-color: black;
+            display: flex; 
+            align-items: center;
+            justify-content: center; 
+            column-gap: 145px; 
+            color: antiquewhite;
+            font-size: 30px;
+            background-color: black;
+        }
+        .Header-Image-Frame{
+            display: flex;
+            align-items: center;
         }
         .Head-Part img{
-            width:130px;
-            height: 100px;
+            width: 60%;
+            height: 90%;
+            /*border-style: solid;*/
+            /*border-width: 1px;*/
         }
         .Main-Message-Body{
             display: flex; 
             flex-direction: column; 
             align-items: center;
             justify-content: center; 
-            background-color: cornsilk; height: 70vh; width: 42vw;
+            background-color: cornsilk; 
+            height: 70vh;
+            width: 100%;
             font-family: 'Arial Nova',serif;
         }
         .Account-Activation-Header-Frame{
@@ -38,19 +50,21 @@
             align-items: center;
             font-size: 30px;
             justify-content: flex-start;
-            width: 41vw;
+            width: 97%;
             color: chocolate;
         }
-        .Main-Message-Body h1{
+        .Main-Message-Body td{
             font-size: 20px;
-            width: 41vw;
+            width: 97%;
             text-align: start
         }
         .Main-Message-Body-Inner-Frame{
-            width: 41vw; display: flex;
+            width: 97%;
+            display: flex;
             flex-direction: column;
             align-items: flex-start;
-            row-gap: 0; justify-content: center;
+            row-gap: 0; 
+            justify-content: center;
         }
         .OTP-Tag{
             display: flex;
@@ -58,7 +72,7 @@
             justify-content: flex-start;
             column-gap: 40px;
             font-size: 20px;
-            width: 41vw;
+            width: 97%;
             text-align: start
         }
         .Main-Message-Body-Inner-Frame p{
@@ -88,14 +102,14 @@
         }
         .Footer-Frame{
             background-color: #000000;
-            width: 42vw;
+            width: 100%;
             display: flex; flex-direction: column;
             align-items: center;
             justify-content: center;
         }
         .Contact-Frame{
             display: flex;
-            width: 41vw;
+            width: 97%;
             flex-direction: column;
             align-items: flex-start;
             justify-content: center;
@@ -107,17 +121,23 @@
             font-size: 20px;
         }
         .Social_Media_Handles-Frame {
+            display: flex;
+            align-items: flex-start;
+            column-gap: 20px;
+            justify-content: flex-start;
             width: 97%;
         }
         .Social_Media_Handles-Frame button{
+            height: 45px;
+            width: 55px;
             cursor: pointer;
             background: none;
             border: none;
         }
         .Social_Media_Handles-Frame img {
             color: white;
-            height: 35px;
-            width: 35px;
+            height: 100%;
+            width: 100%;
         }
 
     </style>
@@ -128,18 +148,20 @@
     </script>
 </head>
 <body >
-<div class="Inner-Frame">
-    <div class="Head-Part">
-        <img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703337350/cloudinary_images/bola_air/static_assets/logo-no-background_1_oo7qni.png" alt="Logo"/>
-        <p>Fly Anywhere You Want</p>
-    </div>
+<table class="Inner-Frame">
+    <tr class="Head-Part">
+        <td class="Header-Image-Frame">
+            <img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703337350/cloudinary_images/bola_air/static_assets/logo-no-background_1_oo7qni.png" alt="Logo"/>
+        </td>
+        <td>Fly Anywhere You Want</td>
+    </tr>
     
-    <div class="Main-Message-Body">
-        <div class="Account-Activation-Header-Frame">
+    <tr class="Main-Message-Body">
+        <td class="Account-Activation-Header-Frame">
             <h1>Activate Your Account</h1>
-        </div>
-        <h1 th:text="Hi ${firstName}">Hi ${firstName}</h1>
-        <div class="Main-Message-Body-Inner-Frame">
+        </td>
+        <td th:text="'Hi '+ ${firstName}">Hi ${firstName}</td>
+        <td class="Main-Message-Body-Inner-Frame">
             <p>
                 Welcome To Bola-Air, We Are Very Pleased To Have You<br/>
                 Your Account Was Successfully Created, But You Need To Activate The Account.
@@ -152,16 +174,16 @@
                 <button onclick={copyOTP('${code}')} >Copy OTP</button>
             </p>
             <h3 >Please Do Not Share This Code With Anyone</h3>
-        </div>
-    </div>
-    <div class="Footer-Frame">
-        <div class="Contact-Frame">
+        </td>
+    </tr>
+    <tr class="Footer-Frame">
+        <td class="Contact-Frame">
             <p >For More Information: </p>
             <p >Email Bola at <a href="mailto:alaabdulmalik03@gmailcom">alaabdulmalik03@gmailcom</a> or</p>
-            <p > Message Bola On Whatsapp <a href="">at 07036174617</a></p>
+            <p > Message Bola On Whatsapp <a href="https://wa.me/2347036174617">at 07036174617</a></p>
             <p >Our Social Media Handles Are Below</p>
-        </div>
-        <div class="Social_Media_Handles-Frame">
+        </td>
+        <td class="Social_Media_Handles-Frame">
             <a href="https://www.instagram.com/blaq_mhee/">
                 <button >
                     <img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703335728/cloudinary_images/bola_air/static_assets/instagram_x4vtkb.png" alt="instagram image">
@@ -182,8 +204,8 @@
                     <img src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703335729/cloudinary_images/bola_air/static_assets/linkedin_dipapn.png" alt="linkedIn image">
                 </button>
             </a>
-        </div>
-    </div>
-</div>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

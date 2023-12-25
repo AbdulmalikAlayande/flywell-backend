@@ -33,7 +33,7 @@ public class BolaAir_CustomerController {
 		try {
 			response = customerService.registerNewCustomer(customerRequest);
 			ApiResponse<CustomerResponse> apiResponse = new ApiResponse<>();
-			apiResponse.setData(response);
+			apiResponse.setResponseData(response);
 			apiResponse.setSuccessful(HttpStatus.CREATED.is2xxSuccessful());
 			apiResponse.setStatusCode(HttpStatus.CREATED.value());
 			System.out.println(apiResponse);
@@ -43,7 +43,7 @@ public class BolaAir_CustomerController {
 			log.info("Error:: ", exception);
 			response.setMessage(exception.getMessage());
 			ApiResponse<CustomerResponse> apiResponse= new ApiResponse<>();
-			apiResponse.setData(response);
+			apiResponse.setResponseData(response);
 			apiResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
 			apiResponse.setSuccessful(HttpStatus.BAD_REQUEST.is4xxClientError());
 			System.out.println(apiResponse);
@@ -57,7 +57,7 @@ public class BolaAir_CustomerController {
 		try {
 			ApiResponse<CustomerResponse> apiResponse = new ApiResponse<>();
 			customerResponse = customerService.activateCustomerAccount(TOTP);
-			apiResponse.setData(customerResponse);
+			apiResponse.setResponseData(customerResponse);
 			apiResponse.setSuccessful(HttpStatus.CREATED.is2xxSuccessful());
 			apiResponse.setStatusCode(HttpStatus.CREATED.value());
 			System.out.println("api response at activate account =="+apiResponse);
@@ -65,7 +65,7 @@ public class BolaAir_CustomerController {
 		} catch (InvalidRequestException e) {
 			ApiResponse<String> apiResponse = new ApiResponse<>();
 			apiResponse.setSuccessful(false);
-			apiResponse.setData(e.getMessage());
+			apiResponse.setResponseData(e.getMessage());
 			apiResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
 			return apiResponse;
 		}
@@ -76,7 +76,7 @@ public class BolaAir_CustomerController {
 		try {
 			LoginResponse loginResponse = customerService.login(loginRequest);
 			ApiResponse<LoginResponse> response = new ApiResponse<>();
-			response.setData(loginResponse);
+			response.setResponseData(loginResponse);
 			response.setSuccessful(HttpStatus.OK.is2xxSuccessful());
 			response.setStatusCode(HttpStatus.OK.value());
 			return new ResponseEntity<>(response, HttpStatus.OK);

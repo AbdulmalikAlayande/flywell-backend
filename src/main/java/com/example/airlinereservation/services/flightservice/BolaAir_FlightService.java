@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +44,7 @@ public class BolaAir_FlightService implements FlightService{
 			mappedFlight.setArrivalAirport(savedArrivalAirport);
 			mappedFlight.setDepartureAirport(savedDepartureAirport);
 			mappedFlight.setAirline(BOLA_AIR);
+			mappedFlight.setFlightInstances(new ArrayList<>());
 			mappedFlight.setEstimatedFlightDurationInMinutes(flightRequest.getEstimatedFlightDurationInMinutes());
 			
 			Flight savedFlight = flightRepository.save(mappedFlight);

@@ -5,9 +5,9 @@ import com.example.airlinereservation.data.model.flight.Flight;
 import com.example.airlinereservation.data.model.flight.FlightInstance;
 import com.example.airlinereservation.data.repositories.FlightInstanceRepository;
 import com.example.airlinereservation.data.repositories.FlightRepository;
-import com.example.airlinereservation.dtos.Request.AirportRequest;
 import com.example.airlinereservation.dtos.Request.CreateFlightInstanceRequest;
 import com.example.airlinereservation.dtos.Response.FlightInstanceResponse;
+import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -30,16 +30,29 @@ public class BolaAir_FlightInstanceService implements FlightInstanceService{
 	
 	@Override
 	public FlightInstanceResponse createNewInstance(CreateFlightInstanceRequest request){
+		checkIfAFlightStillExists(request);
 		Optional<Flight> foundFlight = flightRepository.findByArrivalCityAndDepartureCity(request.getArrivalCity(), request.getDepartureCity());
-		FlightInstance flights = foundFlight.map(flight -> {
-			FlightInstance mappedFlight = mapper.map(request, FlightInstance.class);
-			mappedFlight.setFlight(flight);
-			mappedFlight.setStatus(SCHEDULED);
-			mappedFlight.setFlightSeat(new ArrayList<>());
-			return mappedFlight;
+		FlightInstance savedFlight = foundFlight.map(flight -> {
+			FlightInstance mappedFlightInstance = mapper.map(request, FlightInstance.class);
+			mappedFlightInstance.setFlight(flight);
+			mappedFlightInstance.setStatus(SCHEDULED);
+			mappedFlightInstance.setFlightSeat(new ArrayList<>());
+			FlightInstance savedInstance = flightInstanceRepository.save(mappedFlightInstance);
+			flight.getFlightInstances().add(savedInstance);
+			flightRepository.save(flight);
+			return savedInstance;
 		}).orElseThrow();
-		FlightInstance savedFlight = flightInstanceRepository.save(flights);
 		return flightInstanceResponse(savedFlight);
+	}
+	
+	private void checkIfAFlightStillExists(CreateFlightInstanceRequest request) {
+		List<FlightInstance> foundInstances = flightInstanceRepository.findAvailableInstances(
+																		SCHEDULED,
+																		request.getArrivalDate(),
+																		request.getDepartureDate()
+																	);
+//		foundInstances.f
+		
 	}
 	
 	private FlightInstance performSeparationTechnique(List<FlightInstance> enRouteInstances, FlightInstance mappedFlight) {
@@ -78,3 +91,8 @@ public class BolaAir_FlightInstanceService implements FlightInstanceService{
 		return new ArrayList<>();
 	}
 }
+/*  TODO: 12/24/2023
+     |==|)) If a flight instance still exist and it is neither filled nor en-route yet
+     don't create a new one, meaning by arrival and departure location, by date and time
+     |==|)) If a flight instance is to be created let it be spaced by at least 5hrs
+*/

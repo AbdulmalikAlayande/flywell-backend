@@ -3,7 +3,6 @@ package com.example.airlinereservation.services.userservice;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Uploader;
 import com.cloudinary.utils.ObjectUtils;
-import com.example.airlinereservation.config.CloudConfig;
 import com.example.airlinereservation.dtos.Response.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class Bola_Air_CloudService implements CloudService{
 					"secure", true
 			));
 			ApiResponse<String> response = new ApiResponse<>();
-			response.setData(uploadResponse.get("url").toString());
+			response.setResponseData(uploadResponse.get("url").toString());
 			System.out.println(response);
 			return response;
 		}catch (Throwable exception){

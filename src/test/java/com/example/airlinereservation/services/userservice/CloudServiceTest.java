@@ -27,7 +27,7 @@ public class CloudServiceTest {
 			MultipartFile multipartFile = new MockMultipartFile("test image", inputStream);
 			ApiResponse<?> response =  cloudService.uploadFile(multipartFile);
 			assertNotNull(response);
-			assertThat(response.getData()).isNotNull();
+			assertThat(response.getResponseData()).isNotNull();
 		}
 		catch (IOException exception){
 			throw new RuntimeException(exception);

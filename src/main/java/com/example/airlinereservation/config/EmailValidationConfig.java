@@ -71,7 +71,7 @@ public class EmailValidationConfig {
 	}
 @Bean
 	public Context context() {
-		return new Context();
+	return new Context();
 	}
 	
 	@Bean

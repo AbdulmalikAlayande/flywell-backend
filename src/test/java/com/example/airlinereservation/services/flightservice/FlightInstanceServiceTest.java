@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigInteger;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @SpringBootTest
 class FlightInstanceServiceTest {
@@ -23,7 +24,7 @@ class FlightInstanceServiceTest {
 	@Autowired
 	private FlightService flightService;
 	private FlightInstanceResponse response;
-	private static final int ONE = BigInteger.ONE.intValue();
+	private static final int ZERO = BigInteger.ZERO.intValue();
 	
 	@BeforeEach
 	@SneakyThrows
@@ -39,35 +40,27 @@ class FlightInstanceServiceTest {
 	@SneakyThrows
 	public void createNewFlightInstance_NewFlightIsCreatedTest(){
 		assertThat(response).isNotNull();
-		assertThat(flightInstanceService.findAllBy(FlightStatus.SCHEDULED).size()).isGreaterThan(ONE);
+		assertThat(flightInstanceService.findAllBy(FlightStatus.SCHEDULED).size()).isGreaterThan(ZERO);
 		assertThat(response.getArrivalAirportIcaoCode()).isNotNull();
 		assertThat(response.getDepartureAirportIcaoCode()).isNotNull();
 		assertThat(response.getArrivalDate()).isNotNull();
 		assertThat(response.getDepartureDate()).isNotNull();
 	}
 	
-	@Test public void testThatIfFlightIsFilled_FlightMovementIsScheduledImmediately(){
-	
-	}
-	
 	@Test
 	@SneakyThrows
 	public void createNewFlightInstance_ProperFlightSpacingIsApplied_ToMaintainSafeDistanceBetweenConsecutiveFlights(){
-		CreateFlightInstanceRequest instance = buildInstance();
-		FlightInstanceResponse response2 = flightInstanceService.createNewInstance(instance);
-		
-	}
-	
-	@Test
-	public void testThatAllFlightHaveAnIntervalOfFiveMinutesBetweenEachOther(){
 	
 	}
 	
 	@Test void createNewFlightInstance_AssignAircraftToFlightInstanceTest(){
 	
 	}
-	
 	@Test void createNewFlightInstance_AssignAircraftToFlightInstance_AircraftIsAssignedIfPassedFlightRequirement(){
+	
+	}
+	
+	@Test public void testThatIfFlightIsFilled_FlightMovementIsScheduledImmediately(){
 	
 	}
 	

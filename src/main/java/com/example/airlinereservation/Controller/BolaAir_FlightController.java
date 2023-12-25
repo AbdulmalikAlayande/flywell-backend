@@ -23,14 +23,14 @@ public class BolaAir_FlightController {
 		try {
 			ApiResponse<FlightResponse> apiResponse = new ApiResponse<>();
 			FlightResponse response = flightService.addFlight(flightRequest);
-			apiResponse.setData(response);
+			apiResponse.setResponseData(response);
 			apiResponse.setSuccessful(HttpStatus.CREATED.is2xxSuccessful());
 			apiResponse.setStatusCode(HttpStatus.CREATED.value());
 			return apiResponse;
 		} catch (InvalidRequestException exception) {
 			ApiResponse<String> apiResponse = new ApiResponse<>();
 			apiResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
-			apiResponse.setData(exception.getMessage());
+			apiResponse.setResponseData(exception.getMessage());
 			apiResponse.setSuccessful(HttpStatus.BAD_REQUEST.is4xxClientError());
 			return apiResponse;
 		}

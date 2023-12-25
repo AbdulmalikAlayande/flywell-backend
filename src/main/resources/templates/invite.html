@@ -117,7 +117,7 @@
                     <span th:text="${code}">${code}</span>
                     <button th:attr="onclick=|copyOtp('${code}')|">Copy Code</button>
                 </p>
-                <a href="http://localhost:3000/admin-signup">
+                <a th:href="${adminSignUpUrl}">
                     <button>Accept Invite</button>
                 </a>
                 <p>Note: You Will Always Need The Admin Code To Sign In, Any Time Your Account Is Logged Out</p>

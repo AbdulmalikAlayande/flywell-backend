@@ -8,6 +8,7 @@ import lombok.*;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.EAGER;
 
 @Data
 @AllArgsConstructor
@@ -29,6 +30,6 @@ public class Flight {
 	private Airport departureAirport;
 	@OneToOne(cascade = ALL)
 	private Airport arrivalAirport;
-	@OneToMany(cascade = ALL)
+	@OneToMany(cascade = ALL, fetch = EAGER)
 	private List<FlightInstance> flightInstances;
 }

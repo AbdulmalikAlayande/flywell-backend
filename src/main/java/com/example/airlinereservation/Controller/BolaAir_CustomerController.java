@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.example.airlinereservation.utils.Constants.ERROR_MESSAGE;
 
 @RestController
@@ -83,6 +85,26 @@ public class BolaAir_CustomerController {
 		} catch (LoginFailedException e) {
 			LoginResponse loginResponse = new LoginResponse();
 			return null;
+		}
+	}
+	
+	@GetMapping("all-customers/")
+	public ApiResponse<?> getAllCustomers(){
+		try{
+			List<CustomerResponse> foundCustomers = customerService.getAllCustomers();
+			ApiResponse<List<CustomerResponse>> apiResponse = new ApiResponse<>();
+			apiResponse.setResponseData(foundCustomers);
+			apiResponse.setSuccessful(HttpStatus.FOUND.is2xxSuccessful());
+			apiResponse.setStatusCode(HttpStatus.FOUND.value());
+			System.out.println("api response at get all customers try ==> "+ apiResponse);
+			return apiResponse;
+		}catch (Throwable exception){
+			ApiResponse<String> apiResponse = new ApiResponse<>();
+			apiResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+			apiResponse.setSuccessful(HttpStatus.NOT_FOUND.is4xxClientError());
+			apiResponse.setResponseData(exception.getMessage());
+			System.out.println("api response at get all customers try ==> "+ apiResponse);
+			return apiResponse;
 		}
 	}
 }

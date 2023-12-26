@@ -233,17 +233,16 @@ public class BolaAirCustomerService implements CustomerService {
 	
 	@Override
 	public List<CustomerResponse> getAllCustomers() {
-		List<CustomerResponse> responses = new ArrayList<>();
 		List<Customer> allCustomers = customerRepository.findAll();
-		allCustomers.forEach(passenger -> {
+		return new ArrayList<>(allCustomers.stream().map(passenger -> {
 			CustomerResponse response = new CustomerResponse();
 			mapper.map(passenger.getBioData(), response);
-			responses.add(response);
-		});
-		return responses;
+			return response;
+		}).toList());
 	}
 	
-	@Override public Optional<CustomerResponse> findCustomerByEmailAndPassword(String email, String password) {
+	@Override
+	public Optional<CustomerResponse> findCustomerByEmailAndPassword(String email, String password) {
 		Optional<UserBioData> foundBio = userBioDataRepository.findByEmailAndPassword(email, password);
 		CustomerResponse response = new CustomerResponse();
 		foundBio.ifPresent(bioData -> {

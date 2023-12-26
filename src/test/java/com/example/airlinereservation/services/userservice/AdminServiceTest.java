@@ -36,7 +36,7 @@ class AdminServiceTest {
 		createAdminRequest = new CreateAdminRequest();
 		createAdminResponse = new CreateAdminResponse();
 		AdminInvitationRequest invitationRequest = new AdminInvitationRequest();
-		invitationRequest.setAdminEmail("alaabdulmalik03@gmail.com");
+		invitationRequest.setEmail("alaabdulmalik03@gmail.com");
 		response = adminService.inviteAdmin(invitationRequest);
 	}
 	
@@ -51,7 +51,7 @@ class AdminServiceTest {
 	
 	@Test void testThatBeforeInvitation_AdminEmailMustBeCorrect(){
 		AdminInvitationRequest invitationRequest = new AdminInvitationRequest();
-		invitationRequest.setAdminEmail("alaabdulmalik03@m");
+		invitationRequest.setEmail("alaabdulmalik03@m");
 		assertThatThrownBy(()-> response = adminService.inviteAdmin(invitationRequest)).isInstanceOf(FieldInvalidException.class)
 																					   .hasMessageContaining(INVALID_EMAIL_FORMAT);
 	}

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class AdminInvitationRequest {
 	
-	private String adminEmail;
-	private String adminPhoneNumber;
+	private String email;
+	private String phoneNumber;
 	private String notificationPreference;
 }

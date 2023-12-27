@@ -37,7 +37,7 @@ public class BolaAirAdminController {
 			return apiResponse;
 		} catch (InvalidRequestException | EmptyFieldException | FieldInvalidException exception) {
 			ApiResponse<String> apiResponse = new ApiResponse<>();
-			apiResponse.setResponseData("An Error Occurred"+exception.getMessage());
+			apiResponse.setResponseData("An Error Occurred "+exception.getMessage());
 			apiResponse.setSuccessful(false);
 			apiResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
 			return apiResponse;

@@ -10,6 +10,7 @@ import com.example.airlinereservation.exceptions.FailedRegistrationException;
 import com.example.airlinereservation.exceptions.FieldInvalidException;
 import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.services.userservice.AdminService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class BolaAirAdminController {
 	private AdminService adminService;
 	
 	@PostMapping("invite-admin/")
-	public ApiResponse<?> inviteAdmin(@RequestBody AdminInvitationRequest invitationRequest){
+	public ApiResponse<?> inviteAdmin(@Valid @RequestBody AdminInvitationRequest invitationRequest){
 		try {
 			ApiResponse<AdminInvitationResponse> apiResponse = new ApiResponse<>();
 			AdminInvitationResponse invitationResponse = adminService.inviteAdmin(invitationRequest);
@@ -45,7 +46,7 @@ public class BolaAirAdminController {
 	}
 	
 	@PostMapping("create-admin-account/")
-	public ApiResponse<?> createAdminAccount(@RequestBody CreateAdminRequest createAdminRequest){
+	public ApiResponse<?> createAdminAccount(@Valid @RequestBody CreateAdminRequest createAdminRequest){
 		try {
 			ApiResponse<CreateAdminResponse> apiResponse = new ApiResponse<>();
 			CreateAdminResponse response = adminService.createAdminAccount(createAdminRequest);

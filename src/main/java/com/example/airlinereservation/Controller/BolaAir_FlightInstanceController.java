@@ -6,6 +6,7 @@ import com.example.airlinereservation.dtos.Response.ApiResponse;
 import com.example.airlinereservation.dtos.Response.FlightInstanceResponse;
 import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.services.flightservice.FlightInstanceService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class BolaAir_FlightInstanceController {
 	}
 	
 	@PostMapping("create-new-flight-instance")
-	public ApiResponse<?> createNewInstance(@RequestBody CreateFlightInstanceRequest instanceRequest){
+	public ApiResponse<?> createNewInstance(@Valid @RequestBody CreateFlightInstanceRequest instanceRequest){
 		try {
 			ApiResponse<FlightInstanceResponse> apiResponse = new ApiResponse<>();
 			FlightInstanceResponse response = flightInstanceService.createNewInstance(instanceRequest);

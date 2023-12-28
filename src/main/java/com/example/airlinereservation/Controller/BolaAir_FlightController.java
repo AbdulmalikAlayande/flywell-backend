@@ -5,6 +5,7 @@ import com.example.airlinereservation.dtos.Response.ApiResponse;
 import com.example.airlinereservation.dtos.Response.FlightResponse;
 import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.services.flightservice.FlightService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +14,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("bola-air/")
 @CrossOrigin("*")
 @AllArgsConstructor
+
 public class BolaAir_FlightController {
 	
 	private final FlightService flightService;
 	
 	@PostMapping(value = "add-flight/")
-	public ApiResponse<?> addNewFlight(@RequestBody FlightRequest flightRequest){
+	public ApiResponse<?> addNewFlight(@Valid @RequestBody FlightRequest flightRequest){
 	
 		try {
 			ApiResponse<FlightResponse> apiResponse = new ApiResponse<>();

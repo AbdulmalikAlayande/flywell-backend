@@ -10,6 +10,7 @@ import com.example.airlinereservation.exceptions.InvalidRequestException;
 import com.example.airlinereservation.services.userservice.CustomerService;
 import com.example.airlinereservation.exceptions.FailedRegistrationException;
 import com.example.airlinereservation.exceptions.LoginFailedException;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class BolaAir_CustomerController {
 	private CustomerService customerService;
 	
 	@PostMapping("register-customer/")
-	public ApiResponse<?> registerCustomer(@RequestBody CustomerRequest customerRequest){
+	public ApiResponse<?> registerCustomer(@Valid @RequestBody CustomerRequest customerRequest){
 		CustomerResponse response = new CustomerResponse();
 		try {
 			response = customerService.registerNewCustomer(customerRequest);

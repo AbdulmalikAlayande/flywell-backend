@@ -80,7 +80,6 @@ public class BolaAirCustomerService implements CustomerService {
 						       .lastName(bioData.getLastName())
 						       .phoneNumber(bioData.getPhoneNumber())
 						       .email(bioData.getEmail())
-						       .userName(bioData.getUserName())
 						       .build();
 	}
 	
@@ -124,7 +123,7 @@ public class BolaAirCustomerService implements CustomerService {
 		return userBio.map(userBioData -> {
 				   modelMapper.map(updateRequest, userBioData);
 				   if (updateRequest.getNewUserName() != null){
-					   userBioData.setUserName(updateRequest.getNewUserName());
+					   System.out.println("p");
 				   }
 				   Optional<Customer> foundCustomer = customerRepository.findByBioData(userBioData);
 				   foundCustomer.ifPresent(passenger -> {
@@ -178,10 +177,10 @@ public class BolaAirCustomerService implements CustomerService {
 			Optional<Customer> foundCustomer = customerRepository.findByBioData(foundBio.get());
 			Optional<LoginResponse> optionalResponse = foundCustomer.map(passenger -> {
 				if (passenger.isLoggedIn())
-					return loginResponse(SESSION_NOT_EXHAUSTED_MESSAGE, foundBio.get().getUserName());
+					return loginResponse(SESSION_NOT_EXHAUSTED_MESSAGE, "");
 				passenger.setLastLoggedIn(LocalDate.now());
 				passenger.setLoggedIn(true);
-				return loginResponse(LOGIN_SUCCESS_MESSAGE, foundBio.get().getUserName());
+				return loginResponse(LOGIN_SUCCESS_MESSAGE, "");
 			});
 			if (optionalResponse.isPresent())
 				loginResponse.set(optionalResponse.get());

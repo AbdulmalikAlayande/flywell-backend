@@ -1,11 +1,10 @@
 package com.example.airlinereservation.data.model.persons;
 
+import com.example.airlinereservation.validator.EmailPattern;
 import com.example.airlinereservation.data.model.enums.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +13,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 import java.util.List;
 
@@ -46,6 +44,7 @@ public class UserBioData {
 	@Column(unique = true, nullable = false)
 	@NaturalId(mutable = true)
 	@Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Invalid Email: Email Must Match The Format Specified")
+	@EmailPattern
 	private String email;
 	@Valid
 	@NotBlank(message = "This Field Cannot Be Empty Or Blank")

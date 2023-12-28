@@ -1,4 +1,4 @@
-package com.example.airlinereservation.data.model.annotations;
+package com.example.airlinereservation.validator;
 
 import com.example.airlinereservation.exceptions.Exceptions;
 import com.example.airlinereservation.exceptions.InvalidRequestException;

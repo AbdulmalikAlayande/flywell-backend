@@ -1,7 +1,7 @@
 package com.example.airlinereservation.dtos.Request;
 
-import com.example.airlinereservation.data.model.annotations.EmailDomainValidator;
-import com.example.airlinereservation.data.model.annotations.EmailPattern;
+import com.example.airlinereservation.validator.EmailDomainValidator;
+import com.example.airlinereservation.validator.EmailPattern;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.*;

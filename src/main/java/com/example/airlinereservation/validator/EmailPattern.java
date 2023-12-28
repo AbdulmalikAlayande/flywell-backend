@@ -1,4 +1,4 @@
-package com.example.airlinereservation.data.model.annotations;
+package com.example.airlinereservation.validator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

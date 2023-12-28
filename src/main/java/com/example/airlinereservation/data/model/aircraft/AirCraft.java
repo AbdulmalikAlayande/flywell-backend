@@ -23,6 +23,7 @@ public class AirCraft {
 	@Id
 	private String id;
 	@Column(unique = true, nullable = false)
+	@Builder.Default
 	private UUID hangerId = UUID.randomUUID();
 	private String airCraftName;
 	private String model;

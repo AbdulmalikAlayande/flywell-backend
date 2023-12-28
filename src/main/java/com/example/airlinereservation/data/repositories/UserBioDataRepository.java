@@ -7,8 +7,6 @@ import java.util.Optional;
 
 public interface UserBioDataRepository extends JpaRepository<UserBioData, String> {
 	
-	void deleteByUserName(String userName);
-	Optional<UserBioData> findByUserName(String userName);
 	
 	Optional<UserBioData> findByEmailAndPassword(String email, String password);
 	

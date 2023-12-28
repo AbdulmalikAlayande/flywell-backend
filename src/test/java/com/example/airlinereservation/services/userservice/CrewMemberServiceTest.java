@@ -77,8 +77,6 @@ class CrewMemberServiceTest {
         crewMemberService.createCrewMember(createCrewMemberRequest);
         Optional<CrewMember> foundCrewMember = crewMemberService.findCrewMemberByUserName(createCrewMemberRequest.getUserName());
         assertThat(foundCrewMember).isPresent();
-        assertThat(foundCrewMember.get().getBioData().getUserName()).isEqualTo(createCrewMemberRequest.getUserName());
-
     }
 
     @SneakyThrows
@@ -92,7 +90,6 @@ class CrewMemberServiceTest {
         Optional<CrewMember> foundCrewMember = crewMemberService.findCrewMemberByUserName(createCrewMemberRequest.getUserName());
         assertThat(foundCrewMember).isPresent().isPresent();
         foundCrewMember.ifPresent(crewMember -> {
-            assertThat(crewMember.getBioData().getUserName()).isEqualTo(updateRequest.getNewUserName());
             assertThat(crewMember.getBioData().getEmail()).isEqualTo(updateRequest.getEmail());
         });
 

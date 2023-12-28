@@ -2,6 +2,7 @@ package com.example.airlinereservation.data.model.persons;
 
 import com.example.airlinereservation.data.model.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import java.util.Objects;
 import java.util.UUID;
@@ -21,6 +22,7 @@ public class CrewMember extends Person{
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	@Column(unique = true, nullable = false)
+	@Builder.Default
 	private UUID departmentId = UUID.randomUUID();
 	@OneToOne
 	private UserBioData bioData;

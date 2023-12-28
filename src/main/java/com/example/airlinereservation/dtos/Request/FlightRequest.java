@@ -10,9 +10,6 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class FlightRequest {
 	
-	@NonNull
-	@NotBlank
-	private Long flightNumber;
 	@NotBlank
 	private long estimatedFlightDurationInMinutes;
 	@NonNull

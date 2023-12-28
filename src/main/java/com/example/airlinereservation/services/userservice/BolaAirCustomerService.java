@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.example.airlinereservation.data.model.enums.Role.USER;
 import static com.example.airlinereservation.exceptions.Exceptions.*;
@@ -80,7 +78,6 @@ public class BolaAirCustomerService implements CustomerService {
 						       .lastName(bioData.getLastName())
 						       .phoneNumber(bioData.getPhoneNumber())
 						       .email(bioData.getEmail())
-						       .userName(bioData.getUserName())
 						       .build();
 	}
 	
@@ -109,111 +106,19 @@ public class BolaAirCustomerService implements CustomerService {
 		validator.validatePassword(password);
 	}
 	
-	private boolean userDoesNotExistBy(String userName) {
-		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
-		return foundBio.filter(userBioData ->
-				       customerRepository.existsByBioData(userBioData)).isEmpty();
-	}
-	
 	@Override
 	public CustomerResponse updateDetailsOfRegisteredCustomer(@NotNull UpdateRequest updateRequest) {
 		CustomerResponse response = new CustomerResponse();
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setSkipNullEnabled(true);
-		Optional<UserBioData> userBio = userBioDataRepository.findByUserName(updateRequest.getUserName());
-		return userBio.map(userBioData -> {
-				   modelMapper.map(updateRequest, userBioData);
-				   if (updateRequest.getNewUserName() != null){
-					   userBioData.setUserName(updateRequest.getNewUserName());
-				   }
-				   Optional<Customer> foundCustomer = customerRepository.findByBioData(userBioData);
-				   foundCustomer.ifPresent(passenger -> {
-					   passenger.setBioData(userBioData);
-					   customerRepository.save(passenger);
-				   });
-				   modelMapper.map(userBioData, response);
-				   return response;
-		}).orElseThrow(()-> {
-			try {
-				return throwInvalidRequestException(UPDATE_NOT_COMPLETED);
-			} catch (InvalidRequestException e) {
-				throw new RuntimeException(e);
-			}
-		});
-		
+		return response;
 	}
 	
 	@Override
-	public LoginResponse login(LoginRequest loginRequest) throws LoginFailedException {
-		validateLoginCredentialsIntegrity(loginRequest);
-		checkIfUserExists(loginRequest);
-		if (loginRequest.getUsername() == null)
-			return logInViaEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
-		return loginViaUsernameAndPassword(loginRequest.getUsername());
+	public LoginResponse login(LoginRequest loginRequest) {
+	    return new LoginResponse();
 	}
-	
-	private @NotNull LoginResponse loginViaUsernameAndPassword(String username) throws LoginFailedException {
-		Optional<UserBioData> foundUser = userBioDataRepository.findByUserName(username);
-		AtomicReference<LoginResponse> response = new AtomicReference<>();
-		Optional<LoginResponse> optionalResponse = foundUser.map(bioData -> {
-			Optional<Customer> foundCustomer = customerRepository.findByBioData(bioData);
-			foundCustomer.ifPresent(passenger -> {
-				if (passenger.isLoggedIn())
-					response.set(loginResponse(SESSION_NOT_EXHAUSTED_MESSAGE, username));
-				passenger.setLastLoggedIn(LocalDate.now());
-				passenger.setLoggedIn(true);
-				response.set(loginResponse(LOGIN_SUCCESS_MESSAGE, username));
-			});
-			return response.get();
-		});
-		if (optionalResponse.isPresent())
-			return optionalResponse.get();
-		throw new LoginFailedException(LOGIN_FAILURE_MESSAGE);
-	}
-	
-	private LoginResponse logInViaEmailAndPassword(String email, String password) throws LoginFailedException {
-		Optional<UserBioData> foundBio = userBioDataRepository.findByEmailAndPassword(email, password);
-		AtomicReference<LoginResponse> loginResponse = new AtomicReference<>();
-		if (foundBio.isPresent()){
-			Optional<Customer> foundCustomer = customerRepository.findByBioData(foundBio.get());
-			Optional<LoginResponse> optionalResponse = foundCustomer.map(passenger -> {
-				if (passenger.isLoggedIn())
-					return loginResponse(SESSION_NOT_EXHAUSTED_MESSAGE, foundBio.get().getUserName());
-				passenger.setLastLoggedIn(LocalDate.now());
-				passenger.setLoggedIn(true);
-				return loginResponse(LOGIN_SUCCESS_MESSAGE, foundBio.get().getUserName());
-			});
-			if (optionalResponse.isPresent())
-				loginResponse.set(optionalResponse.get());
-			else throw new LoginFailedException(LOGIN_FAILURE_MESSAGE);
-		}
-		return loginResponse.get();
-	}
-	
-	private void validateLoginCredentialsIntegrity(@NotNull LoginRequest loginRequest) throws LoginFailedException {
-		if (loginRequest.getUsername() == null && loginRequest.getEmail() == null)
-			throw new LoginFailedException(INCORRECT_FORMAT_LOGIN_FAILURE_MESSAGE);
-		else if (loginRequest.getPassword() == null) {
-			throw new LoginFailedException(INCORRECT_FORMAT_LOGIN_FAILURE_MESSAGE);
-		}
-	}
-	
-	private void checkIfUserExists(@NotNull LoginRequest loginRequest) throws LoginFailedException {
-		boolean userDoesNotExistsByUsername = userDoesNotExistBy(loginRequest.getUsername());
-		boolean userDoesNotExistsByEmailAndPassword = userDoesNotExistBy(loginRequest.getEmail(), loginRequest.getPassword());
-		if (userDoesNotExistsByEmailAndPassword && userDoesNotExistsByUsername)
-			throw new LoginFailedException(LOGIN_FAILURE_MESSAGE);
-	}
-	
-	private LoginResponse loginResponse(String message, String username) {
-		return LoginResponse.builder().message(message).username(username).build();
-	}
-	
-	private boolean userDoesNotExistBy(String email, String password) {
-		Optional<CustomerResponse> response = findCustomerByEmailAndPassword(email, password);
-		return response.isEmpty();
-	}
-	
+
 	@Override public Optional<CustomerResponse> findCustomerById(String passengerId) {
 		CustomerResponse response = new CustomerResponse();
 		Optional<Customer> foundCustomer = customerRepository.findById(passengerId);
@@ -233,17 +138,16 @@ public class BolaAirCustomerService implements CustomerService {
 	
 	@Override
 	public List<CustomerResponse> getAllCustomers() {
-		List<CustomerResponse> responses = new ArrayList<>();
 		List<Customer> allCustomers = customerRepository.findAll();
-		allCustomers.forEach(passenger -> {
+		return new ArrayList<>(allCustomers.stream().map(passenger -> {
 			CustomerResponse response = new CustomerResponse();
 			mapper.map(passenger.getBioData(), response);
-			responses.add(response);
-		});
-		return responses;
+			return response;
+		}).toList());
 	}
 	
-	@Override public Optional<CustomerResponse> findCustomerByEmailAndPassword(String email, String password) {
+	@Override
+	public Optional<CustomerResponse> findCustomerByEmailAndPassword(String email, String password) {
 		Optional<UserBioData> foundBio = userBioDataRepository.findByEmailAndPassword(email, password);
 		CustomerResponse response = new CustomerResponse();
 		foundBio.ifPresent(bioData -> {
@@ -253,41 +157,12 @@ public class BolaAirCustomerService implements CustomerService {
 		return Optional.of(response);
 	}
 	
-	@Override public Optional<CustomerResponse> findCustomerByUserName(String userName) throws InvalidRequestException {
-		CustomerResponse passengerResponse = new CustomerResponse();
-		AtomicReference<CustomerResponse> response = new AtomicReference<>();
-		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
-		Optional<CustomerResponse> optionalPassengerResponse = foundBio.map(userBioData -> {
-			Optional<Customer> foundCustomer = customerRepository.findByBioData(userBioData);
-			foundCustomer.ifPresent(passenger -> {
-				mapper.map(userBioData, passengerResponse);
-				response.set(passengerResponse);
-			});
-			return response.get();
-		});
-		if (optionalPassengerResponse.isPresent())
-			return optionalPassengerResponse;
-		throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "User", "username",userName));
+	@Override public Optional<CustomerResponse> findCustomerByUserName(String userName) {
+		return Optional.of(new CustomerResponse());
 	}
 	
 	@Override public long getCountOfCustomers() {
 		return customerRepository.count();
-	}
-	
-	@Override public boolean removeCustomerByUserName(String userName) throws InvalidRequestException {
-		Optional<UserBioData> foundBio = userBioDataRepository.findByUserName(userName);
-		Optional<Boolean> optionalBooleanIsDeleted = foundBio.map(userBioData -> {
-			Optional<Customer> foundCustomer = customerRepository.findByBioData(userBioData);
-			if (foundCustomer.isPresent()) {
-				customerRepository.deleteByBioData(userBioData);
-				return true;
-			}
-			return false;
-		});
-		if (optionalBooleanIsDeleted.isPresent()){
-			return optionalBooleanIsDeleted.get();
-		}
-		else throw new InvalidRequestException(String.format(INVALID_REQUEST_MESSAGE, "User", "username", userName));
 	}
 	
 	@Override

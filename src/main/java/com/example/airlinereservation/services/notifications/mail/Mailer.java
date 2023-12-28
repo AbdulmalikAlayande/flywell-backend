@@ -85,12 +85,10 @@ public class Mailer implements MailService{
 	
 	@Override
 	public ResponseEntity<NotificationResponse> sendAdminInvitationEmail(NotificationRequest notificationRequest) throws InvalidRequestException {
-		System.out.println(notificationRequest.toString());
-		System.out.println(notificationRequest.getFirstName());
 		context.setVariable("firstName", notificationRequest.getFirstName());
 		context.setVariable("email", notificationRequest.getEmail());
 		context.setVariable("code", notificationRequest.getCode());
-		
+		context.setVariable("adminSignUpUrl", FRONTEND_BASE_URL+"admin-signup");
 		String email = templateEngine.process(notificationRequest.getMailPath(), context);
 		System.out.println(email);
 		return sendNotification(notificationRequest, email);
@@ -98,8 +96,9 @@ public class Mailer implements MailService{
 	
 	@Override
 	public ResponseEntity<NotificationResponse> sendOtp(NotificationRequest notificationRequest) throws InvalidRequestException {
-		Map<String, Object> contextVariables = getContextVariables(notificationRequest);
-		context.setVariables(contextVariables);
+		context.setVariable("firstName", notificationRequest.getFirstName());
+		context.setVariable("email", notificationRequest.getEmail());
+		context.setVariable("code", notificationRequest.getCode());
 		String email = templateEngine.process(notificationRequest.getMailPath(), context);
 		System.out.println(email);
 		return sendNotification(notificationRequest, email);

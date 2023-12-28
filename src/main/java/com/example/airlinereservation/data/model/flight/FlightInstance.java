@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static jakarta.persistence.EnumType.STRING;
@@ -28,9 +30,11 @@ public class FlightInstance {
 	@NonNull
 	private Long flightNumber;
 	@NotBlank
-	private LocalDateTime departureTime;
+	private LocalTime departureTime;
+	private LocalTime arrivalTime;
 	@NotBlank
-	private LocalDateTime arrivalDate;
+	private LocalDate arrivalDate;
+	private LocalDate departureDate;
 	@NotBlank
 	private int baggageAllowance;
 	@OneToOne

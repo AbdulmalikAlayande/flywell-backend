@@ -30,7 +30,6 @@ public interface CustomerService {
 	Optional<CustomerResponse> findCustomerByEmailAndPassword(String email, String password) throws InvalidRequestException;
 	
 	Optional<CustomerResponse> findCustomerByUserName(String userName) throws InvalidRequestException;
-	boolean removeCustomerByUserName(String userName) throws InvalidRequestException;
 	
 	Optional<Passenger> findPassengerByUserNameForAdmin(String passengerUsername);
 	

@@ -15,7 +15,7 @@ public interface FlightService {
 	FlightResponse addFlight(FlightRequest flightRequest) throws InvalidRequestException;
 	FlightResponse updateFlight(FlightUpdateRequest flightRequest);
 	List<Flight> getAllFLights();
-	FlightResponse getFlightByArrivalAndDepartureLocation(Destinations arrivalState, Destinations departureState) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvalidRequestException;
+	FlightResponse getFlightByArrivalAndDepartureLocation(String arrivalCity, String departureCity) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvalidRequestException;
 	Long getCountOfAllFlights();
 	
 	void removeAll();

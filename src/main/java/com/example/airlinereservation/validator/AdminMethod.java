@@ -1,4 +1,4 @@
-package com.example.airlinereservation.data.model.annotations;
+package com.example.airlinereservation.validator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

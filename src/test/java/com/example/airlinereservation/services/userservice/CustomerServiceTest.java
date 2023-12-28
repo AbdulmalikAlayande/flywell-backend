@@ -1,6 +1,5 @@
 package com.example.airlinereservation.services.userservice;
 
-import com.example.airlinereservation.dtos.Request.CreateAddressRequest;
 import com.example.airlinereservation.dtos.Request.LoginRequest;
 import com.example.airlinereservation.dtos.Request.CustomerRequest;
 import com.example.airlinereservation.dtos.Request.UpdateRequest;
@@ -100,10 +99,7 @@ class CustomerServiceTest {
 		assertThat(updateResponse.getEmail()).isEqualTo(updateRequest.getEmail());
 		Optional<CustomerResponse> foundPassenger = customerService.findCustomerByUserName(updateRequest.getNewUserName());
 		assertThat(foundPassenger.isPresent()).isTrue();
-		foundPassenger.ifPresent(passenger->{
-			assertThat(passenger.getUserName()).isEqualTo(updateRequest.getNewUserName());
-			assertThat(passenger.getEmail()).isEqualTo(updateRequest.getEmail());
-		});
+		foundPassenger.ifPresent(passenger-> assertThat(passenger.getEmail()).isEqualTo(updateRequest.getEmail()));
 	}
 	private CustomerRequest buildIncompletePassenger() {
 		return CustomerRequest.builder().email("theeniolasamuel@gmail.com").firstName("Samuel")
@@ -145,7 +141,6 @@ class CustomerServiceTest {
 		response.ifPresent(passengerResponse -> {
 			assertThat(passengerResponse).isNotNull();
 			assertThat(passengerResponse).isInstanceOf(CustomerResponse.class);
-			assertThat(passengerResponse.getUserName()).isNotEmpty();
 		});
 	}
 	
@@ -194,7 +189,6 @@ class CustomerServiceTest {
 		response.ifPresent(passengerResponse -> {
 			assertThat(passengerResponse).isNotNull();
 			assertThat(passengerResponse).isInstanceOf(CustomerResponse.class);
-			assertThat(passengerResponse.getUserName()).isNotEmpty();
 		});
 	}
 	@SneakyThrows
@@ -205,11 +199,7 @@ class CustomerServiceTest {
 	@SneakyThrows
 	@Test void getAllPassengersTest(){
 		List<CustomerResponse> allPassengersPresent = customerService.getAllCustomers();
-		allPassengersPresent.forEach(passengerResponse->{
-			assertThat(passengerResponse).isNotNull();
-			assertThat(passengerResponse.getUserName()).isNotNull();
-			assertThat(passengerResponse.getUserName()).isNotEmpty();
-		});
+		allPassengersPresent.forEach(passengerResponse-> assertThat(passengerResponse).isNotNull());
 		assertThat(allPassengersPresent.size()).isEqualTo(customerService.getCountOfCustomers());
 	}
 	

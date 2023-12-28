@@ -62,29 +62,29 @@ public class BolaAirAdminService implements AdminService{
 
     @Override
     public AdminInvitationResponse inviteAdmin(AdminInvitationRequest invitationRequest) throws InvalidRequestException, FieldInvalidException, EmptyFieldException {
-        if (invitationRequest.getAdminEmail() == null || invitationRequest.getAdminEmail().isEmpty() || invitationRequest.getAdminEmail().isBlank())
+        if (invitationRequest.getEmail() == null || invitationRequest.getEmail().isEmpty() || invitationRequest.getEmail().isBlank())
             throw new EmptyFieldException("Email Cannot Be Blank Or Empty Spaces");
         else {
-            validator.validateEmail(invitationRequest.getAdminEmail());
-            String adminCode = generateAdminCode(invitationRequest.getAdminEmail());
+            validator.validateEmail(invitationRequest.getEmail());
+            String adminCode = generateAdminCode(invitationRequest.getEmail());
             Admin admin = new Admin();
-            admin.setEmail(invitationRequest.getAdminEmail());
+            admin.setEmail(invitationRequest.getEmail());
             admin.setAdminCode(adminCode);
             adminRepository.save(admin);
             NotificationRequest notificationRequest = buildNotificationRequest(invitationRequest, adminCode);
             ResponseEntity<NotificationResponse> response = mailService.sendAdminInvitationEmail(notificationRequest);
             System.out.println(response);
             return AdminInvitationResponse.builder()
-                           .email(invitationRequest.getAdminEmail())
+                           .email(invitationRequest.getEmail())
                            .code(adminCode)
-                           .message("An Invitation Mail Has Been Sent To " + invitationRequest.getAdminEmail())
+                           .message("An Invitation Mail Has Been Sent To " + invitationRequest.getEmail())
                            .build();
         }
     }
     
     private NotificationRequest buildNotificationRequest(AdminInvitationRequest invitationRequest, String code) {
         return NotificationRequest.builder()
-                                  .email(invitationRequest.getAdminEmail())
+                                  .email(invitationRequest.getEmail())
                                   .code(code)
                                   .mailPath("invite")
                                   .firstName("Abdulmalik")

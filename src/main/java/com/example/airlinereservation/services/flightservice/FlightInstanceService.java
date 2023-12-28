@@ -13,4 +13,6 @@ public interface FlightInstanceService {
 	FlightInstanceResponse createNewInstance(CreateFlightInstanceRequest flightInstanceRequest) throws InvalidRequestException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException;
 	
 	List<FlightInstanceResponse> findAllBy(FlightStatus status);
+	
+	void removeAll();
 }

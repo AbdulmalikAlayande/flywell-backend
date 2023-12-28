@@ -1,7 +1,7 @@
 package com.example.airlinereservation.config;
 
-import com.example.airlinereservation.data.model.annotations.EmailPattern;
-import com.example.airlinereservation.data.model.annotations.EmailDomainValidator;
+import com.example.airlinereservation.validator.EmailPattern;
+import com.example.airlinereservation.validator.EmailDomainValidator;
 import com.example.airlinereservation.services.notifications.FieldValidator;
 import com.example.airlinereservation.services.notifications.Validator;
 import lombok.Getter;
@@ -71,7 +71,7 @@ public class EmailValidationConfig {
 	}
 @Bean
 	public Context context() {
-		return new Context();
+	return new Context();
 	}
 	
 	@Bean

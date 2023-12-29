@@ -8,10 +8,11 @@ import com.example.airlinereservation.services.flightservice.FlightService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("bola-air/")
+@RequestMapping("bola-air/flights/")
 @CrossOrigin("*")
 @AllArgsConstructor
 
@@ -19,7 +20,8 @@ public class BolaAir_FlightController {
 	
 	private final FlightService flightService;
 	
-	@PostMapping(value = "add-flight/")
+	@PostMapping("add-flight/")
+	@Validated
 	public ApiResponse<?> addNewFlight(@Valid @RequestBody FlightRequest flightRequest){
 	
 		try {

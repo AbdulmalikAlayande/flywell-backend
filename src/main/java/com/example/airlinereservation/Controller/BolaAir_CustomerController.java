@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,12 +27,14 @@ import static com.example.airlinereservation.utils.Constants.ERROR_MESSAGE;
 @AllArgsConstructor
 @Slf4j
 @CrossOrigin("*")
+@Validated
 public class BolaAir_CustomerController {
 	
 	private CustomerService customerService;
 	
 	@PostMapping("register-customer/")
-	public ApiResponse<?> registerCustomer(@Valid @RequestBody CustomerRequest customerRequest){
+	@Validated
+	public ApiResponse<?> registerCustomer(@RequestBody @Valid CustomerRequest customerRequest){
 		CustomerResponse response = new CustomerResponse();
 		try {
 			response = customerService.registerNewCustomer(customerRequest);
@@ -63,7 +66,7 @@ public class BolaAir_CustomerController {
 			apiResponse.setResponseData(customerResponse);
 			apiResponse.setSuccessful(HttpStatus.CREATED.is2xxSuccessful());
 			apiResponse.setStatusCode(HttpStatus.CREATED.value());
-			System.out.println("api response at activate account =="+apiResponse);
+			System.out.println("api response at activate account ==> "+apiResponse);
 			return apiResponse;
 		} catch (InvalidRequestException e) {
 			ApiResponse<String> apiResponse = new ApiResponse<>();

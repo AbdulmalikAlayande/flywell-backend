@@ -23,7 +23,7 @@ import java.util.Collections;
 
 
 @Configuration
-@ComponentScan(basePackages = "com.example.airlinereservation.data.model.annotations",
+@ComponentScan(basePackages = "com.example.airlinereservation.validator",
 				basePackageClasses = {
 					EmailPattern.class,
 					EmailDomainValidator.class

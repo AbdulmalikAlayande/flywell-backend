@@ -39,7 +39,8 @@ public class BolaAirCustomerService implements CustomerService {
 	public CustomerResponse registerNewCustomer(@NotNull CustomerRequest customerRequest) throws FailedRegistrationException {
 		CustomerResponse customerResponse = new CustomerResponse();
 		try {
-			validateEmailAndPassword(customerRequest.getEmail(), customerRequest.getPassword());
+			validator.validateEmail(customerRequest.getEmail());
+			validator.validatePassword(customerRequest.getPassword());
 			UserBioData biodata = mapper.map(customerRequest, UserBioData.class);
 			biodata.setOTPs(new ArrayList<>());
 			UserBioData savedBio = userBioDataRepository.save(biodata);
@@ -99,11 +100,6 @@ public class BolaAirCustomerService implements CustomerService {
 	public List<FlightResponse> viewAvailableFLights() {
 		return null;
 		
-	}
-	
-	private void validateEmailAndPassword(String email, String password) throws FieldInvalidException, InvalidRequestException {
-		validator.validateEmail(email);
-		validator.validatePassword(password);
 	}
 	
 	@Override

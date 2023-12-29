@@ -34,7 +34,7 @@ public class BolaAir_CustomerController {
 	
 	@PostMapping("register-customer/")
 	@Validated
-	public ApiResponse<?> registerCustomer(@Valid @RequestBody CustomerRequest customerRequest){
+	public ApiResponse<?> registerCustomer(@RequestBody @Valid CustomerRequest customerRequest){
 		CustomerResponse response = new CustomerResponse();
 		try {
 			response = customerService.registerNewCustomer(customerRequest);

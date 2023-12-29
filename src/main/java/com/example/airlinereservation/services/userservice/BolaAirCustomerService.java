@@ -6,7 +6,7 @@ import com.example.airlinereservation.data.repositories.*;
 import com.example.airlinereservation.dtos.Request.*;
 import com.example.airlinereservation.dtos.Response.*;
 import com.example.airlinereservation.exceptions.*;
-//import com.example.airlinereservation.services.notifications.Validator;
+import com.example.airlinereservation.services.notifications.Validator;
 import com.example.airlinereservation.services.notifications.mail.MailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import static com.example.airlinereservation.utils.Constants.*;
 @Slf4j
 public class BolaAirCustomerService implements CustomerService {
 	
-//	private Validator validator;
+	private Validator validator;
 	private CustomerRepository customerRepository;
 	private UserBioDataRepository userBioDataRepository;
 	private ModelMapper mapper;
@@ -39,6 +39,8 @@ public class BolaAirCustomerService implements CustomerService {
 	public CustomerResponse registerNewCustomer(@NotNull CustomerRequest customerRequest) throws FailedRegistrationException {
 		CustomerResponse customerResponse = new CustomerResponse();
 		try {
+			validator.validateEmail(customerRequest.getEmail());
+			validator.validatePassword(customerRequest.getPassword());
 			UserBioData biodata = mapper.map(customerRequest, UserBioData.class);
 			biodata.setOTPs(new ArrayList<>());
 			UserBioData savedBio = userBioDataRepository.save(biodata);
@@ -56,7 +58,7 @@ public class BolaAirCustomerService implements CustomerService {
 			mapper.map(savedBio, customerResponse);
 			customerResponse.setMessage(REGISTRATION_SUCCESSFUL_MESSAGE);
 			customerResponse.setOtp(otpData);
-		} catch (InvalidRequestException exception) {
+		} catch (FieldInvalidException | InvalidRequestException exception) {
 			throwFailedRegistrationException(exception);
 		}
 		return customerResponse;

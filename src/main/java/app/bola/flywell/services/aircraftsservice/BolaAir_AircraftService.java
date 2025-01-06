@@ -1,7 +1,7 @@
 package app.bola.flywell.services.aircraftsservice;
 
-import app.bola.flywell.dtos.Request.AirCraftRequest;
-import app.bola.flywell.dtos.Response.AirCraftResponse;
+import app.bola.flywell.dtos.request.AirCraftRequest;
+import app.bola.flywell.dto.response.AirCraftResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

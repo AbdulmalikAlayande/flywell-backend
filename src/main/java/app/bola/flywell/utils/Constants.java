@@ -24,8 +24,10 @@ public final class Constants {
 	public static final String BREVO_CONTACTS_IMPORT_URL = "https://api.brevo.com/v3/contacts/import";
 	public static final String BREVO_SEND_EMAIL_API_URL = "https://api.brevo.com/v3/smtp/email";
 	public static final String DUPLICATE_ACCOUNT_REGISTRATION_FAILURE_MESSAGE = "Registration Failed:: Seems Like You Already Have An Account With Us";
-	public static final String EMPTY_FIELD_MESSAGE = "Field %s is null or empty";
+	public static final String EMPTY_FIELDS_MESSAGE = "Field %s is null or empty";
+	public static final String EMPTY_FIELD_MESSAGE = "Field Cannot Be Null Or Empty";
 	public static final String REGISTRATION_SUCCESSFUL_MESSAGE = "Registration Successful";
+	public static final String ENTITY_CREATION_SUCCESSFUL = "%s Successfully Created";
 	public static final String INCOMPLETE_DETAILS_MESSAGE = "Incomplete Details:: %s";
 	public static final String INVALID_REQUEST_MESSAGE = "Invalid Request:: %s with %s %s not found";
 	public static final String LOGIN_SUCCESS_MESSAGE = "Login Successful";
@@ -34,4 +36,7 @@ public final class Constants {
 	public static final String SESSION_NOT_EXHAUSTED_MESSAGE = "Your session has not expired";
 	public static final String UPDATE_NOT_COMPLETED = "Update could not be completed";
 	public static final String INVALID_DESTINATION = "Invalid Destination";
+	public static final String ENTITY_NOT_FOUND = "%s Not Found";
+	public static final String ENTITY_SUCCESSFULLY_RETRIEVED = "Flight Was Successfully Retrieved";
+
 }

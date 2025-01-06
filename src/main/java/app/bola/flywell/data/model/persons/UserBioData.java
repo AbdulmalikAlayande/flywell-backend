@@ -1,6 +1,6 @@
 package app.bola.flywell.data.model.persons;
 
-import app.bola.flywell.validator.EmailPattern;
+import app.bola.flywell.annotations.EmailPattern;
 import app.bola.flywell.data.model.enums.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 

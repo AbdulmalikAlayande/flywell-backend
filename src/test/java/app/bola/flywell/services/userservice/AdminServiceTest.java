@@ -2,10 +2,12 @@
 package app.bola.flywell.services.userservice;
 
 
-import app.bola.flywell.dtos.Request.*;
-import app.bola.flywell.dtos.Response.*;
+import app.bola.flywell.dto.response.AdminInvitationResponse;
+import app.bola.flywell.dto.response.CreateAdminResponse;
+import app.bola.flywell.dto.response.GetUserResponse;
+import app.bola.flywell.dtos.request.*;
 import app.bola.flywell.exceptions.FieldInvalidException;
-import app.bola.flywell.exceptions.UserNotFoundException;
+import app.bola.flywell.exceptions.EntityNotFoundException;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,7 +71,7 @@ class AdminServiceTest {
 		assertThatThrownBy(()->{
 			CreateAdminResponse adminResponse = adminService.createAdminAccount(buildUninvitedAdmin());
 		})
-		.isInstanceOf(UserNotFoundException.class)
+		.isInstanceOf(EntityNotFoundException.class)
 		.hasMessageContaining("Admin With Email Ahoy@gmail.com Does Not Exist");
 	}
 	

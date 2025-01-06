@@ -1,7 +1,8 @@
 package app.bola.flywell.services.userservice;
 
-import app.bola.flywell.dtos.Request.*;
-import app.bola.flywell.dtos.Response.*;
+import app.bola.flywell.dto.response.CustomerResponse;
+import app.bola.flywell.dto.response.LoginResponse;
+import app.bola.flywell.dtos.request.*;
 import app.bola.flywell.exceptions.FailedRegistrationException;
 import app.bola.flywell.exceptions.InvalidRequestException;
 import app.bola.flywell.exceptions.LoginFailedException;
@@ -74,6 +75,8 @@ class CustomerServiceTest {
 	
 	@SneakyThrows
 	@Test void testThatOtpIsGenerated_AndSentToTheUserToActivateTheirAccount(){
+		System.out.println("Hi onw two");
+//		assertThatThrownBy(() -> 10/0)
 	}
 	
 	@Test

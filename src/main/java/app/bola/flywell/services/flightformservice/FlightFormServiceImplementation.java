@@ -1,8 +1,8 @@
 package app.bola.flywell.services.flightformservice;
 
-import app.bola.flywell.dtos.Request.FlightFormRequest;
-import app.bola.flywell.dtos.Request.FlightRequest;
-import app.bola.flywell.dtos.Response.FlightFormResponse;
+import app.bola.flywell.dtos.request.FlightFormRequest;
+import app.bola.flywell.dtos.request.FlightRequest;
+import app.bola.flywell.dto.response.FlightFormResponse;
 
 import java.util.List;
 import java.util.Optional;

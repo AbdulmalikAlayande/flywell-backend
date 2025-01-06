@@ -1,10 +1,10 @@
 package app.bola.flywell.controllers;
 
-import app.bola.flywell.dtos.Request.CustomerRequest;
-import app.bola.flywell.dtos.Request.LoginRequest;
-import app.bola.flywell.dtos.Response.ApiResponse;
-import app.bola.flywell.dtos.Response.CustomerResponse;
-import app.bola.flywell.dtos.Response.LoginResponse;
+import app.bola.flywell.dtos.request.CustomerRequest;
+import app.bola.flywell.dtos.request.LoginRequest;
+import app.bola.flywell.dto.response.ApiResponse;
+import app.bola.flywell.dto.response.CustomerResponse;
+import app.bola.flywell.dto.response.LoginResponse;
 import app.bola.flywell.exceptions.*;
 import app.bola.flywell.services.userservice.CustomerService;
 import jakarta.validation.Valid;
@@ -28,7 +28,12 @@ import static app.bola.flywell.utils.Constants.ERROR_MESSAGE;
 public class BolaAir_CustomerController {
 	
 	private CustomerService customerService;
-	
+
+
+	@GetMapping("/")
+	public String home(){
+		return "Welcome to FlyWell";
+	}
 	@PostMapping("register-customer/")
 	@Validated
 	public ApiResponse<?> registerCustomer(@RequestBody @Valid CustomerRequest customerRequest){

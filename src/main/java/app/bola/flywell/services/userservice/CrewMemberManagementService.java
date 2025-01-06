@@ -2,8 +2,8 @@ package app.bola.flywell.services.userservice;
 
 import app.bola.flywell.data.model.enums.Destinations;
 import app.bola.flywell.data.model.persons.CrewMember;
-import app.bola.flywell.dtos.Response.CreateCrewMemberResponse;
-import app.bola.flywell.dtos.Response.CrewMemberResponse;
+import app.bola.flywell.dto.response.CreateCrewMemberResponse;
+import app.bola.flywell.dto.response.CrewMemberResponse;
 
 import java.util.List;
 

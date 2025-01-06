@@ -1,92 +1,93 @@
 package app.bola.flywell.services.flightservice;
 
-import app.bola.flywell.data.model.enums.FlightStatus;
-import app.bola.flywell.dtos.Request.*;
-import app.bola.flywell.dtos.Response.*;
+import app.bola.flywell.dto.response.FlightInstanceResponse;
+import app.bola.flywell.dto.response.FlightResponse;
+import app.bola.flywell.dtos.request.*;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+@Slf4j
 @SpringBootTest
 class FlightInstanceServiceTest {
-	
+
 	@Autowired
 	private FlightInstanceService flightInstanceService;
 	@Autowired
 	private FlightService flightService;
 	private FlightInstanceResponse response;
-	private static final int ZERO = BigInteger.ZERO.intValue();
-	
+	private FlightResponse flightResponse;
+	static final int ZERO = BigInteger.ZERO.intValue();
+
 	@BeforeEach
 	@SneakyThrows
 	void startEachTestWith() {
 		flightInstanceService.removeAll();
 		flightService.removeAll();
-		flightService.addFlight(buildFlight());
-		response = flightInstanceService.createNewInstance(buildInstance());
-		
+		flightResponse = flightService.createNew(buildFlight());
 	}
-	
+
 	@Test
 	@SneakyThrows
-	public void createNewFlightInstance_NewFlightIsCreatedTest(){
-		assertThat(response).isNotNull();
-		assertThat(flightInstanceService.findAllBy(FlightStatus.SCHEDULED).size()).isGreaterThan(ZERO);
-		assertThat(response.getArrivalAirportIcaoCode()).isNotNull();
-		assertThat(response.getDepartureAirportIcaoCode()).isNotNull();
-		assertThat(response.getArrivalDate()).isNotNull();
-		assertThat(response.getDepartureDate()).isNotNull();
+	void createNewFlightInstance_NewFlightIsCreatedTest() {
+		response = flightInstanceService.createNew(buildInstance());
+		assertThat(response).hasNoNullFieldsOrPropertiesExcept("createdByRole", "lastModifiedBy");
 	}
-	
+
 	@Test
-	@SneakyThrows
-	public void createNewFlightInstance_ProperFlightSpacingIsApplied_ToMaintainSafeDistanceBetweenConsecutiveFlights(){
-	
+	void createNewFlightInstance_ProperFlightSpacingIsApplied_ToMaintainSafeDistanceBetweenConsecutiveFlights() {
+
 	}
-	
-	@Test void createNewFlightInstance_AssignAircraftToFlightInstanceTest(){
-	
+
+	@Test
+	void createNewFlightInstance_AssignAircraftToFlightInstanceTest() {
+
 	}
-	@Test void createNewFlightInstance_AssignAircraftToFlightInstance_AircraftIsAssignedIfPassedFlightRequirement(){
-	
+
+	@Test
+	void createNewFlightInstance_AssignAircraftToFlightInstance_AircraftIsAssignedIfPassedFlightRequirement() {
+
 	}
-	
-	@Test public void testThatIfFlightIsFilled_FlightMovementIsScheduledImmediately(){
-	
+
+	@Test
+	void testThatIfFlightIsFilled_FlightMovementIsScheduledImmediately() {
+
 	}
-	
-	private CreateFlightInstanceRequest buildInstance() {
-		return CreateFlightInstanceRequest.builder()
-				       .arrivalCity("Rivers")
-				       .departureCity("Abuja")
-				       .build();
+
+	private FlightInstanceRequest buildInstance() {
+		return FlightInstanceRequest.builder()
+				.flightId(flightResponse.getPublicId())
+				.departureTime(LocalDateTime.parse("2021-12-12T12:00:00"))
+				.arrivalTime(LocalDateTime.parse("2021-12-12T15:00:00"))
+				.build();
 	}
-	
+
 	private FlightRequest buildFlight() {
 		return FlightRequest.builder()
-				       .estimatedFlightDurationInMinutes(360)
-				       .arrivalAirportRequest(buildAirportRequest("Oakland Airport", "U.S.A", "3456", "45678"))
-				       .departureAirportRequest(buildAirportRequest("Orlando Airport", "U.S.A", "4598", "0237"))
-				       .arrivalCity("Rivers")
-				       .departureCity("Abuja")
-				       .build();
+				.duration(360)
+				.destinationAirport(buildAirportRequest("Oakland Airport", "U.S.A", "3456", "45678"))
+				.departureAirport(buildAirportRequest("Orlando Airport", "U.S.A", "4598", "0237"))
+				.arrivalCity("Rivers")
+				.departureCity("Abuja")
+				.build();
 	}
-	
-	public AirportRequest buildAirportRequest(String name, String country, String icaoCode, String iataCode){
+
+	public AirportRequest buildAirportRequest(String name, String country, String icaoCode, String iataCode) {
 		return AirportRequest.builder()
-				       .airportName(name)
-				       .countryName(country)
-				       .icaoCode(icaoCode)
-				       .iataCode(iataCode)
-				       .longitude(-34567)
-				       .latitude(45678)
-				       .build();
+				.name(name)
+				.countryName(country)
+				.icaoCode(icaoCode)
+				.iataCode(iataCode)
+				.longitude(-34567)
+				.latitude(45678)
+				.build();
 	}
 }

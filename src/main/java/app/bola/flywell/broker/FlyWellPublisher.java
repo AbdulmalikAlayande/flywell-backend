@@ -3,7 +3,7 @@ package app.bola.flywell.broker;
 import app.bola.flywell.data.model.enums.Gender;
 import app.bola.flywell.data.model.persons.Customer;
 import app.bola.flywell.data.model.persons.UserBioData;
-import app.bola.flywell.dtos.Response.CustomerResponse;
+import app.bola.flywell.dto.response.CustomerResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

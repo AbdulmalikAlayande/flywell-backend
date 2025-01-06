@@ -28,10 +28,16 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ayanniyi20
+      MYSQL_DATABASE: flywell_db
       MYSQL_USER: abolade
       MYSQL_PASSWORD: ayanniyi20
     ports:
       - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
 
 networks:
   pulsar_network:

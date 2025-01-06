@@ -1,8 +1,8 @@
 package app.bola.flywell.services.notifications.mail;
 
 import app.bola.flywell.config.EmailValidationConfig;
-import app.bola.flywell.dtos.Request.NotificationRequest;
-import app.bola.flywell.dtos.Response.NotificationResponse;
+import app.bola.flywell.dtos.request.NotificationRequest;
+import app.bola.flywell.dto.response.NotificationResponse;
 import app.bola.flywell.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

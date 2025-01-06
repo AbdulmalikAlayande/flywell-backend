@@ -1,11 +1,10 @@
 package app.bola.flywell.data.model.aircraft;
 
+import app.bola.flywell.basemodules.FlyWellModel;
 import app.bola.flywell.data.model.enums.Destinations;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -13,15 +12,15 @@ import java.util.UUID;
 
 import static jakarta.persistence.EnumType.STRING;
 
-@Builder
-@Data
+@Getter
+@Setter
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "hanger")
-public class AirCraft {
-	@Id
-	private String id;
+public class AirCraft extends FlyWellModel {
+
 	@Column(unique = true, nullable = false)
 	@Builder.Default
 	private UUID hangerId = UUID.randomUUID();

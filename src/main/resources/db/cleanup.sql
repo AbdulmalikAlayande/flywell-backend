@@ -1,4 +1,4 @@
-use bola_air_db;
+use flywell_db;
 delete from customer;
 delete from user_bio_data_otps;
 delete from otp;

@@ -8,8 +8,10 @@ import app.bola.flywell.data.model.persons.UserBioData;
 import app.bola.flywell.data.repositories.AddressRepository;
 import app.bola.flywell.data.repositories.CrewMemberRepository;
 import app.bola.flywell.data.repositories.UserBioDataRepository;
-import app.bola.flywell.dtos.Request.*;
-import app.bola.flywell.dtos.Response.*;
+import app.bola.flywell.dto.response.CreateCrewMemberResponse;
+import app.bola.flywell.dto.response.CrewMemberResponse;
+import app.bola.flywell.dto.response.FlightScheduleResponse;
+import app.bola.flywell.dtos.request.*;
 import app.bola.flywell.exceptions.*;
 import java.util.Optional;
 import app.bola.flywell.services.notifications.Validator;
@@ -20,7 +22,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
-import java.util.Optional;
 
 import static app.bola.flywell.utils.Constants.*;
 
@@ -64,7 +65,7 @@ public class BolaAirCrewMemberService implements CrewMemberService {
                 field.setAccessible(true);
                 Object accessedField = field.get(createCrewMemberRequest);
                 if (accessedField == null || (accessedField instanceof String && accessedField.toString().isEmpty())) {
-                    String errorMessage = String.format(EMPTY_FIELD_MESSAGE, field.getName());
+                    String errorMessage = String.format(EMPTY_FIELDS_MESSAGE, field.getName());
                     throw new EmptyFieldException(String.format(INCOMPLETE_DETAILS_MESSAGE, errorMessage));
                 }
             }

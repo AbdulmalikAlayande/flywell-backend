@@ -8,7 +8,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Formatter;
 
 import static app.bola.flywell.utils.Constants.TEMPLATE_LOAD_FAILED;
 
@@ -16,7 +15,6 @@ import static app.bola.flywell.utils.Constants.TEMPLATE_LOAD_FAILED;
 public class TemplateLoader {
 	
 	public static String loadTemplateContent(Resource templateResource) throws InvalidRequestException {
-		Formatter formatter = new Formatter();
 		ByteArrayOutputStream result = new ByteArrayOutputStream();
 		try {
 			InputStream inputStream = templateResource.getInputStream();

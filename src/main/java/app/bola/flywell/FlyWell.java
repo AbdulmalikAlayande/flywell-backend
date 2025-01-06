@@ -2,11 +2,12 @@ package app.bola.flywell;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.pulsar.annotation.EnablePulsar;
 
-
+//@EnablePulsar
+@EnableJpaAuditing
 @SpringBootApplication
-@EnablePulsar
 public class FlyWell {
 
 		public int[] searchRange(int[] nums, int target) {

@@ -1,6 +1,6 @@
 package app.bola.flywell.services.userservice;
 
-import app.bola.flywell.dtos.Response.ApiResponse;
+import app.bola.flywell.dto.response.ApiResponse;
 import app.bola.flywell.utils.Constants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

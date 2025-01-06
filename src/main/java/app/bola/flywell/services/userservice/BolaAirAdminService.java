@@ -4,8 +4,8 @@ import app.bola.flywell.data.model.enums.Role;
 import app.bola.flywell.data.model.persons.Admin;
 import app.bola.flywell.data.model.persons.UserBioData;
 import app.bola.flywell.data.repositories.*;
-import app.bola.flywell.dtos.Request.*;
-import app.bola.flywell.dtos.Response.*;
+import app.bola.flywell.dto.response.*;
+import app.bola.flywell.dtos.request.*;
 import app.bola.flywell.exceptions.*;
 import app.bola.flywell.services.flightservice.FlightService;
 import app.bola.flywell.services.notifications.Validator;
@@ -49,8 +49,8 @@ public class BolaAirAdminService implements AdminService{
                 adminRepository.save(foundAdmin);
                 responseRef.set(mapper.map(saveBioData, CreateAdminResponse.class));
             }
-            else throw new UserNotFoundException("Invalid Code, Please Enter The Code That Was Sent To You at %s".formatted(createAdminRequest.getEmail()));
-        }, ()-> {throw new UserNotFoundException("Admin With Email %s Does Not Exist".formatted(createAdminRequest.getEmail()));});
+            else throw new EntityNotFoundException("Invalid Code, Please Enter The Code That Was Sent To You at %s".formatted(createAdminRequest.getEmail()));
+        }, ()-> {throw new EntityNotFoundException("Admin With Email %s Does Not Exist".formatted(createAdminRequest.getEmail()));});
         responseRef.get().setMessage("Admin Account created successfully");
 	    return responseRef.get();
     }
@@ -104,12 +104,12 @@ public class BolaAirAdminService implements AdminService{
     public GetUserResponse findByEmail(String email) {
         Optional<Admin> foundAdminRef = adminRepository.findByEmail(email);
         return foundAdminRef.map(bioData -> mapper.map(bioData, GetUserResponse.class))
-                            .orElseThrow(()-> new UserNotFoundException("User With Email %s Does Not Exist".formatted(email)));
+                            .orElseThrow(()-> new EntityNotFoundException("User With Email %s Does Not Exist".formatted(email)));
     }
     
     @Override
     public FlightResponse addNewFlight(FlightRequest flightRequest) throws InvalidRequestException {
-        return flightService.addFlight(flightRequest);
+        return flightService.createNew(flightRequest);
     }
     
     @Override

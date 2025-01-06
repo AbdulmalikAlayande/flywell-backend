@@ -1,7 +1,10 @@
 package app.bola.flywell.exceptions;
 
+import lombok.Setter;
+
+@Setter
 public class InvalidRequestException extends Exception {
-	private String message;
+	private final String message;
 	private Throwable cause;
 	
 	public InvalidRequestException(String message){
@@ -14,18 +17,16 @@ public class InvalidRequestException extends Exception {
 		this.cause = cause;
 		this.message = message;
 	}
-	
-	public void setMessage(String message){
-		this.message = message;
-	}
-	public String getMessage(){
+
+	@Override
+    public String getMessage(){
 		if (this.message == null)
 			return super.getMessage();
 		return this.message;
 	}
 	
 	@Override
-	public Throwable getCause() {
+	public synchronized Throwable getCause() {
 		return cause;
 	}
 }

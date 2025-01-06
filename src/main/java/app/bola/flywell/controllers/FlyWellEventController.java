@@ -1,7 +1,7 @@
 package app.bola.flywell.controllers;
 
 import app.bola.flywell.broker.FlyWellPublisher;
-import app.bola.flywell.dtos.Response.CustomerResponse;
+import app.bola.flywell.dto.response.CustomerResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

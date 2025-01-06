@@ -3,7 +3,7 @@ package app.bola.flywell.services.userservice;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Uploader;
 import com.cloudinary.utils.ObjectUtils;
-import app.bola.flywell.dtos.Response.ApiResponse;
+import app.bola.flywell.dto.response.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,9 +1,9 @@
 package app.bola.flywell.controllers;
 
-import app.bola.flywell.dtos.Request.*;
-import app.bola.flywell.dtos.Response.AdminInvitationResponse;
-import app.bola.flywell.dtos.Response.ApiResponse;
-import app.bola.flywell.dtos.Response.CreateAdminResponse;
+import app.bola.flywell.dtos.request.*;
+import app.bola.flywell.dto.response.AdminInvitationResponse;
+import app.bola.flywell.dto.response.ApiResponse;
+import app.bola.flywell.dto.response.CreateAdminResponse;
 import app.bola.flywell.exceptions.*;
 import app.bola.flywell.services.userservice.AdminService;
 import jakarta.validation.Valid;

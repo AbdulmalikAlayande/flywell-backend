@@ -1,7 +1,7 @@
 package app.bola.flywell.config;
 
-import app.bola.flywell.validator.EmailPattern;
 import app.bola.flywell.validator.EmailDomainValidator;
+import app.bola.flywell.annotations.EmailPattern;
 import app.bola.flywell.services.notifications.FieldValidator;
 import app.bola.flywell.services.notifications.Validator;
 import lombok.Getter;
@@ -69,7 +69,8 @@ public class EmailValidationConfig {
 	public EmailDomainValidator validEmailDomain() {
 		return new EmailDomainValidator();
 	}
-@Bean
+
+	@Bean
 	public Context context() {
 	return new Context();
 	}

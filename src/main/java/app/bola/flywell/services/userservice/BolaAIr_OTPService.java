@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.util.Optional;
 
+import static java.lang.Integer.parseInt;
 import static java.math.BigInteger.valueOf;
-import static org.codehaus.plexus.util.TypeFormat.parseInt;
 
 @Service
 @AllArgsConstructor
@@ -40,7 +40,7 @@ public class BolaAIr_OTPService implements OTPService {
 				value1.append(emailHashcode.charAt(index));
 			else value.append(emailHashcode.charAt(index));
 		}
-		int addition = parseInt(value) + parseInt(value1);
+		int addition = parseInt(String.valueOf(value)) + parseInt(String.valueOf(value1));
 		String stringValueOfAddition;
 		if (addition > 0) stringValueOfAddition = String.valueOf(addition);
 		else stringValueOfAddition = String.valueOf(-1*addition);

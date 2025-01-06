@@ -1,4 +1,7 @@
 use flywell_db;
+delete from flight;
+delete from flight_flight_instances;
+delete from flight_instance;
 delete from customer;
 delete from user_bio_data_otps;
 delete from otp;

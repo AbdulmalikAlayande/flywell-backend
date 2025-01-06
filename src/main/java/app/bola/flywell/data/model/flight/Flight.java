@@ -34,6 +34,12 @@ public class Flight extends FlyWellModel {
 	@OneToMany(mappedBy = "flight", cascade = ALL, fetch = EAGER)
 	private List<FlightInstance> flightInstances;
 
+	public FlightInstance addFlightInstance(FlightInstance newInstance){
+		newInstance.setFlight(this);
+		flightInstances.add(newInstance);
+		return newInstance;
+	}
+
 	@Override
 	public final boolean equals(Object o) {
 		if (this == o) return true;

@@ -10,7 +10,6 @@ import app.bola.flywell.dto.response.FlightInstanceResponse;
 import app.bola.flywell.exceptions.EntityNotFoundException;
 import app.bola.flywell.utils.Constants;
 import io.micrometer.observation.Observation;
-import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -20,7 +19,6 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,30 +33,23 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 	final FlightRepository flightRepository;
 	final ModelMapper mapper;
 	final Logger logger = LoggerFactory.getLogger(FlyWellFlightInstanceService.class);
-	EntityManager entityManager;
 
 	@Override
 	@Transactional
-	@Retryable(retryFor = ObjectOptimisticLockingFailureException.class, maxAttempts = 3)
+	@Retryable(retryFor = ObjectOptimisticLockingFailureException.class, maxAttempts = 5)
 	public FlightInstanceResponse createNew(FlightInstanceRequest request) {
-		Observation.withName("FlightInstanceService.createNew").record(() -> {
-            logger.info("Creating new flight instance for flight with public id {}", request.getFlightId());
-        });
+
 		Flight flight = flightRepository.findByPublicId(request.getFlightId())
 				.orElseThrow(() -> new EntityNotFoundException(Constants.ENTITY_NOT_FOUND.formatted("Flight")));
-
-		logger.info("Flight:: {}", flight);
 
 		FlightInstance mappedFlightInstance = mapper.map(request, FlightInstance.class);
 		mappedFlightInstance.setFlight(flight);
 		mappedFlightInstance.setStatus(SCHEDULED);
 		mappedFlightInstance.setFlightSeat(new ArrayList<>());
 
-		// Log transaction status
-		System.out.println("Transaction active before save: " + TransactionSynchronizationManager.isActualTransactionActive());
-		FlightInstance savedInstance = flightInstanceRepository.save(mappedFlightInstance);
+		FlightInstance savedInstance = flight.addFlightInstance(mappedFlightInstance);
 
-		flight.getFlightInstances().add(savedInstance);
+		flightRepository.save(flight);
 		return flightInstanceResponse(savedInstance);
 	}
 

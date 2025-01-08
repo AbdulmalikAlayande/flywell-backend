@@ -2,9 +2,9 @@ package app.bola.flywell.services.userservice;
 
 
 import app.bola.flywell.data.model.Passenger;
-import app.bola.flywell.dtos.request.CustomerRequest;
-import app.bola.flywell.dtos.request.LoginRequest;
-import app.bola.flywell.dtos.request.UpdateRequest;
+import app.bola.flywell.dto.request.CustomerRequest;
+import app.bola.flywell.dto.request.LoginRequest;
+import app.bola.flywell.dto.request.UpdateRequest;
 import app.bola.flywell.dto.response.CustomerResponse;
 import app.bola.flywell.dto.response.FlightResponse;
 import app.bola.flywell.dto.response.LoginResponse;

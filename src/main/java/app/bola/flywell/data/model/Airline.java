@@ -1,6 +1,6 @@
 package app.bola.flywell.data.model;
 
-import app.bola.flywell.data.model.aircraft.AirCraft;
+import app.bola.flywell.data.model.aircraft.Aircraft;
 import app.bola.flywell.data.model.flight.Flight;
 import app.bola.flywell.data.model.persons.CrewMember;
 import jakarta.persistence.*;
@@ -22,7 +22,7 @@ public class Airline {
 	private String name;
 	private String code;
 	@OneToOne
-	private AirCraft airCraft;
+	private Aircraft airCraft;
 	@OneToMany
 	private List<Flight> flight;
 	@OneToMany

@@ -3,7 +3,7 @@ package app.bola.flywell.services.flightservice;
 import app.bola.flywell.basemodules.FlyWellService;
 import app.bola.flywell.data.model.flight.Flight;
 import app.bola.flywell.dto.response.FlightResponse;
-import app.bola.flywell.dtos.request.*;
+import app.bola.flywell.dto.request.*;
 import app.bola.flywell.exceptions.*;
 
 import java.util.List;

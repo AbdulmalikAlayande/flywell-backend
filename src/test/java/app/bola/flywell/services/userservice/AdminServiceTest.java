@@ -5,7 +5,7 @@ package app.bola.flywell.services.userservice;
 import app.bola.flywell.dto.response.AdminInvitationResponse;
 import app.bola.flywell.dto.response.CreateAdminResponse;
 import app.bola.flywell.dto.response.GetUserResponse;
-import app.bola.flywell.dtos.request.*;
+import app.bola.flywell.dto.request.*;
 import app.bola.flywell.exceptions.FieldInvalidException;
 import app.bola.flywell.exceptions.EntityNotFoundException;
 import lombok.SneakyThrows;

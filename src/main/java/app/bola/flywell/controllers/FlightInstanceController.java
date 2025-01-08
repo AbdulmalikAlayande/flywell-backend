@@ -3,8 +3,7 @@ package app.bola.flywell.controllers;
 
 import app.bola.flywell.dto.response.ApiResponse;
 import app.bola.flywell.dto.response.FlightInstanceResponse;
-import app.bola.flywell.dtos.request.*;
-import app.bola.flywell.exceptions.InvalidRequestException;
+import app.bola.flywell.dto.request.*;
 import app.bola.flywell.services.flightservice.FlightInstanceService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

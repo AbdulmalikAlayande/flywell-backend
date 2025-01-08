@@ -1,7 +1,7 @@
 package app.bola.flywell.services.notifications;
 
 import app.bola.flywell.data.model.notifications.Recipients;
-import app.bola.flywell.dtos.request.NotificationRequest;
+import app.bola.flywell.dto.request.NotificationRequest;
 import app.bola.flywell.dto.response.NotificationResponse;
 import app.bola.flywell.services.notifications.mail.MailService;
 import lombok.SneakyThrows;

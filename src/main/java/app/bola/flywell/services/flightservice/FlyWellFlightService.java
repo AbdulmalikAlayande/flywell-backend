@@ -4,7 +4,7 @@ import app.bola.flywell.data.model.Airport;
 import app.bola.flywell.data.model.flight.Flight;
 import app.bola.flywell.data.repositories.*;
 import app.bola.flywell.dto.response.FlightResponse;
-import app.bola.flywell.dtos.request.*;
+import app.bola.flywell.dto.request.*;
 import app.bola.flywell.exceptions.EntityNotFoundException;
 import app.bola.flywell.utils.Constants;
 import jakarta.validation.ConstraintViolation;
@@ -55,7 +55,6 @@ public class FlyWellFlightService implements FlightService{
 
 		flightEntity.setArrivalAirport(airportRepository.save(arrivalAirport));
 		flightEntity.setDepartureAirport(airportRepository.save(departureAirport));
-		flightEntity.setFlightInstances(new ArrayList<>());
 		flightEntity.setDuration(flightRequest.getDuration());
 
 		Flight savedFlight = flightRepository.save(flightEntity);
@@ -81,7 +80,7 @@ public class FlyWellFlightService implements FlightService{
 	@Override
 	public FlightResponse findFlightByRoute(String arrivalCity, String departureCity) {
 		ExampleMatcher matcher = ExampleMatcher.matching()
-				.withIgnorePaths("id", "duration", "displayImageName", "departureAirport", "arrivalAirport", "flightInstances")
+				.withIgnorePaths("id", "duration", "displayImageName", "departureAirport", "arrivalAirport", "instances")
 				.withMatcher("arrivalCity", ExampleMatcher.GenericPropertyMatchers.ignoreCase())
 				.withMatcher("departureCity", ExampleMatcher.GenericPropertyMatchers.ignoreCase());
 

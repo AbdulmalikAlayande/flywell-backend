@@ -1,26 +1,24 @@
 package app.bola.flywell.services.flightservice;
 
+import app.bola.flywell.data.model.aircraft.Aircraft;
 import app.bola.flywell.data.model.enums.FlightStatus;
 import app.bola.flywell.data.model.flight.Flight;
 import app.bola.flywell.data.model.flight.FlightInstance;
+import app.bola.flywell.data.repositories.AircraftRepository;
 import app.bola.flywell.data.repositories.FlightInstanceRepository;
 import app.bola.flywell.data.repositories.FlightRepository;
-import app.bola.flywell.dtos.request.FlightInstanceRequest;
+import app.bola.flywell.dto.request.FlightInstanceRequest;
 import app.bola.flywell.dto.response.FlightInstanceResponse;
 import app.bola.flywell.exceptions.EntityNotFoundException;
 import app.bola.flywell.utils.Constants;
 import io.micrometer.observation.Observation;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import static app.bola.flywell.data.model.enums.FlightStatus.SCHEDULED;
@@ -33,31 +31,51 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 	final FlightRepository flightRepository;
 	final ModelMapper mapper;
 	final Logger logger = LoggerFactory.getLogger(FlyWellFlightInstanceService.class);
+	final AircraftRepository aircraftRepository;
+	final FlightSpacingService flightSpacingService;
+
 
 	@Override
-	@Transactional
-	@Retryable(retryFor = ObjectOptimisticLockingFailureException.class, maxAttempts = 5)
 	public FlightInstanceResponse createNew(FlightInstanceRequest request) {
 
 		Flight flight = flightRepository.findByPublicId(request.getFlightId())
 				.orElseThrow(() -> new EntityNotFoundException(Constants.ENTITY_NOT_FOUND.formatted("Flight")));
 
-		FlightInstance mappedFlightInstance = mapper.map(request, FlightInstance.class);
-		mappedFlightInstance.setFlight(flight);
-		mappedFlightInstance.setStatus(SCHEDULED);
-		mappedFlightInstance.setFlightSeat(new ArrayList<>());
+		FlightInstance flightInstance = new FlightInstance();
 
-		FlightInstance savedInstance = flight.addFlightInstance(mappedFlightInstance);
+		flightInstance.setDepartureTime(request.getDepartureTime());
+		flightInstance.setArrivalTime(request.getArrivalTime());
+		flightInstance.setStatus(SCHEDULED);
+		flightInstance.setAirCraft(findAvailableAircraft());
+		flightInstance.setPriority(request.getPriority());
 
+		List<FlightInstance> existingInstances = new java.util.ArrayList<>(flight.getInstances().stream().toList());
+		existingInstances.add(flightInstance);
+
+		List<FlightInstance> scheduledInstances = flightSpacingService.scheduleFlights(existingInstances, 30);
+
+		flight.setInstances(new LinkedHashSet<>(scheduledInstances));
+
+		FlightInstance savedInstance = flightInstanceRepository.saveAndFlush(flightInstance);
+
+		flight.addFlightInstance(savedInstance);
 		flightRepository.save(flight);
-		return flightInstanceResponse(savedInstance);
+		return toResponse(savedInstance);
+	}
+
+	private Aircraft findAvailableAircraft() {
+		return aircraftRepository.findAll()
+								 .stream()
+								 .filter(Aircraft::isAvailable)
+								 .findAny()
+								 .orElse(null);
 	}
 
 	@Override
 	public FlightInstanceResponse findByPublicId(String publicId) {
-		FlightInstance flightInstance = flightInstanceRepository.findByPublicId(publicId)
-				.orElseThrow(() -> new EntityNotFoundException(Constants.ENTITY_NOT_FOUND.formatted("Flight Instance")));
-		return flightInstanceResponse(flightInstance);
+		FlightInstance instance = flightInstanceRepository.findByPublicId(publicId)
+				.orElseThrow(() -> new EntityNotFoundException(Constants.ENTITY_NOT_FOUND.formatted("Flight FlightInstance")));
+		return toResponse(instance);
 	}
 
 	@Override
@@ -65,29 +83,20 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 		return false;
 	}
 
-	private FlightInstanceResponse flightInstanceResponse(FlightInstance flightInstance) {
+	private FlightInstanceResponse toResponse(FlightInstance instance) {
 
-		ModelMapper map = new ModelMapper();
-		map.addMappings(new PropertyMap<FlightInstance, FlightInstanceResponse>() {
-
-			@Override
-			protected void configure() {
-				map().setArrivalAirportAddress(source.getFlight().getArrivalAirport().getAddress());
-				map().setArrivalAirportName(source.getFlight().getArrivalAirport().getName());
-				map().setArrivalAirportIcaoCode(source.getFlight().getArrivalAirport().getIcaoCode());
-				
-				map().setDepartureAirportAddress(source.getFlight().getDepartureAirport().getAddress());
-				map().setDepartureAirportName(source.getFlight().getDepartureAirport().getName());
-				map().setDepartureAirportIcaoCode(source.getFlight().getDepartureAirport().getIcaoCode());
-			}
-		});
-		return map.map(flightInstance, FlightInstanceResponse.class);
+		FlightInstanceResponse response = mapper.map(instance, FlightInstanceResponse.class);
+		response.setArrivalAirportName(instance.getFlight().getArrivalAirport().getName());
+		response.setDepartureAirportName(instance.getFlight().getDepartureAirport().getName());
+		logger.info("Flight Instance:: {}", instance);
+		logger.info("Flight Instance Response:: {}", response);
+		return response;
 	}
 	
 	@Override
 	public List<FlightInstanceResponse> findAllByStatus(FlightStatus status){
 		List<FlightInstance> foundInstances = flightInstanceRepository.findByStatus(status);
-		return foundInstances.stream().map(this::flightInstanceResponse).toList();
+		return foundInstances.stream().map(this::toResponse).toList();
 	}
 
 	@Override

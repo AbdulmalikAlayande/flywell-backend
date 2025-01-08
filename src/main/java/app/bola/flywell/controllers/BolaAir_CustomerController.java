@@ -1,7 +1,7 @@
 package app.bola.flywell.controllers;
 
-import app.bola.flywell.dtos.request.CustomerRequest;
-import app.bola.flywell.dtos.request.LoginRequest;
+import app.bola.flywell.dto.request.CustomerRequest;
+import app.bola.flywell.dto.request.LoginRequest;
 import app.bola.flywell.dto.response.ApiResponse;
 import app.bola.flywell.dto.response.CustomerResponse;
 import app.bola.flywell.dto.response.LoginResponse;

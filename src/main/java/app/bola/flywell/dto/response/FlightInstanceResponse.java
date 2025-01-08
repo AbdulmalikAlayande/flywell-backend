@@ -8,6 +8,10 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
+/**
+ *  Response DTO corresponding to {@link app.bola.flywell.data.model.flight.FlightInstance}
+ */
+
 @Getter
 @Setter
 @SuperBuilder
@@ -21,13 +25,10 @@ public class FlightInstanceResponse extends BaseResponse {
 	long flightDuration;
 	boolean isFullyBooked;
 	String departureAirportName;
-	String departureAirportIcaoCode;
-	String departureAirportAddress;
 	String arrivalAirportName;
-	String arrivalAirportIcaoCode;
-	String arrivalAirportAddress;
 	LocalDateTime departureTime;
 	LocalDateTime arrivalTime;
+	AirCraftResponse aircraft;
 
 	@Override
 	public String toString() {
@@ -38,18 +39,9 @@ public class FlightInstanceResponse extends BaseResponse {
 				.add("flightDuration", flightDuration)
 				.add("isFullyBooked", isFullyBooked)
 				.add("departureAirportName", departureAirportName)
-				.add("departureAirportIcaoCode", departureAirportIcaoCode)
-				.add("departureAirportAddress", departureAirportAddress)
 				.add("arrivalAirportName", arrivalAirportName)
-				.add("arrivalAirportIcaoCode", arrivalAirportIcaoCode)
-				.add("arrivalAirportAddress", arrivalAirportAddress)
 				.add("departureDate", departureTime)
 				.add("arrivalDate", arrivalTime)
-				.add("createdDate", getCreatedDate())
-				.add("lastModifiedDate", getLastModifiedDate())
-				.add("createdBy", getCreatedBy())
-				.add("createdByRole", getCreatedByRole())
-				.add("lastModifiedBy", getLastModifiedBy())
 				.toString();
 	}
 }

@@ -1,6 +1,6 @@
 package app.bola.flywell.controllers;
 
-import app.bola.flywell.dtos.request.FlightRequest;
+import app.bola.flywell.dto.request.FlightRequest;
 import app.bola.flywell.dto.response.ApiResponse;
 import app.bola.flywell.dto.response.FlightResponse;
 import app.bola.flywell.services.flightservice.FlightService;

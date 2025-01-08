@@ -5,14 +5,14 @@ import app.bola.flywell.data.model.persons.CrewMember;
 import app.bola.flywell.dto.response.CreateCrewMemberResponse;
 import app.bola.flywell.dto.response.CrewMemberResponse;
 import app.bola.flywell.dto.response.FlightScheduleResponse;
-import app.bola.flywell.dtos.request.*;
+import app.bola.flywell.dto.request.*;
 import app.bola.flywell.exceptions.*;
 import java.util.Optional;
 
 public interface CrewMemberService {
     CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) throws EmptyFieldException, FieldInvalidException;
     void deleteCrewMemberById(String id) throws InvalidRequestException;
-    FlightInstance assignCrewMember(FlightInstance flightInstance);
+    FlightInstance assignCrewMember(FlightInstance instance);
     void deleteCrewMemberByUsername(String userName) throws InvalidRequestException;
 
     long getCountOfCrewMembers();

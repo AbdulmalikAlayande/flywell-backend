@@ -1,7 +1,7 @@
 package app.bola.flywell.services.flightservice;
 
 import app.bola.flywell.dto.response.FlightResponse;
-import app.bola.flywell.dtos.request.*;
+import app.bola.flywell.dto.request.*;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

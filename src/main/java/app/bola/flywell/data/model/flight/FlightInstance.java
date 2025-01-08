@@ -2,69 +2,76 @@ package app.bola.flywell.data.model.flight;
 
 import app.bola.flywell.annotations.FlightNumberSequence;
 import app.bola.flywell.basemodules.FlyWellModel;
-import app.bola.flywell.data.model.aircraft.AirCraft;
+import app.bola.flywell.data.model.aircraft.Aircraft;
 import app.bola.flywell.data.model.enums.FlightStatus;
+import com.google.common.base.MoreObjects;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.proxy.HibernateProxy;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static jakarta.persistence.EnumType.STRING;
 
 @Entity
 @Getter
 @Setter
-@ToString
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class FlightInstance extends FlyWellModel {
 
-	private boolean isFullyBooked;
+	private boolean isFullyBooked = Boolean.FALSE;
+
 	@Column(unique = true)
 	@FlightNumberSequence(name = "flight_number_sequence", startWith = 1000, incrementBy = 3)
 	private String flightNumber;
+
 	private LocalDateTime departureTime;
 	private LocalDateTime arrivalTime;
 	private int baggageAllowance;
+
 	@OneToOne
-	private AirCraft airCraft;
+	private Aircraft airCraft;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@ToString.Exclude
 	private Flight flight;
+
 	@Enumerated(STRING)
 	private FlightStatus status;
-	@OneToMany()
+
+	@OneToMany
 	@ToString.Exclude
-	private List<FlightSeat> flightSeat;
+	private Set<FlightSeat> flightSeat = new LinkedHashSet<>();
 
-	@Override
-	public final boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null)
-			return false;
-		Class<?> oEffectiveClass = o instanceof HibernateProxy hibernateProxy
-				? hibernateProxy.getHibernateLazyInitializer().getPersistentClass()
-				: o.getClass();
-		Class<?> thisEffectiveClass = this instanceof HibernateProxy hibernateProxy
-				? hibernateProxy.getHibernateLazyInitializer().getPersistentClass()
-				: this.getClass();
-		if (thisEffectiveClass != oEffectiveClass)
-			return false;
-		FlightInstance that = (FlightInstance) o;
-		return this.getId() != null && Objects.equals(getId(), that.getId());
+	private int priority = 0;
+	private long durationMinutes;
+
+	@PostLoad
+	@PostPersist
+	@PostUpdate
+	private void computeDuration() {
+		if (departureTime != null && arrivalTime != null) {
+			this.durationMinutes = Duration.between(departureTime, arrivalTime).toMinutes();
+		}
 	}
 
 	@Override
-	public final int hashCode() {
-		return this instanceof HibernateProxy hibernateProxy
-				? hibernateProxy.getHibernateLazyInitializer().getPersistentClass().hashCode()
-				: getClass().hashCode();
+	public String toString() {
+		return MoreObjects.toStringHelper(this)
+				.add("id", getId())
+				.add("publicId", getPublicId())
+				.add("isFullyBooked", isFullyBooked)
+				.add("flightNumber", flightNumber)
+				.add("departureTime", departureTime)
+				.add("arrivalTime", arrivalTime)
+				.add("baggageAllowance", baggageAllowance)
+				.add("airCraft", airCraft)
+				.add("status", status)
+				.toString();
 	}
-
 }

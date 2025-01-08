@@ -1,5 +1,5 @@
 -- Creation of a sequence table for flightNumber in FlightInstance model.
-CREATE TABLE flight_number_sequence (
+CREATE TABLE IF NOT EXISTS flight_number_sequence (
                                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                         next_val INT NOT NULL
 );

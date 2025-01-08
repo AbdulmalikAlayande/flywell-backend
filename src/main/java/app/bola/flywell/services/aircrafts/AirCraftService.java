@@ -1,6 +1,6 @@
-package app.bola.flywell.services.aircraftsservice;
+package app.bola.flywell.services.aircrafts;
 
-import app.bola.flywell.dtos.request.AirCraftRequest;
+import app.bola.flywell.dto.request.AirCraftRequest;
 import app.bola.flywell.dto.response.AirCraftResponse;
 
 public interface AirCraftService {

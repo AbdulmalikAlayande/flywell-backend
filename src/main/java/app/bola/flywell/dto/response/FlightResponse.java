@@ -33,11 +33,6 @@ public class FlightResponse extends BaseResponse {
 				.add("departureCity", departureCity)
 				.add("arrivalAirportName", arrivalAirportName)
 				.add("departureAirportName", departureAirportName)
-				.add("createdDate", getCreatedDate())
-				.add("lastModifiedDate", getLastModifiedDate())
-				.add("createdBy", getCreatedBy())
-				.add("createdByRole", getCreatedByRole())
-				.add("lastModifiedBy", getLastModifiedBy())
 				.toString();
 	}
 }

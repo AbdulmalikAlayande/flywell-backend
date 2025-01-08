@@ -2,7 +2,7 @@ package app.bola.flywell.services.userservice;
 
 import app.bola.flywell.dto.response.CustomerResponse;
 import app.bola.flywell.dto.response.LoginResponse;
-import app.bola.flywell.dtos.request.*;
+import app.bola.flywell.dto.request.*;
 import app.bola.flywell.exceptions.FailedRegistrationException;
 import app.bola.flywell.exceptions.InvalidRequestException;
 import app.bola.flywell.exceptions.LoginFailedException;

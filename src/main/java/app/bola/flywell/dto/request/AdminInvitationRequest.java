@@ -1,4 +1,4 @@
-package app.bola.flywell.dtos.request;
+package app.bola.flywell.dto.request;
 
 
 import jakarta.validation.Valid;

@@ -1,6 +1,6 @@
 package app.bola.flywell.controllers;
 
-import app.bola.flywell.dtos.request.*;
+import app.bola.flywell.dto.request.*;
 import app.bola.flywell.dto.response.AdminInvitationResponse;
 import app.bola.flywell.dto.response.ApiResponse;
 import app.bola.flywell.dto.response.CreateAdminResponse;

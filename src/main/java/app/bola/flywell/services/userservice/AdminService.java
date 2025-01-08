@@ -1,7 +1,7 @@
 package app.bola.flywell.services.userservice;
 
+import app.bola.flywell.dto.request.*;
 import app.bola.flywell.dto.response.*;
-import app.bola.flywell.dtos.request.*;
 import app.bola.flywell.exceptions.*;
 
 

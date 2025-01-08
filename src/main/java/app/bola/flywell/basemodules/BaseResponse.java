@@ -9,6 +9,11 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * Base Response class for all response DTOs corresponding to {@link FlyWellModel}
+ */
+
+
 @Getter
 @Setter
 @SuperBuilder
@@ -19,21 +24,12 @@ import java.time.LocalDateTime;
 public class BaseResponse implements Serializable {
 
     String publicId;
-    LocalDateTime createdDate;
-    LocalDateTime lastModifiedDate;
-    String createdBy;
-    String createdByRole;
-    String lastModifiedBy;
+
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("publicId", publicId)
-                .add("createdDate", createdDate)
-                .add("lastModifiedDate", lastModifiedDate)
-                .add("createdBy", createdBy)
-                .add("createdByRole", createdByRole)
-                .add("lastModifiedBy", lastModifiedBy)
                 .toString();
     }
 }

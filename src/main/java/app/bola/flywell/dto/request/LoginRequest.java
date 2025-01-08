@@ -1,4 +1,4 @@
-package app.bola.flywell.dtos.request;
+package app.bola.flywell.dto.request;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;

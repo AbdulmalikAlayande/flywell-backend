@@ -2,7 +2,7 @@ package app.bola.flywell.services.flightservice;
 
 import app.bola.flywell.basemodules.FlyWellService;
 import app.bola.flywell.data.model.enums.FlightStatus;
-import app.bola.flywell.dtos.request.FlightInstanceRequest;
+import app.bola.flywell.dto.request.FlightInstanceRequest;
 import app.bola.flywell.dto.response.FlightInstanceResponse;
 import app.bola.flywell.exceptions.InvalidRequestException;
 import jakarta.validation.constraints.NotNull;

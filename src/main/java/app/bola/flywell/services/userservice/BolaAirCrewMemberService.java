@@ -11,7 +11,7 @@ import app.bola.flywell.data.repositories.UserBioDataRepository;
 import app.bola.flywell.dto.response.CreateCrewMemberResponse;
 import app.bola.flywell.dto.response.CrewMemberResponse;
 import app.bola.flywell.dto.response.FlightScheduleResponse;
-import app.bola.flywell.dtos.request.*;
+import app.bola.flywell.dto.request.*;
 import app.bola.flywell.exceptions.*;
 import java.util.Optional;
 import app.bola.flywell.services.notifications.Validator;
@@ -89,7 +89,7 @@ public class BolaAirCrewMemberService implements CrewMemberService {
     }
 
     @Override
-    public FlightInstance assignCrewMember(FlightInstance flightInstance) {
+    public FlightInstance assignCrewMember(FlightInstance instance) {
         return null;
     }
 

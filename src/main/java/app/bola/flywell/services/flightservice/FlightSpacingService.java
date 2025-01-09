@@ -1,7 +1,6 @@
 package app.bola.flywell.services.flightservice;
 
 import app.bola.flywell.data.model.flight.FlightInstance;
-import app.bola.flywell.data.repositories.FlightInstanceRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +12,6 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class FlightSpacingService {
-
-	final FlightInstanceRepository flightInstanceRepository;
 
 	/**
 	 * Schedules flights while ensuring minimum spacing and avoiding conflicts.
@@ -44,7 +41,7 @@ public class FlightSpacingService {
 				scheduledFlights.add(flight);
 			}
 		}
-		return flightInstanceRepository.saveAll(scheduledFlights);
+		return scheduledFlights;
 	}
 
 	private boolean isConflict(FlightInstance scheduled, FlightInstance newFlight, int minSpacingMinutes) {

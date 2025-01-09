@@ -12,16 +12,14 @@ import app.bola.flywell.dto.response.FlightInstanceResponse;
 import app.bola.flywell.exceptions.EntityNotFoundException;
 import app.bola.flywell.utils.Constants;
 import io.micrometer.observation.Observation;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-
-import static app.bola.flywell.data.model.enums.FlightStatus.SCHEDULED;
+ import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -36,31 +34,18 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 
 
 	@Override
+	@Transactional
 	public FlightInstanceResponse createNew(FlightInstanceRequest request) {
-
 		Flight flight = flightRepository.findByPublicId(request.getFlightId())
 				.orElseThrow(() -> new EntityNotFoundException(Constants.ENTITY_NOT_FOUND.formatted("Flight")));
 
-		FlightInstance flightInstance = new FlightInstance();
-
-		flightInstance.setDepartureTime(request.getDepartureTime());
-		flightInstance.setArrivalTime(request.getArrivalTime());
-		flightInstance.setStatus(SCHEDULED);
-		flightInstance.setAirCraft(findAvailableAircraft());
-		flightInstance.setPriority(request.getPriority());
-
-		List<FlightInstance> existingInstances = new java.util.ArrayList<>(flight.getInstances().stream().toList());
-		existingInstances.add(flightInstance);
-
-		List<FlightInstance> scheduledInstances = flightSpacingService.scheduleFlights(existingInstances, 30);
-
-		flight.setInstances(new LinkedHashSet<>(scheduledInstances));
-
-		FlightInstance savedInstance = flightInstanceRepository.saveAndFlush(flightInstance);
-
-		flight.addFlightInstance(savedInstance);
+		FlightInstance flightInstance = mapper.map(request, FlightInstance.class);
+		logger.info("Ex: {}", flightInstance);
+		flightInstance.setId(null);
+		flightInstance.setStatus(FlightStatus.SCHEDULED);
+		flight.addFlightInstance(flightInstance);
 		flightRepository.save(flight);
-		return toResponse(savedInstance);
+		return toResponse(flightInstance);
 	}
 
 	private Aircraft findAvailableAircraft() {

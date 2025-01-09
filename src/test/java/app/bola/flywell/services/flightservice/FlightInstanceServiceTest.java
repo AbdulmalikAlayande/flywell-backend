@@ -34,6 +34,7 @@ class FlightInstanceServiceTest {
 	@SneakyThrows
 	void startEachTestWith() {
 		flightService.removeAll();
+		flightInstanceService.removeAll();
 		flightResponse = flightService.createNew(buildFlight());
 	}
 
@@ -44,56 +45,55 @@ class FlightInstanceServiceTest {
 		assertThat(response).hasNoNullFieldsOrPropertiesExcept("aircraft");
 	}
 
-	@Test
-	void createNewFlightInstance_AvailableAircraftIsAssociatedWithFlightInstance_AndIsAutomaticallyUnavailable() {
-
-	}
-
-	@Test
-	void createNewFlightInstance_ProperFlightSpacingIsApplied_ToMaintainSafeDistanceBetweenConsecutiveFlights() {
-
-	}
-
-	@Test
-	void createNewFlightInstance_AssignAircraftToFlightInstanceTest() {
-
-	}
-
-	@Test
-	void createNewFlightInstance_AssignAircraftToFlightInstance_AircraftIsAssignedIfPassedFlightRequirement() {
-
-	}
-
-	@Test
-	void testThatIfFlightIsFilled_FlightMovementIsScheduledImmediately() {
-
-	}
+//	@Test
+//	void createNewFlightInstance_AvailableAircraftIsAssociatedWithFlightInstance_AndIsAutomaticallyUnavailable() {
+//
+//	}
+//
+//	@Test
+//	void createNewFlightInstance_ProperFlightSpacingIsApplied_ToMaintainSafeDistanceBetweenConsecutiveFlights() {
+//
+//	}
+//
+//	@Test
+//	void createNewFlightInstance_AssignAircraftToFlightInstanceTest() {
+//
+//	}
+//
+//	@Test
+//	void createNewFlightInstance_AssignAircraftToFlightInstance_AircraftIsAssignedIfPassedFlightRequirement() {
+//
+//	}
+//
+//	@Test
+//	void testThatIfFlightIsFilled_FlightMovementIsScheduledImmediately() {
+//
+//	}
 
 		@Test
 		public void testScheduleFlights() {
-			// Create test data
-			List<FlightInstance> flights = List.of(
+			List<FlightInstanceRequest> flights = List.of(
 					createFlightInstance("F1", LocalDateTime.of(2025, 1, 8, 8, 0), LocalDateTime.of(2025, 1, 8, 10, 0), 1),
 					createFlightInstance("F2", LocalDateTime.of(2025, 1, 8, 8, 30), LocalDateTime.of(2025, 1, 8, 9, 30), 2),
 					createFlightInstance("F3", LocalDateTime.of(2025, 1, 8, 9, 45), LocalDateTime.of(2025, 1, 8, 11, 0), 3)
 			);
 
-			// Run the algorithm
-			List<FlightInstance> scheduledFlights = flightSpacingService.scheduleFlights(flights, 30);
+			List<FlightInstanceResponse> scheduledFlights =  flights.stream().map(flight -> {
+				return flightInstanceService.createNew(flight);
+			}).toList();
 
-			// Assert results
 			assertEquals(3, scheduledFlights.size());
 			assertTrue(scheduledFlights.get(1).getDepartureTime().isAfter(scheduledFlights.get(0).getArrivalTime().plusMinutes(30)));
 			assertTrue(scheduledFlights.get(2).getDepartureTime().isAfter(scheduledFlights.get(1).getArrivalTime().plusMinutes(30)));
 		}
 
-		private FlightInstance createFlightInstance(String flightNumber, LocalDateTime departure, LocalDateTime arrival, int priority) {
-			FlightInstance flight = new FlightInstance();
-			flight.setFlightNumber(flightNumber);
-			flight.setDepartureTime(departure);
-			flight.setArrivalTime(arrival);
-			flight.setPriority(priority);
-			return flight;
+		private FlightInstanceRequest createFlightInstance(String flightId, LocalDateTime departure, LocalDateTime arrival, int priority) {
+			FlightInstanceRequest instance = new FlightInstanceRequest();
+			instance.setFlightId(flightId);
+			instance.setDepartureTime(departure);
+			instance.setArrivalTime(arrival);
+			instance.setPriority(priority);
+			return instance;
 		}
 
 

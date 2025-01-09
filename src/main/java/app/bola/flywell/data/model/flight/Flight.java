@@ -11,7 +11,7 @@ import java.util.Set;
 
 
 import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.FetchType.EAGER;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -33,15 +33,15 @@ public class Flight extends FlyWellModel {
 	@OneToOne(cascade = ALL)
 	private Airport arrivalAirport;
 
-	@OneToMany(mappedBy = "flight", cascade = ALL, fetch = EAGER)
-	private Set<FlightInstance> instances = new LinkedHashSet<>();
-
+	@OneToMany(cascade = ALL, orphanRemoval = true)
+	private Set<FlightInstance> flightInstances;
 
 	public void addFlightInstance(FlightInstance newInstance){
-		newInstance.setFlight(this);
-		this.instances.add(newInstance);
+		if (newInstance != null){
+			newInstance.setFlight(this);
+			flightInstances.add(newInstance);
+		}
 	}
-
 
 	@Override
 	public String toString() {
@@ -54,7 +54,6 @@ public class Flight extends FlyWellModel {
 				.add("displayImage", displayImage)
 				.add("departureAirport", departureAirport)
 				.add("arrivalAirport", arrivalAirport)
-				.add("instances", instances)
 				.toString();
 	}
 }

@@ -23,7 +23,8 @@ public class FlyWellFlightReservationService implements FlightReservationService
         FlightReservation reservation = mapper.map(request, FlightReservation.class);
         reservation.setReservationNumber(generator.generateFlightReservationNumber());
 
-        return null;
+        FlightReservation savedReservation = reservationRepository.save(reservation);
+        return toResponse(savedReservation);
     }
 
     public FlightReservationResponse findByPublicId(String publicId) {
@@ -39,5 +40,9 @@ public class FlyWellFlightReservationService implements FlightReservationService
     }
 
     public void removeAll() {
+    }
+
+    private FlightReservationResponse toResponse(FlightReservation reservation){
+        return mapper.map(reservation, FlightReservationResponse.class);
     }
 }

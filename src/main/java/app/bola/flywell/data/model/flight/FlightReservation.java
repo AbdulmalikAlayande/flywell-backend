@@ -1,25 +1,24 @@
 package app.bola.flywell.data.model.flight;
 
+import app.bola.flywell.basemodules.FlyWellModel;
 import app.bola.flywell.data.model.Passenger;
 import app.bola.flywell.data.model.enums.ReservationStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
 
 import java.time.LocalDate;
 import java.util.Map;
 
+@Getter
+@Setter
 @Entity
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@Builder
-public class FlightReservation {
-	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
-	private String id;
+public class FlightReservation extends FlyWellModel {
+
 	private String reservationNumber;
 	private LocalDate creationDate;
 	private ReservationStatus status;

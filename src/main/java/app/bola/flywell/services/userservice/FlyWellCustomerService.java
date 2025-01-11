@@ -10,12 +10,13 @@ import app.bola.flywell.dto.response.CustomerResponse;
 import app.bola.flywell.exceptions.EntityNotFoundException;
 import app.bola.flywell.services.notifications.mail.MailService;
 import app.bola.flywell.dto.request.CustomerRequest;
-import app.bola.flywell.dto.request.UpdateRequest;
 import app.bola.flywell.exceptions.FailedRegistrationException;
 import app.bola.flywell.exceptions.InvalidRequestException;
 
 
 import app.bola.flywell.utils.Constants;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -30,25 +32,30 @@ import java.util.*;
 @Service
 @AllArgsConstructor
 public class FlyWellCustomerService implements CustomerService {
-	
+
+	final Validator validator;
+	final ModelMapper mapper;
+	final MailService mailer;
+	final OTPService otpService;
 	final CustomerRepository customerRepository;
 	final UserBioDataRepository userBioDataRepository;
-	final ModelMapper mapper;
-	final OTPService otpService;
-	final MailService mailer;
 	final Logger logger = LoggerFactory.getLogger(FlyWellCustomerService.class);
 
     @Override
 	@Transactional(rollbackFor = {SQLException.class, FailedRegistrationException.class})
 	public CustomerResponse createNew(@NotNull CustomerRequest customerRequest) {
-			
+
+		Set<ConstraintViolation<CustomerRequest>> violations = validator.validate(customerRequest);
+		Assert.isTrue(violations.isEmpty(), violations.stream().map(violation -> String.format("Field '%s': %s",
+				violation.getPropertyPath(), violation.getMessage())).toList().toString());
+
 		UserBioData bioData = mapper.map(customerRequest, UserBioData.class);
 		UserBioData savedBio = userBioDataRepository.save(bioData);
 		Customer customer = new Customer();
 		customer.setBioData(savedBio);
 		Customer savedCustomer = customerRepository.save(customer);
 		
-		OTP otp = createOtp(bioData.getEmail());
+		OTP otp = otpService.createNew(bioData.getEmail());
 		long otpData = otp.getData();
 		mailer.sendOtp(buildNotificationRequest(bioData.getFirstName(), bioData.getEmail(), otpData));
 		
@@ -58,15 +65,10 @@ public class FlyWellCustomerService implements CustomerService {
 	}
 
 
-	public OTP createOtp(String email){
-		OTP generatedTotp = otpService.generateTOTP(email);
-		return otpService.saveOTP(generatedTotp);
-	}
-
 	@Override
 	@Transactional
 	public CustomerResponse activateCustomerAccount(String OTP, String publicId) throws InvalidRequestException {
-		OTP otp = otpService.verifiedOtp(OTP);
+		OTP otp = otpService.verifyOtp(OTP);
 		logger.info("OTP successfully verified. Generated OTP: {}. For User {}", otp, publicId);
 		Customer customer = customerRepository.findByPublicId(publicId).orElseThrow(()->new InvalidRequestException("USER WITH EMAIL NOT FOUND"));
 		return toResponse(customer);
@@ -85,24 +87,11 @@ public class FlyWellCustomerService implements CustomerService {
 				       .firstName(firstName)
 				       .build();
 	}
-	
-	@Override
-	public CustomerResponse updateDetailsOfRegisteredCustomer(@NotNull UpdateRequest updateRequest) {
-		CustomerResponse response = new CustomerResponse();
-		ModelMapper modelMapper = new ModelMapper();
-		modelMapper.getConfiguration().setSkipNullEnabled(true);
-		return response;
-	}
 
 	
 	@Override
 	public List<CustomerResponse> findAll() {
-		List<Customer> allCustomers = customerRepository.findAll();
-		return new ArrayList<>(allCustomers.stream().map(passenger -> {
-			CustomerResponse response = new CustomerResponse();
-			mapper.map(passenger.getBioData(), response);
-			return response;
-		}).toList());
+		return customerRepository.findAll().stream().map(this::toResponse).toList();
 	}
 
 	
@@ -115,7 +104,7 @@ public class FlyWellCustomerService implements CustomerService {
 
 	@Override
 	public boolean existsByPublicId(String publicId) {
-		return false;
+		return customerRepository.existsByPublicId(publicId);
 	}
 
 	@Override public long getCountOfCustomers() {

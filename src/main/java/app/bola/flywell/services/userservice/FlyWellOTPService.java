@@ -15,7 +15,7 @@ import static java.math.BigInteger.valueOf;
 
 @Service
 @AllArgsConstructor
-public class BolaAIr_OTPService implements OTPService {
+public class FlyWellOTPService implements OTPService {
 	
 	private EmailValidationConfig validationConfig;
 	private OTPRepository otpRepository;
@@ -24,12 +24,22 @@ public class BolaAIr_OTPService implements OTPService {
 	
 	
 	@Override
-	public OTP saveOTP(OTP otp) {
+	public OTP createNew(String email) {
+
+		String value = generateTOTP(email);
+		String secretKey = email+validationConfig.getTotpSecret();
+
+		OTP.OTPBuilder<?, ?> otpBuilder = OTP.builder();
+		otpBuilder.staleTime(System.currentTimeMillis()+TIME_STEP);
+		otpBuilder.secretKey(secretKey);
+		otpBuilder.userEmail(email);
+		otpBuilder.data(Long.parseLong(value));
+		OTP otp = otpBuilder.build();
+
 		return otpRepository.save(otp);
 	}
 	
-	@Override
-	public OTP generateTOTP(String input) {
+	private String generateTOTP(String input) {
 		String secretKey = input+validationConfig.getTotpSecret();
 		String emailHashcode = String.valueOf(secretKey.hashCode());
 		int halfLength = emailHashcode.length() / 2;
@@ -44,18 +54,13 @@ public class BolaAIr_OTPService implements OTPService {
 		String stringValueOfAddition;
 		if (addition > 0) stringValueOfAddition = String.valueOf(addition);
 		else stringValueOfAddition = String.valueOf(-1*addition);
-		String stingOfLengthSix;
+		String stringOfLengthSix;
 		if (stringValueOfAddition.length() != 6)
-			stingOfLengthSix=getStringOfLengthSix(stringValueOfAddition);
-		else stingOfLengthSix = stringValueOfAddition;
-		return saveOTP(OTP.builder()
-			               .staleTime(System.currentTimeMillis()+TIME_STEP)
-			               .secretKey(secretKey)
-				           .userEmail(input)
-			               .data(Long.parseLong(stingOfLengthSix))
-			               .build());
+			stringOfLengthSix=getStringOfLengthSix(stringValueOfAddition);
+		else stringOfLengthSix = stringValueOfAddition;
+		return stringOfLengthSix;
 	}
-	
+
 	public String getStringOfLengthSix(String value){
 		int remainingLength = value.length() - TOTP_LENGTH;
 		System.out.println(remainingLength);
@@ -85,8 +90,7 @@ public class BolaAIr_OTPService implements OTPService {
 		return valueOfLengthSix.toString();
 	}
 	
-	@Override
-	public OTP validatedTOTP(String inputTotp) throws InvalidRequestException {
+	private OTP validatedTOTP(String inputTotp) throws InvalidRequestException {
 		Optional<OTP> foundOTPRef = otpRepository.findByData(Long.parseLong(inputTotp));
 		return foundOTPRef.map(otp -> {
 			long currentTimeInMilliSeconds = System.currentTimeMillis();
@@ -107,7 +111,7 @@ public class BolaAIr_OTPService implements OTPService {
 	}
 	
 	@Override
-	public OTP verifiedOtp(String totp) throws InvalidRequestException {
+	public OTP verifyOtp(String totp) throws InvalidRequestException {
 		return validatedTOTP(totp);
 	}
 }

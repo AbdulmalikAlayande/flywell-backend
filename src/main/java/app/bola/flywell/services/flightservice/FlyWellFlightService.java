@@ -38,16 +38,11 @@ public class FlyWellFlightService implements FlightService{
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public FlightResponse createNew(@Valid FlightRequest flightRequest) {
-		Set<ConstraintViolation<FlightRequest>> violations = validator.validate(flightRequest);
 
-		Assert.isTrue(violations.isEmpty(),
-				violations.stream()
-						.map(violation -> String.format("Field '%s': %s",
-								violation.getPropertyPath(),
-								violation.getMessage())
-						)
-						.toList().toString()
-		);
+		Set<ConstraintViolation<FlightRequest>> violations = validator.validate(flightRequest);
+		Assert.isTrue(violations.isEmpty(), violations.stream().map(violation -> String.format("Field '%s': %s",
+				violation.getPropertyPath(), violation.getMessage())).toList().toString());
+
 		Flight flightEntity = mapper.map(flightRequest, Flight.class);
 			
 		Airport arrivalAirport = mapper.map(flightRequest.getDestinationAirport(), Airport.class);

@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 @Setter
 public class FlightSeat extends FlyWellModel {
 
-	public int seatNumber;
 	private SeatStatus status;
 	private BigDecimal seatPrice;
 	private String reservationNumber;

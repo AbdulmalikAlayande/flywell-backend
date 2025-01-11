@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class AircraftServiceTest {
 	
 	@Autowired
-	private AirCraftService airCraftService;
+	private AircraftService airCraftService;
 	
 	@Test void saveAirCraftTest(){
 	

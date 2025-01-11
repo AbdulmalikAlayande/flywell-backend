@@ -28,7 +28,7 @@ public class FlightInstanceResponse extends BaseResponse {
 	String arrivalAirportName;
 	LocalDateTime departureTime;
 	LocalDateTime arrivalTime;
-	AirCraftResponse aircraft;
+	AircraftResponse aircraft;
 
 	@Override
 	public String toString() {

@@ -3,6 +3,7 @@ package app.bola.flywell.services.flightservice;
 import app.bola.flywell.basemodules.FlyWellService;
 import app.bola.flywell.data.model.enums.FlightStatus;
 import app.bola.flywell.dto.request.FlightInstanceRequest;
+import app.bola.flywell.dto.response.AircraftResponse;
 import app.bola.flywell.dto.response.FlightInstanceResponse;
 import app.bola.flywell.exceptions.InvalidRequestException;
 import jakarta.validation.constraints.NotNull;
@@ -53,14 +54,7 @@ public interface FlightInstanceService extends FlyWellService<FlightInstanceRequ
 	 * @param id the unique identifier of the flight instance to cancel.
 	 */
 	void cancelInstance(@NotNull String id);
-	
-	/**
-	 * Retrieves all flight instances for a specific flight model.
-	 *
-	 * @param flightModelId the unique identifier of the flight model.
-	 * @return a list of flight instance responses corresponding to the given flight model.
-	 */
-	List<FlightInstanceResponse> findAllByFlightModel(@NotNull String flightModelId);
+
 	
 	/**
 	 * Checks the availability of seats in the specified flight instance.
@@ -88,4 +82,8 @@ public interface FlightInstanceService extends FlyWellService<FlightInstanceRequ
 		// Default implementation for batch removal
 		throw new UnsupportedOperationException("removeAll is not implemented");
 	}
+
+    AircraftResponse getAssignedAircraft(String publicId);
+
+    FlightInstanceResponse assignAircraft(String publicId);
 }

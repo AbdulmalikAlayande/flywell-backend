@@ -23,8 +23,8 @@ public class FlightReservation {
 	private String reservationNumber;
 	private LocalDate creationDate;
 	private ReservationStatus status;
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	private Map<Passenger, FlightForm> formMap;
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	private Map<Passenger, FlightSeat> seatMap;
 }

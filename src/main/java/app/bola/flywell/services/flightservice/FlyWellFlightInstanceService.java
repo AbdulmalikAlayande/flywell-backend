@@ -8,18 +8,24 @@ import app.bola.flywell.data.repositories.AircraftRepository;
 import app.bola.flywell.data.repositories.FlightInstanceRepository;
 import app.bola.flywell.data.repositories.FlightRepository;
 import app.bola.flywell.dto.request.FlightInstanceRequest;
+import app.bola.flywell.dto.response.AircraftResponse;
 import app.bola.flywell.dto.response.FlightInstanceResponse;
 import app.bola.flywell.exceptions.EntityNotFoundException;
+import app.bola.flywell.services.aircrafts.AircraftService;
 import app.bola.flywell.utils.Constants;
 import io.micrometer.observation.Observation;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
- import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static app.bola.flywell.data.model.enums.FlightStatus.SCHEDULED;
 
 @Service
 @AllArgsConstructor
@@ -29,6 +35,7 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 	final FlightRepository flightRepository;
 	final ModelMapper mapper;
 	final Logger logger = LoggerFactory.getLogger(FlyWellFlightInstanceService.class);
+	final AircraftService aircraftService;
 	final AircraftRepository aircraftRepository;
 	final FlightSpacingService flightSpacingService;
 
@@ -36,30 +43,47 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 	@Override
 	@Transactional
 	public FlightInstanceResponse createNew(FlightInstanceRequest request) {
+
 		Flight flight = flightRepository.findByPublicId(request.getFlightId())
 				.orElseThrow(() -> new EntityNotFoundException(Constants.ENTITY_NOT_FOUND.formatted("Flight")));
 
-		FlightInstance flightInstance = mapper.map(request, FlightInstance.class);
-		logger.info("Ex: {}", flightInstance);
-		flightInstance.setId(null);
-		flightInstance.setStatus(FlightStatus.SCHEDULED);
+		FlightInstance flightInstance = new FlightInstance();
+
+		flightInstance.setDepartureTime(request.getDepartureTime());
+		flightInstance.setArrivalTime(request.getArrivalTime());
+		flightInstance.setStatus(SCHEDULED);
+		flightInstance.setPriority(request.getPriority());
 		flight.addFlightInstance(flightInstance);
-		flightRepository.save(flight);
-		return toResponse(flightInstance);
+		FlightInstance savedInstance = flightInstanceRepository.save(flightInstance);
+
+        logger.info("Flight Instance At this point:: {}", flightInstanceRepository.findByStatus(SCHEDULED));
+		List<FlightInstance> existingInstances = flight.getInstances().stream()
+				.filter(instance -> instance.getStatus() == SCHEDULED)
+				.toList();
+
+		List<FlightInstance> scheduledInstances = flightSpacingService.scheduleFlights(new ArrayList<>(existingInstances), 30);
+
+		flightInstanceRepository.saveAll(scheduledInstances);
+		return toResponse(savedInstance);
 	}
 
-	private Aircraft findAvailableAircraft() {
-		return aircraftRepository.findAll()
-								 .stream()
-								 .filter(Aircraft::isAvailable)
-								 .findAny()
-								 .orElse(null);
+	private Aircraft findAvailableAircraft(int capacity) {
+		Aircraft aircraft = aircraftService.findAvailableAircraft(capacity);
+		if (aircraft == null) {
+			//Todo: logger.error("No aircraft available for capacity >= {}. Manual intervention required.", capacity);
+			// notifyAdmin("No aircraft available for capacity: " + capacity + " for flight ");
+			// find next possible aircraft and reschedule flight
+			logger.warn("No aircraft available with capacity >= {}", capacity);
+			return new Aircraft();
+		}
+		aircraft.setAvailable(false);
+		return aircraftRepository.save(aircraft);
 	}
 
 	@Override
 	public FlightInstanceResponse findByPublicId(String publicId) {
 		FlightInstance instance = flightInstanceRepository.findByPublicId(publicId)
-				.orElseThrow(() -> new EntityNotFoundException(Constants.ENTITY_NOT_FOUND.formatted("Flight FlightInstance")));
+				.orElseThrow(() -> new EntityNotFoundException(Constants.ENTITY_NOT_FOUND.formatted("FlightInstance")));
 		return toResponse(instance);
 	}
 
@@ -68,16 +92,11 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 		return false;
 	}
 
-	private FlightInstanceResponse toResponse(FlightInstance instance) {
-
-		FlightInstanceResponse response = mapper.map(instance, FlightInstanceResponse.class);
-		response.setArrivalAirportName(instance.getFlight().getArrivalAirport().getName());
-		response.setDepartureAirportName(instance.getFlight().getDepartureAirport().getName());
-		logger.info("Flight Instance:: {}", instance);
-		logger.info("Flight Instance Response:: {}", response);
-		return response;
+	@Override
+	public Collection<FlightInstanceResponse> findAll() {
+		return flightInstanceRepository.findAll().stream().map(this::toResponse).toList();
 	}
-	
+
 	@Override
 	public List<FlightInstanceResponse> findAllByStatus(FlightStatus status){
 		List<FlightInstance> foundInstances = flightInstanceRepository.findByStatus(status);
@@ -100,10 +119,6 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 		logger.info("{}", eCheckedRunnable);
 	}
 
-	@Override
-	public List<FlightInstanceResponse> findAllByFlightModel(String flightModelId) {
-		return List.of();
-	}
 
 	@Override
 	public int checkSeatAvailability(String id) {
@@ -117,17 +132,34 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 
 	@Override
 	public void removeAll() {
+		logger.warn("Clearing all flight instances: ");
 		flightInstanceRepository.deleteAll();
+		logger.info("All flight instances cleared.");
 	}
 
+	@Override
+	public AircraftResponse getAssignedAircraft(String publicId) {
+		FlightInstance foundFlightInstance = flightInstanceRepository.findByPublicId(publicId)
+				.orElseThrow(() -> new EntityNotFoundException(Constants.ENTITY_NOT_FOUND.formatted("Flight Instance")));
+		return mapper.map(foundFlightInstance.getAirCraft(), AircraftResponse.class);
+	}
+
+	@Override
+	public FlightInstanceResponse assignAircraft(String publicId){
+		FlightInstance flightInstance = flightInstanceRepository.findByPublicId(publicId).orElseThrow();
+		flightInstance.setAirCraft(findAvailableAircraft(flightInstance.computeTotalPassengers()));
+		FlightInstance updatedInstance = flightInstanceRepository.save(flightInstance);
+		return mapper.map(updatedInstance, FlightInstanceResponse.class);
+	}
+
+	private FlightInstanceResponse toResponse(FlightInstance instance) {
+
+		FlightInstanceResponse response = mapper.map(instance, FlightInstanceResponse.class);
+		response.setArrivalAirportName(instance.getFlight().getArrivalAirport().getName());
+		response.setDepartureAirportName(instance.getFlight().getDepartureAirport().getName());
+		logger.info("Flight Instance:: {}", instance);
+		logger.info("Flight Instance Response:: {}", response);
+		return response;
+	}
 
 }
-
-
-
-
-/*  TODO: 12/24/2023
-     |==|)) If a flight instance still exist and it is neither filled nor en-route yet
-     don't create a new one, meaning by arrival and departure location, by date and time
-     |==|)) If a flight instance is to be created let it be spaced by at least 5hrs
-*/

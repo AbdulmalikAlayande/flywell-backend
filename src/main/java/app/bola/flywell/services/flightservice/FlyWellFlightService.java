@@ -55,7 +55,6 @@ public class FlyWellFlightService implements FlightService{
 
 		flightEntity.setArrivalAirport(airportRepository.save(arrivalAirport));
 		flightEntity.setDepartureAirport(airportRepository.save(departureAirport));
-		flightEntity.setDuration(flightRequest.getDuration());
 
 		Flight savedFlight = flightRepository.save(flightEntity);
 		return toResponse(savedFlight, ENTITY_CREATION_SUCCESSFUL.formatted("Flight"));
@@ -121,5 +120,10 @@ public class FlyWellFlightService implements FlightService{
 	@Override
 	public boolean existsByPublicId(String publicId) {
 		return false;
+	}
+
+	@Override
+	public Collection<FlightResponse> findAll() {
+		return List.of();
 	}
 }

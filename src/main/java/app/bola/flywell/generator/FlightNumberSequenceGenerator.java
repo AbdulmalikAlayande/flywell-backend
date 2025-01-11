@@ -15,6 +15,12 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.EnumSet;
 
+/**
+ * Generates unique flight numbers based on a sequence defined in the database.
+ * The sequence is incremented by a specified value and prefixed with a specified string.
+ *
+ * @see FlightNumberSequence
+ */
 public class FlightNumberSequenceGenerator implements BeforeExecutionGenerator {
 
     private final String prefix;
@@ -22,13 +28,27 @@ public class FlightNumberSequenceGenerator implements BeforeExecutionGenerator {
     final Logger logger= LoggerFactory.getLogger(FlightNumberSequenceGenerator.class);
 
 
+    /**
+     * Constructs a FlightNumberSequenceGenerator with the specified configuration.
+     *
+     * @param config the configuration for the flight number sequence.
+     */
     public FlightNumberSequenceGenerator(FlightNumberSequence config) {
-        System.out.println("Hello from FlightNumberSequenceGenerator");
         this.prefix = config.prefix();
         this.incrementBy = config.incrementBy();
     }
 
-
+    /**
+     * Generates a unique flight number based on the sequence defined in the database.
+     * The sequence is incremented by the specified value and prefixed with the specified string.
+     *
+     * @param session the Hibernate session.
+     * @param owner the entity for which the flight number is being generated.
+     * @param currentValue the current value of the flight number.
+     * @param eventType the event type triggering the generation.
+     * @return the generated flight number.
+     * @throws IdentifierGenerationException if there is an error generating the flight number.
+     */
     @Override
     public Object generate(SharedSessionContractImplementor session, Object owner, Object currentValue, EventType eventType) {
         return session.doReturningWork(connection -> {
@@ -40,10 +60,12 @@ public class FlightNumberSequenceGenerator implements BeforeExecutionGenerator {
                     preparedStatement.setInt(1, nextVal + incrementBy);
                     preparedStatement.setInt(2, nextVal);
                     preparedStatement.executeUpdate();
+                    String generatedValue = prefix + nextVal;
                     if (owner instanceof FlightInstance){
-                        ((FlightInstance)owner).setFlightNumber(prefix+nextVal);
+                        ((FlightInstance)owner).setFlightNumber(generatedValue);
+                        logger.warn("flightNumber field explicitly set: FlightInstance.flightNumber explicitly set to {}", generatedValue);
                     }
-                    return prefix + nextVal;
+                    return generatedValue;
                 } else {
                     throw new IdentifierGenerationException("Unable to fetch the next sequence value.");
                 }
@@ -53,7 +75,11 @@ public class FlightNumberSequenceGenerator implements BeforeExecutionGenerator {
         });
     }
 
-
+    /**
+     * Specifies that this generator should be triggered only on insert events.
+     *
+     * @return the set of event types that trigger this generator.
+     */
     @Override
     public EnumSet<EventType> getEventTypes() {
         return EventTypeSets.INSERT_ONLY;

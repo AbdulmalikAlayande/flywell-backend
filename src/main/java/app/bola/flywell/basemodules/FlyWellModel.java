@@ -22,9 +22,6 @@ public class FlyWellModel {
     @Column(nullable = false, unique = true)
     private String publicId;
 
-    @Version
-    private int version;
-
 
     @PrePersist
     protected void onCreate() {

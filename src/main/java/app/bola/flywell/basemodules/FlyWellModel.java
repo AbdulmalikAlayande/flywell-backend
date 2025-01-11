@@ -4,6 +4,7 @@ import com.google.common.base.MoreObjects;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.NaturalId;
 
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ public class FlyWellModel {
     private String id;
 
     @Column(nullable = false, unique = true)
+    @NaturalId
     private String publicId;
 
 

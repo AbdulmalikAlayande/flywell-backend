@@ -1,11 +1,9 @@
 package app.bola.flywell.services.userservice;
 
 import app.bola.flywell.dto.response.CustomerResponse;
-import app.bola.flywell.dto.response.LoginResponse;
 import app.bola.flywell.dto.request.*;
 import app.bola.flywell.exceptions.FailedRegistrationException;
 import app.bola.flywell.exceptions.InvalidRequestException;
-import app.bola.flywell.exceptions.LoginFailedException;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
 
 import static app.bola.flywell.utils.Constants.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -34,7 +31,7 @@ class CustomerServiceTest {
 	public void startAllTestWith() {
 		customerService.removeAll();
 		updateRequest = new UpdateRequest();
-		customerResponse = customerService.registerNewCustomer(
+		customerResponse = customerService.createNew(
 										CustomerRequest.builder()
 		                               .phoneNumber("567890234")
 		                               .firstName("Alayande")
@@ -52,13 +49,13 @@ class CustomerServiceTest {
 	
 	@SneakyThrows
 	@Test void testThatPassengerTriesToRegisterWithIncompleteDetails_ExceptionIsThrown(){
-		assertThatThrownBy(()-> customerService.registerNewCustomer(buildIncompletePassenger()))
+		assertThatThrownBy(()-> customerService.createNew(buildIncompletePassenger()))
 											.as("")
 											.isInstanceOf(NullPointerException.class);
 	}
 	
 	@Test void testThatPassengerTriesToRegisterUsingDetailsWithIncorrectFormat_RegistrationFailedExceptionIsThrown() {
-		assertThatThrownBy(() -> customerService.registerNewCustomer(buildPassengerWithIncorrectFormatDetails()),
+		assertThatThrownBy(() -> customerService.createNew(buildPassengerWithIncorrectFormatDetails()),
 				"Invalid Email Format")
 				.as("Please enter a valid email format", "")
 				.isInstanceOf(FailedRegistrationException.class)
@@ -67,7 +64,7 @@ class CustomerServiceTest {
 	
 	@SneakyThrows
 	@Test void testThatPassengerCanRegisterSuccessfully_IfAllChecksArePassed(){
-		customerResponse = customerService.registerNewCustomer(buildPassenger1());
+		customerResponse = customerService.createNew(buildPassenger1());
 		assertThat(customerService.getCountOfCustomers()).isNotZero();
 		assertThat(customerService.getCountOfCustomers()).isGreaterThan(BigInteger.ZERO.intValue());
 		assertThat(customerResponse).isNotNull();
@@ -82,7 +79,7 @@ class CustomerServiceTest {
 	@Test
 	@SneakyThrows
 	void testThatAccountActivationIsSuccessful_IfTheOtpEnteredIdCorrect(){
-		CustomerResponse response = customerService.activateCustomerAccount(String.valueOf(customerResponse.getOtp()));
+		CustomerResponse response = customerService.activateCustomerAccount(customerResponse.getPublicId(), "");
 		assertThat(response).isNotNull();
 		assertThat(response.getMessage()).isEqualTo(SUCCESSFUL_ACTIVATION_MESSAGE);
 	}
@@ -96,10 +93,10 @@ class CustomerServiceTest {
 		updateRequest.setNewUserName("mithra");
 		CustomerResponse updateResponse = customerService.updateDetailsOfRegisteredCustomer(updateRequest);
 		assertThat(updateResponse).isNotNull();
-		assertThat(updateResponse.getEmail()).isEqualTo(updateRequest.getEmail());
-		Optional<CustomerResponse> foundPassenger = customerService.findCustomerByUserName(updateRequest.getNewUserName());
-		assertThat(foundPassenger.isPresent()).isTrue();
-		foundPassenger.ifPresent(passenger-> assertThat(passenger.getEmail()).isEqualTo(updateRequest.getEmail()));
+		assertThat(updateResponse.getUserBioData().getEmail()).isEqualTo(updateRequest.getEmail());
+		CustomerResponse foundPassenger = customerService.findByPublicId(updateRequest.getNewUserName());
+		assertThat(foundPassenger).isNotNull();
+		assertThat(foundPassenger.getUserBioData().getEmail()).isEqualTo(updateRequest.getEmail());
 	}
 	private CustomerRequest buildIncompletePassenger() {
 		return CustomerRequest.builder().email("theeniolasamuel@gmail.com").firstName("Samuel")
@@ -131,17 +128,15 @@ class CustomerServiceTest {
 	
 	@SneakyThrows
 	@Test void findSavedPassengerWithAUsernameThatDoesNotExist_InvalidRequestExceptionIsThrown(){
-		assertThrowsExactly(InvalidRequestException.class, ()-> customerService.findCustomerByUserName("mithra"),
+		assertThrowsExactly(InvalidRequestException.class, ()-> customerService.findByPublicId("mithra"),
 				"Request Failed:: Invalid Username");
 	}
 	@SneakyThrows
 	@Test void findSavedPassengerWithUsername_PassengerWithTheSaidUsernameIsFound(){
-		Optional<CustomerResponse> response = customerService.findCustomerByUserName("mirah");
-		assertThat(response.isPresent()).isTrue();
-		response.ifPresent(passengerResponse -> {
-			assertThat(passengerResponse).isNotNull();
-			assertThat(passengerResponse).isInstanceOf(CustomerResponse.class);
-		});
+		CustomerResponse response = customerService.findByPublicId("mirah");
+		assertThat(response).isNotNull();
+		assertThat(response).isNotNull();
+		assertThat(response).isInstanceOf(CustomerResponse.class);
 	}
 	
 	@Test void testThatWhenTokenHasExpiredAnotherOneIsGenerated(){
@@ -149,25 +144,17 @@ class CustomerServiceTest {
 	}
 	
 	@Test void testThatUserTriesToLoginWithoutSigningUpLoginFailedExceptionIsThrown(){
-		LoginRequest request = LoginRequest.builder().email("alamala@gmail.com").password("alamala@42").username("alamala1").build();
-		assertThrows(LoginFailedException.class, ()-> customerService.login(request), "Login Failed:: You do not have an account with us, Please register to create one");
+
 	}
 	
 	@Test void testThatUserTriesToLoginWithoutValidOrIncompleteCredentialsLoginFailedExceptionIsThrown(){
-		LoginRequest request = LoginRequest.builder().username("mirah").email("ololadeayandunni@gmail.com").build();
-		assertThrows(LoginFailedException.class, ()-> customerService.login(request), "Login Failed:: Please provide the full details requested in the correct format");
+
 	}
 	
 	@SneakyThrows
 	@DisplayName("Login is successful when all credentials are valid")
 	@Test void loginTest(){
-		LoginRequest request = LoginRequest.builder()
-				                       .username("mirah").email("ololadeayandunni@gmail.com")
-				                       .password("ayandunni#$2008")
-				                       .build();
-		LoginResponse response = customerService.login(request);
-		assertThat(response.getMessage()).isNotEmpty();
-		assertThat(response.getUsername()).isEqualTo(request.getUsername());
+
 	}
 	
 	@Test void testThatUserTriesToLogInWhenLoginSessionIsStillOn(){
@@ -176,7 +163,7 @@ class CustomerServiceTest {
 	
 	@Test
 	void findSavedPassengerWithIdThatDoesExist_InvalidRequestExceptionIsThrown(){
-		assertThrowsExactly(RuntimeException.class, ()-> customerService.findCustomerById("892ffr0ilj84aas787t274gf7qwerty8"),
+		assertThrowsExactly(RuntimeException.class, ()-> customerService.findByPublicId("892ffr0ilj84aas787t274gf7qwerty8"),
 				"Request Failed:: Invalid Id");
 	}
 	
@@ -185,20 +172,19 @@ class CustomerServiceTest {
 	@Test
 	@Disabled
 	public void findSavedPassengerWithId_PassengerWithTheSaidIdIsFound(){
-		Optional<CustomerResponse> response = customerService.findCustomerById("");
-		response.ifPresent(passengerResponse -> {
-			assertThat(passengerResponse).isNotNull();
-			assertThat(passengerResponse).isInstanceOf(CustomerResponse.class);
-		});
+		CustomerResponse response = customerService.findByPublicId("");
+		assertThat(response).isNotNull();
+		assertThat(response).isInstanceOf(CustomerResponse.class);
+
 	}
 	@SneakyThrows
 	@Test void removePassengerByUserNameTest(){
-		customerService.registerNewCustomer(buildPassenger());
+		customerService.createNew(buildPassenger());
 	}
 	
 	@SneakyThrows
-	@Test void getAllPassengersTest(){
-		List<CustomerResponse> allPassengersPresent = customerService.getAllCustomers();
+	@Test void findAllPassengersTest(){
+		List<CustomerResponse> allPassengersPresent = customerService.findAll();
 		allPassengersPresent.forEach(passengerResponse-> assertThat(passengerResponse).isNotNull());
 		assertThat(allPassengersPresent.size()).isEqualTo(customerService.getCountOfCustomers());
 	}

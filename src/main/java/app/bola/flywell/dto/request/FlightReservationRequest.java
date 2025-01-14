@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Request DTO for the {@link FlightReservation} model
@@ -23,4 +24,5 @@ public class FlightReservationRequest {
     String flightId;
     List<String> seatIds;
     List<PassengerRequest> passengers;
+    Map<PassengerRequest, Integer> seatMap;
 }

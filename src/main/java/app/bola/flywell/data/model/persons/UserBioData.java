@@ -36,6 +36,7 @@ public class UserBioData extends FlyWellModel {
 	private Gender gender;
 
 	@OneToMany(cascade = CascadeType.ALL)
+	@Builder.Default
 	private List<OTP> OTPs = new ArrayList<>();
 
 	public void addOtp(OTP otp) {

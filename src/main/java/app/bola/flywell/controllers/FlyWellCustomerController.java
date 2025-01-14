@@ -4,7 +4,7 @@ import app.bola.flywell.dto.request.CustomerRequest;
 import app.bola.flywell.dto.response.ApiResponse;
 import app.bola.flywell.dto.response.CustomerResponse;
 import app.bola.flywell.exceptions.*;
-import app.bola.flywell.services.userservice.CustomerService;
+import app.bola.flywell.services.users.CustomerService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

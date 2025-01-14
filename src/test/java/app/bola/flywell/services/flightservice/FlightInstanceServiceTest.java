@@ -5,7 +5,7 @@ import app.bola.flywell.dto.response.AircraftResponse;
 import app.bola.flywell.dto.response.FlightInstanceResponse;
 import app.bola.flywell.dto.response.FlightResponse;
 import app.bola.flywell.dto.request.*;
-import app.bola.flywell.services.aircrafts.AircraftService;
+import app.bola.flywell.services.aircraft.AircraftService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -87,14 +87,6 @@ class FlightInstanceServiceTest {
 		AircraftResponse aircraft = flightInstanceService.getAssignedAircraft(instanceWithAircraft.getPublicId());
 		assertThat(aircraft).isNotNull();
 		assertThat(aircraft.isAvailable()).isFalse();
-	}
-
-	private AircraftRequest buildAircraft() {
-		return AircraftRequest.builder()
-				.locationCode("null")
-				.model("G-345")
-				.datePurchased(LocalDate.of(12, 10, 24))
-				.build();
 	}
 
 	@Test

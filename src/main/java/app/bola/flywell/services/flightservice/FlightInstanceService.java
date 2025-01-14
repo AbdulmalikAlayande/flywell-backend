@@ -2,6 +2,7 @@ package app.bola.flywell.services.flightservice;
 
 import app.bola.flywell.basemodules.FlyWellService;
 import app.bola.flywell.data.model.enums.FlightStatus;
+import app.bola.flywell.data.model.flight.FlightInstance;
 import app.bola.flywell.dto.request.FlightInstanceRequest;
 import app.bola.flywell.dto.response.AircraftResponse;
 import app.bola.flywell.dto.response.FlightInstanceResponse;

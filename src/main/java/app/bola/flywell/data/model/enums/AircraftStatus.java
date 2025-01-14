@@ -1,4 +1,4 @@
-package app.bola.flywell.data.model.aircraft;
+package app.bola.flywell.data.model.enums;
 
 public enum AircraftStatus {
 

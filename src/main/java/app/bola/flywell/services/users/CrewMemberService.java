@@ -1,4 +1,4 @@
-package app.bola.flywell.services.userservice;
+package app.bola.flywell.services.users;
 
 import app.bola.flywell.data.model.flight.FlightInstance;
 import app.bola.flywell.data.model.persons.CrewMember;

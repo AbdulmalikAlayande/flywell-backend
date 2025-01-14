@@ -1,17 +1,21 @@
 package app.bola.flywell.services.flightservice;
 
 import app.bola.flywell.data.model.aircraft.Aircraft;
+import app.bola.flywell.data.model.aircraft.Seat;
 import app.bola.flywell.data.model.enums.FlightStatus;
+import app.bola.flywell.data.model.enums.SeatStatus;
 import app.bola.flywell.data.model.flight.Flight;
 import app.bola.flywell.data.model.flight.FlightInstance;
+import app.bola.flywell.data.model.flight.FlightSeat;
 import app.bola.flywell.data.repositories.AircraftRepository;
 import app.bola.flywell.data.repositories.FlightInstanceRepository;
 import app.bola.flywell.data.repositories.FlightRepository;
+import app.bola.flywell.data.repositories.FlightSeatRepository;
 import app.bola.flywell.dto.request.FlightInstanceRequest;
 import app.bola.flywell.dto.response.AircraftResponse;
 import app.bola.flywell.dto.response.FlightInstanceResponse;
 import app.bola.flywell.exceptions.EntityNotFoundException;
-import app.bola.flywell.services.aircrafts.AircraftService;
+import app.bola.flywell.services.aircraft.AircraftService;
 import app.bola.flywell.utils.Constants;
 import io.micrometer.observation.Observation;
 import lombok.AllArgsConstructor;
@@ -21,9 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static app.bola.flywell.data.model.enums.FlightStatus.SCHEDULED;
 
@@ -31,13 +33,14 @@ import static app.bola.flywell.data.model.enums.FlightStatus.SCHEDULED;
 @AllArgsConstructor
 public class FlyWellFlightInstanceService implements FlightInstanceService{
 
-	final FlightInstanceRepository flightInstanceRepository;
-	final FlightRepository flightRepository;
 	final ModelMapper mapper;
-	final Logger logger = LoggerFactory.getLogger(FlyWellFlightInstanceService.class);
 	final AircraftService aircraftService;
+	final FlightRepository flightRepository;
 	final AircraftRepository aircraftRepository;
+	final FlightSeatRepository flightSeatRepository;
 	final FlightSpacingService flightSpacingService;
+	final FlightInstanceRepository flightInstanceRepository;
+	final Logger logger = LoggerFactory.getLogger(FlyWellFlightInstanceService.class);
 
 
 	@Override
@@ -54,9 +57,10 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 		flightInstance.setStatus(SCHEDULED);
 		flightInstance.setPriority(request.getPriority());
 		flight.addFlightInstance(flightInstance);
+		assignAircraft(flightInstance);
+		populateFlightSeats(flightInstance, flightInstance.getAirCraft());
 		FlightInstance savedInstance = flightInstanceRepository.save(flightInstance);
 
-        logger.info("Flight Instance At this point:: {}", flightInstanceRepository.findByStatus(SCHEDULED));
 		List<FlightInstance> existingInstances = flight.getInstances().stream()
 				.filter(instance -> instance.getStatus() == SCHEDULED)
 				.toList();
@@ -67,16 +71,17 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 		return toResponse(savedInstance);
 	}
 
-	private Aircraft findAvailableAircraft(int capacity) {
-		Aircraft aircraft = aircraftService.findAvailableAircraft(capacity);
+	private Aircraft findAvailableAircraft() {
+		Aircraft aircraft = aircraftService.findAvailableAircraft();
 		if (aircraft == null) {
 			//Todo: logger.error("No aircraft available for capacity >= {}. Manual intervention required.", capacity);
 			// notifyAdmin("No aircraft available for capacity: " + capacity + " for flight ");
 			// find next possible aircraft and reschedule flight
-			logger.warn("No aircraft available with capacity >= {}", capacity);
-			return new Aircraft();
+			logger.error("No available aircraft found. The result of app.bola.flywell.services.aircraft.AircraftService.findAvailableAircraft() was null");
+			return null;
 		}
 		aircraft.setAvailable(false);
+		logger.info("Aircraft Found and Ready To Be Assigned: {}", aircraft);
 		return aircraftRepository.save(aircraft);
 	}
 
@@ -144,13 +149,42 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 		return mapper.map(foundFlightInstance.getAirCraft(), AircraftResponse.class);
 	}
 
+	private void assignAircraft(FlightInstance flightInstance){
+		Aircraft availableAircraft = findAvailableAircraft();
+		flightInstance.setAirCraft(availableAircraft);
+		flightInstanceRepository.save(flightInstance);
+		logger.info("Aircraft assigned. Aircraft: {} assigned to flight: {}", availableAircraft, flightInstance);
+	}
+
 	@Override
 	public FlightInstanceResponse assignAircraft(String publicId){
 		FlightInstance flightInstance = flightInstanceRepository.findByPublicId(publicId).orElseThrow();
-		flightInstance.setAirCraft(findAvailableAircraft(flightInstance.computeTotalPassengers()));
+		flightInstance.setAirCraft(findAvailableAircraft());
 		FlightInstance updatedInstance = flightInstanceRepository.save(flightInstance);
 		return mapper.map(updatedInstance, FlightInstanceResponse.class);
 	}
+
+	private void populateFlightSeats(FlightInstance flightInstance, Aircraft aircraft) {
+		logger.info("DGF:: {}", aircraft);
+		if (aircraft == null || aircraft.getSeats().isEmpty()) {
+			throw new IllegalStateException("Aircraft has no seats configured");
+		}
+
+		Set<FlightSeat> flightSeats = new LinkedHashSet<>();
+
+		for (Seat seat : aircraft.getSeats()) {
+			FlightSeat flightSeat = new FlightSeat();
+
+			flightSeat.setSeatReference(seat);
+			flightSeat.setSeatStatus(SeatStatus.EMPTY);
+			flightSeat.setSeatPrice(seat.getSeatClass());
+
+			flightSeats.add(flightSeatRepository.save(flightSeat));
+		}
+
+		flightInstance.setSeats(flightSeats);
+	}
+
 
 	private FlightInstanceResponse toResponse(FlightInstance instance) {
 
@@ -161,5 +195,4 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 		logger.info("Flight Instance Response:: {}", response);
 		return response;
 	}
-
 }

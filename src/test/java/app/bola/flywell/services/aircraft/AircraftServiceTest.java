@@ -1,4 +1,4 @@
-package app.bola.flywell.services.aircrafts;
+package app.bola.flywell.services.aircraft;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

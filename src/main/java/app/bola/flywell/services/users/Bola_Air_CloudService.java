@@ -1,4 +1,4 @@
-package app.bola.flywell.services.userservice;
+package app.bola.flywell.services.users;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Uploader;

@@ -1,5 +1,6 @@
 package app.bola.flywell.dto.request;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AircraftRequest {
 
+	@Min(value = 200)
 	int capacity;
 	@NotBlank
 	String model;

@@ -51,8 +51,9 @@ public class FlightInstance extends FlyWellModel {
 
 	@OneToMany
 	@Builder.Default
-	private Set<FlightSeat> flightSeat = new LinkedHashSet<>();
+	private Set<FlightSeat> seats = new LinkedHashSet<>();
 
+	@Builder.Default
 	@OneToMany(cascade = ALL, fetch = EAGER)
 	private Set<FlightReservation> reservations = new LinkedHashSet<>();
 
@@ -60,12 +61,22 @@ public class FlightInstance extends FlyWellModel {
 	@PostPersist
 	@PostUpdate
 	private void computeDuration() {
+
 		if (departureTime != null && arrivalTime != null) {
 			this.durationMinutes = Duration.between(departureTime, arrivalTime).toMinutes();
 		}
 	}
 
+	public void addReservation(FlightReservation reservation) {
+
+		if (reservation!= null) {
+			reservation.setFlightInstance(this);
+			reservations.add(reservation);
+		}
+	}
+
 	public int computeTotalPassengers(){
+
 		return reservations.stream().mapToInt(reservation -> {
 			if (reservation.getSeatMap().size() == reservation.getFormMap().size())
 				return reservation.getSeatMap().size();

@@ -33,6 +33,7 @@ public class Flight extends FlyWellModel {
 	private Airport arrivalAirport;
 
 	@OneToMany(mappedBy = "flight", cascade = ALL, fetch = EAGER)
+	@Builder.Default
 	private Set<FlightInstance> instances = new LinkedHashSet<>();
 
 

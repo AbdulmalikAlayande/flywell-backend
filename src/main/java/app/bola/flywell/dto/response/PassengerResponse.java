@@ -1,5 +1,6 @@
-package app.bola.flywell.dto.request;
+package app.bola.flywell.dto.response;
 
+import app.bola.flywell.basemodules.BaseResponse;
 import app.bola.flywell.data.model.Passenger;
 import app.bola.flywell.data.model.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -7,12 +8,12 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 /**
- * Request DTO for the {@link Passenger} model
- **/
+ * Response DTO for {@link Passenger} model
+ */
 
 @Getter
 @Setter
@@ -21,20 +22,20 @@ import java.util.Objects;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PassengerRequest {
+public class PassengerResponse extends BaseResponse {
 
     String firstname;
     String lastname;
     String passportUrl;
     String passportNumber;
     Gender gender;
-    LocalDate dateOfBirth;
+    Date dateOfBirth;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PassengerRequest that = (PassengerRequest) o;
+        PassengerResponse that = (PassengerResponse) o;
         return Objects.equals(firstname, that.firstname) &&
                 Objects.equals(lastname, that.lastname) &&
                 Objects.equals(passportNumber, that.passportNumber);

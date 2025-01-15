@@ -12,6 +12,7 @@ import app.bola.flywell.dto.response.FlightReservationResponse;
 import app.bola.flywell.generator.ReservationNumberGenerator;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -38,6 +39,8 @@ public class FlyWellFlightReservationService implements FlightReservationService
 
     }
 
+    @Override
+    @Transactional
     public FlightReservationResponse createNew(FlightReservationRequest request) {
 
         FlightInstance flightInstance = flightInstanceRepository.findByPublicId(request.getFlightId())
@@ -66,9 +69,8 @@ public class FlyWellFlightReservationService implements FlightReservationService
 
             flightSeat.setSeatStatus(SeatStatus.OCCUPIED);
             flightSeat.setReservationNumber(reservation.getReservationNumber());
-            seatRepository.save(flightSeat);
-
-            reservation.getSeatMap().put(savedPassenger, flightSeat);
+            FlightSeat flightSeatUpdated = seatRepository.save(flightSeat);
+            reservation.getSeatMap().put(savedPassenger, flightSeatUpdated);
         });
 
         FlightReservation savedReservation = reservationRepository.save(reservation);
@@ -88,7 +90,10 @@ public class FlyWellFlightReservationService implements FlightReservationService
     }
 
     public Collection<FlightReservationResponse> findAll() {
-        return null;
+        return reservationRepository.findAll()
+                .stream()
+                .map(reservation -> mapper.map(reservation, FlightReservationResponse.class))
+                .toList();
     }
 
     public void removeAll() {

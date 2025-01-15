@@ -34,7 +34,6 @@ public class TestSetupHelper {
     }
 
     public FlightInstanceResponse createFlightInstance(){
-        createAircraft();
         FlightResponse flightResponse = createFlight();
         return flightInstanceService.createNew(TestDataUtil.buildFlightInstanceRequest(flightResponse.getPublicId(), LocalDateTime.parse("2021-11-08T12:00:00"), LocalDateTime.parse("2021-11-09T14:00:00"), 2));
     }
@@ -73,12 +72,12 @@ public class TestSetupHelper {
         }
     }
 
-
     public void clearFlightDb(){
         flightService.removeAll();
     }
 
     public void clearFlightInstanceDb(){
+        flightService.removeAll();
         flightInstanceService.removeAll();
     }
 
@@ -87,13 +86,16 @@ public class TestSetupHelper {
     }
 
     public void clearFlightReservationDb() {
+        flightService.removeAll();
+        flightInstanceService.removeAll();
         flightReservationService.removeAll();
     }
 
     public void clearDb(){
-        clearAircraftDb();
         clearFlightDb();
         clearFlightInstanceDb();
-        createFlightReservation();
+        clearAircraftDb();
+        clearFlightReservationDb();
     }
+
 }

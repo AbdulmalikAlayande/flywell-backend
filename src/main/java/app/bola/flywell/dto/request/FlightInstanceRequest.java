@@ -21,13 +21,13 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FlightInstanceRequest {
 
+	@Min(value = 1, message = "Priority is between 1 and 3, both included")
+	@Max(value = 3, message = "Priority is between 1 and 3, both included")
+	int priority;
 	@NotBlank
 	String flightId;
 	@NotNull
 	LocalDateTime departureTime;
 	@NotNull
 	LocalDateTime arrivalTime;
-	@Min(value = 1, message = "Priority is between 1 and 3, both included")
-	@Max(value = 3, message = "Priority is between 1 and 3, both included")
-	int priority;
 }

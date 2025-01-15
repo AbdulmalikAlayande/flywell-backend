@@ -81,7 +81,6 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 			return null;
 		}
 		aircraft.setAvailable(false);
-		logger.info("Aircraft Found and Ready To Be Assigned: {}", aircraft);
 		return aircraftRepository.save(aircraft);
 	}
 
@@ -137,9 +136,7 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 
 	@Override
 	public void removeAll() {
-		logger.warn("Clearing all flight instances: ");
 		flightInstanceRepository.deleteAll();
-		logger.info("All flight instances cleared.");
 	}
 
 	@Override
@@ -153,7 +150,6 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 		Aircraft availableAircraft = findAvailableAircraft();
 		flightInstance.setAirCraft(availableAircraft);
 		flightInstanceRepository.save(flightInstance);
-		logger.info("Aircraft assigned. Aircraft: {} assigned to flight: {}", availableAircraft, flightInstance);
 	}
 
 	@Override
@@ -165,7 +161,6 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 	}
 
 	private void populateFlightSeats(FlightInstance flightInstance, Aircraft aircraft) {
-		logger.info("DGF:: {}", aircraft);
 		if (aircraft == null || aircraft.getSeats().isEmpty()) {
 			throw new IllegalStateException("Aircraft has no seats configured");
 		}
@@ -189,10 +184,9 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 	private FlightInstanceResponse toResponse(FlightInstance instance) {
 
 		FlightInstanceResponse response = mapper.map(instance, FlightInstanceResponse.class);
+		response.setFlightId(instance.getFlight().getPublicId());
 		response.setArrivalAirportName(instance.getFlight().getArrivalAirport().getName());
 		response.setDepartureAirportName(instance.getFlight().getDepartureAirport().getName());
-		logger.info("Flight Instance:: {}", instance);
-		logger.info("Flight Instance Response:: {}", response);
 		return response;
 	}
 }

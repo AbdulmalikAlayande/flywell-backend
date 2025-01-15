@@ -75,7 +75,6 @@ public class FlyWellAircraftService implements AircraftService {
 		}
 
 		Aircraft savedAircraft = aircraftRepository.save(aircraft);
-		System.out.println("saved Aircraft:: "+savedAircraft);
 		return mapper.map(savedAircraft, AircraftResponse.class);
 	}
 

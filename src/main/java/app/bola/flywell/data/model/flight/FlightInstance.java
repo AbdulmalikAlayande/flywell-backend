@@ -49,7 +49,7 @@ public class FlightInstance extends FlyWellModel {
 	@Enumerated(STRING)
 	private FlightStatus status;
 
-	@OneToMany
+	@OneToMany(cascade = ALL, fetch = EAGER)
 	@Builder.Default
 	private Set<FlightSeat> seats = new LinkedHashSet<>();
 
@@ -98,3 +98,4 @@ public class FlightInstance extends FlyWellModel {
 				.toString();
 	}
 }
+

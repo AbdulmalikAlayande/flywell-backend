@@ -84,7 +84,6 @@ public class FlyWellFlightService implements FlightService{
 				.build(), matcher);
 
 		Optional<Flight> foundFlight = flightRepository.findBy(example, FluentQuery.FetchableFluentQuery::first);
-		logger.info("Flight is present:: {}", foundFlight.isPresent());
 		return foundFlight.map(flight -> this.toResponse(flight, ENTITY_SUCCESSFULLY_RETRIEVED))
 						  .orElseGet(() -> FlightResponse.builder().message(ENTITY_NOT_FOUND.formatted("Flight")).build());
 	}
@@ -94,7 +93,6 @@ public class FlyWellFlightService implements FlightService{
 		response.setMessage(message);
 		response.setArrivalAirportName(flight.getArrivalAirport().getName());
 		response.setDepartureAirportName(flight.getDepartureAirport().getName());
-		logger.info("Response:: {}", response);
 		return response;
 	}
 

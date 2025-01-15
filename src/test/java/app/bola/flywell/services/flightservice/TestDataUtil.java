@@ -2,6 +2,7 @@ package app.bola.flywell.services.flightservice;
 
 import app.bola.flywell.data.model.enums.Gender;
 import app.bola.flywell.dto.request.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,6 +12,16 @@ import java.util.Map;
 public class TestDataUtil {
 
 
+    public static FlightRequest buildFlightRequest() {
+        return FlightRequest.builder()
+                .duration(3L)
+                .arrivalCity("Lagos, Nigeria")
+                .departureCity("Abuja, Nigeria")
+                .destinationAirport(buildAirportRequest("Murtala Muhammed Airport", "Nigeria", "23456", "12345"))
+                .departureAirport(buildAirportRequest("Nnamdi Azikwe International Airport", "Nigeria", "45632", "12345"))
+                .build();
+    }
+
     public static FlightRequest buildFlightRequest(long duration, String arrivalCity, String departureCity) {
         return FlightRequest.builder()
                 .duration(duration)
@@ -19,6 +30,10 @@ public class TestDataUtil {
                 .destinationAirport(buildAirportRequest("Murtala Muhammed Airport", "Nigeria", "23456", "12345"))
                 .departureAirport(buildAirportRequest("Nnamdi Azikwe International Airport", "Nigeria", "45632", "12345"))
                 .build();
+    }
+
+    public @NotNull AirportRequest createAirport() {
+        return null;
     }
 
     public static AirportRequest buildAirportRequest(String name, String country, String icaoCode, String iataCode){

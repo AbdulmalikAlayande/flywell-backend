@@ -7,6 +7,7 @@ import app.bola.flywell.dto.response.FlightReservationResponse;
 import app.bola.flywell.dto.response.FlightSeatResponse;
 import app.bola.flywell.dto.response.PassengerResponse;
 import app.bola.flywell.services.config.TestSetupConfig;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,18 +38,21 @@ class FlightReservationServiceTest {
 
     @BeforeEach
     public void startEachTestWith(){
-        setupHelper.clearDb();
-//        setupHelper.clearFlightReservationDb();
+        setupHelper.clearFlightReservationDb();
+        System.out.println("I am here before hanging");
+    }
+
+    @AfterEach
+    public void endEachTestWith(){
+        setupHelper.clearAircraftDb();
     }
 
     @Test
     public void testCreateReservationWithValidData_ReservationIsCreatedAndExistsInDb(){
         response = setupHelper.createFlightReservation();
-        assertAll(
-                () -> assertNotNull(response),
-                () -> assertEquals(LocalDate.now(), response.getCreationDate()),
-                () -> assertEquals(1, flightReservationService.findAll().size())
-        );
+        assertNotNull(response);
+        assertEquals(LocalDate.now(), response.getCreationDate());
+        assertEquals(1, flightReservationService.findAll().size());
     }
 
     @Test

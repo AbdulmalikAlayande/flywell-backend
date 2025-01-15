@@ -75,7 +75,7 @@ public class Aircraft extends FlyWellModel {
 				.add("datePurchased", datePurchased)
 				.add("status", status)
 				.add("position", position)
-				.add("seats", seats)
+				.add("seats", seats.size())
 				.toString();
 
 	}

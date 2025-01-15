@@ -21,9 +21,10 @@ import java.time.LocalDateTime;
 public class FlightInstanceResponse extends BaseResponse {
 	
 	int baggageAllowance;
-	String flightNumber;
 	long flightDuration;
 	boolean isFullyBooked;
+	String flightNumber;
+	String flightId;
 	String departureAirportName;
 	String arrivalAirportName;
 	LocalDateTime departureTime;

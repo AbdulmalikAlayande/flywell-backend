@@ -52,6 +52,16 @@ public class FlyWellFlightReservationService implements FlightReservationService
         reservation.setStatus(ReservationStatus.PENDING);
         reservation.setFlightInstance(flightInstance);
 
+//        mapRequestToReservation(request, flightInstance, reservation);
+        FlightReservation savedReservation = reservationRepository.save(reservation);
+
+        flightInstance.addReservation(savedReservation);
+        flightInstanceRepository.save(flightInstance);
+
+        return toResponse(savedReservation);
+    }
+
+    private void mapRequestToReservation(FlightReservationRequest request, FlightInstance flightInstance, FlightReservation reservation) {
         request.getSeatMap().forEach((passengerRequest, seatId) -> {
 
             Passenger passenger = mapper.map(passengerRequest, Passenger.class);
@@ -72,13 +82,6 @@ public class FlyWellFlightReservationService implements FlightReservationService
             FlightSeat flightSeatUpdated = seatRepository.save(flightSeat);
             reservation.getSeatMap().put(savedPassenger, flightSeatUpdated);
         });
-
-        FlightReservation savedReservation = reservationRepository.save(reservation);
-
-        flightInstance.addReservation(savedReservation);
-        flightInstanceRepository.save(flightInstance);
-
-        return toResponse(savedReservation);
     }
 
     public FlightReservationResponse findByPublicId(String publicId) {

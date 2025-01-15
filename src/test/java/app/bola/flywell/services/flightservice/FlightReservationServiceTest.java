@@ -44,6 +44,7 @@ class FlightReservationServiceTest {
 
     @AfterEach
     public void endEachTestWith(){
+        setupHelper.clearFlightInstanceDb();
         setupHelper.clearAircraftDb();
     }
 

@@ -44,7 +44,7 @@ public class FlyWellFlightReservationService implements FlightReservationService
     public FlightReservationResponse createNew(FlightReservationRequest request) {
 
         FlightInstance flightInstance = flightInstanceRepository.findByPublicId(request.getFlightId())
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException("FlightInstance with Id " + request.getFlightId()));
 
         FlightReservation reservation = new FlightReservation();
         reservation.setReservationNumber(generator.generateFlightReservationNumber());
@@ -111,6 +111,21 @@ public class FlyWellFlightReservationService implements FlightReservationService
 
     @Override
     public void cancelReservation(String flightId, String reservationId) {
+        FlightInstance flightInstance = flightInstanceRepository.findByPublicId(flightId)
+                .orElseThrow(EntityNotFoundException::new);
 
+        FlightReservation flightReservation = flightInstance.getReservations().stream()
+                .filter(reservation -> Objects.equals(reservation.getPublicId(), reservationId))
+                .distinct().findAny()
+                .orElseThrow(() -> new EntityNotFoundException("FlightReservation with Id " + reservationId));
+
+        Set<FlightSeat> flightInstanceSeats = flightInstance.getSeats();
+        flightReservation.setStatus(ReservationStatus.CANCELLED);
+        flightReservation.getSeatMap().forEach((passenger, flightSeat) -> {
+            var filteredSeat = flightInstanceSeats.stream().filter(seat -> seat.equals(flightSeat)).toList().getFirst();
+            filteredSeat.setReservationNumber(null);
+            filteredSeat.setSeatStatus(SeatStatus.EMPTY);
+        });
+        seatRepository.saveAll(flightInstanceSeats);
     }
 }

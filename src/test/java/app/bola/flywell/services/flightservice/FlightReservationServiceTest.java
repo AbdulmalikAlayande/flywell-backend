@@ -137,7 +137,6 @@ class FlightReservationServiceTest {
         public void testCancelReservationForPastFlight_ReservationCancellationFails_ExceptionIsThrown () {
         }
 
-
     }
 
 }

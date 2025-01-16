@@ -1,32 +1,30 @@
 package app.bola.flywell.data.model.persons;
 
+import app.bola.flywell.basemodules.FlyWellModel;
 import app.bola.flywell.data.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
 import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.CascadeType.MERGE;
 
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Getter
 @Setter
-public class Customer extends Person{
-	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
-	private String id;
+public class Customer extends FlyWellModel {
+
 	private Long frequentFlyerNumber;
+
+	@Builder.Default
 	@Enumerated(EnumType.STRING)
-	private Role role;
-	@OneToOne(cascade = MERGE)
+	private Role role = Role.USER;
+
+	@OneToOne(cascade = ALL, orphanRemoval = true)
 	private UserBioData bioData;
-	private LocalDate lastLoggedIn;
-	private boolean expiredToken;
-	private boolean loggedIn;
-	private String token;
-	
 }

@@ -38,16 +38,11 @@ public class FlyWellFlightService implements FlightService{
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public FlightResponse createNew(@Valid FlightRequest flightRequest) {
-		Set<ConstraintViolation<FlightRequest>> violations = validator.validate(flightRequest);
 
-		Assert.isTrue(violations.isEmpty(),
-				violations.stream()
-						.map(violation -> String.format("Field '%s': %s",
-								violation.getPropertyPath(),
-								violation.getMessage())
-						)
-						.toList().toString()
-		);
+		Set<ConstraintViolation<FlightRequest>> violations = validator.validate(flightRequest);
+		Assert.isTrue(violations.isEmpty(), violations.stream().map(violation -> String.format("Field '%s': %s",
+				violation.getPropertyPath(), violation.getMessage())).toList().toString());
+
 		Flight flightEntity = mapper.map(flightRequest, Flight.class);
 			
 		Airport arrivalAirport = mapper.map(flightRequest.getDestinationAirport(), Airport.class);
@@ -55,7 +50,6 @@ public class FlyWellFlightService implements FlightService{
 
 		flightEntity.setArrivalAirport(airportRepository.save(arrivalAirport));
 		flightEntity.setDepartureAirport(airportRepository.save(departureAirport));
-		flightEntity.setDuration(flightRequest.getDuration());
 
 		Flight savedFlight = flightRepository.save(flightEntity);
 		return toResponse(savedFlight, ENTITY_CREATION_SUCCESSFUL.formatted("Flight"));
@@ -90,7 +84,6 @@ public class FlyWellFlightService implements FlightService{
 				.build(), matcher);
 
 		Optional<Flight> foundFlight = flightRepository.findBy(example, FluentQuery.FetchableFluentQuery::first);
-		logger.info("Flight is present:: {}", foundFlight.isPresent());
 		return foundFlight.map(flight -> this.toResponse(flight, ENTITY_SUCCESSFULLY_RETRIEVED))
 						  .orElseGet(() -> FlightResponse.builder().message(ENTITY_NOT_FOUND.formatted("Flight")).build());
 	}
@@ -100,7 +93,6 @@ public class FlyWellFlightService implements FlightService{
 		response.setMessage(message);
 		response.setArrivalAirportName(flight.getArrivalAirport().getName());
 		response.setDepartureAirportName(flight.getDepartureAirport().getName());
-		logger.info("Response:: {}", response);
 		return response;
 	}
 
@@ -121,5 +113,10 @@ public class FlyWellFlightService implements FlightService{
 	@Override
 	public boolean existsByPublicId(String publicId) {
 		return false;
+	}
+
+	@Override
+	public Collection<FlightResponse> findAll() {
+		return List.of();
 	}
 }

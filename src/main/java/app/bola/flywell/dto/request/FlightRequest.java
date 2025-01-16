@@ -20,16 +20,16 @@ public class FlightRequest {
 
 	private String displayImageName;
 	private long duration;
+
 	@NotBlank(message = EMPTY_FIELD_MESSAGE)
-//	@NonNull
 	private String arrivalCity;
+
 	@NotBlank(message = EMPTY_FIELD_MESSAGE)
-//	@NonNull
 	private String departureCity;
-//	@NonNull
+
 	@NotNull
 	private AirportRequest destinationAirport;
-//	@NonNull
+
 	@NotNull
 	private AirportRequest departureAirport;
 	

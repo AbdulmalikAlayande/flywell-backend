@@ -5,7 +5,7 @@ import app.bola.flywell.dto.response.AdminInvitationResponse;
 import app.bola.flywell.dto.response.ApiResponse;
 import app.bola.flywell.dto.response.CreateAdminResponse;
 import app.bola.flywell.exceptions.*;
-import app.bola.flywell.services.userservice.AdminService;
+import app.bola.flywell.services.users.AdminService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

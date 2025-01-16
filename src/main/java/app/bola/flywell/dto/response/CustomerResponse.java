@@ -1,20 +1,22 @@
 package app.bola.flywell.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import app.bola.flywell.basemodules.BaseResponse;
 
-@Data
-@AllArgsConstructor
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
+
+@Getter
+@Setter
+@SuperBuilder
 @NoArgsConstructor
-@Builder
-public class CustomerResponse {
-	private String message;
-	private String email;
-	private String phoneNumber;
-	private String firstName;
-	private String lastName;
-	private String gender;
-	private long otp;
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CustomerResponse extends BaseResponse {
+
+	Long frequentFlyerNumber;
+	UserBioDataResponse userBioData;
+
 }

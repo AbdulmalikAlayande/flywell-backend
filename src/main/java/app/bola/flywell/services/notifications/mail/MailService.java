@@ -11,7 +11,7 @@ public interface  MailService {
 	ResponseEntity<NotificationResponse> sendReservationConfirmationEmail(NotificationRequest notificationRequest);
 	ResponseEntity<NotificationResponse> sendAdminInvitationEmail(NotificationRequest notificationRequest) throws InvalidRequestException;
 	
-	ResponseEntity<NotificationResponse> sendOtp(NotificationRequest notificationRequest) throws InvalidRequestException, InvalidRequestException;
+	ResponseEntity<NotificationResponse> sendOtp(NotificationRequest notificationRequest);
 	
 	ResponseEntity<NotificationResponse> sendFlightFormAsPdf(NotificationRequest notificationRequest);
 }

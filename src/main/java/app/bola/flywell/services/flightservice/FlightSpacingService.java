@@ -15,40 +15,52 @@ public class FlightSpacingService {
 
 	/**
 	 * Schedules flights while ensuring minimum spacing and avoiding conflicts.
+	 * Only returns flights whose departure or arrival times have been updated.
 	 */
 	public List<FlightInstance> scheduleFlights(List<FlightInstance> flights, int minSpacingMinutes) {
-		flights.sort((f1, f2) -> {
-			int priorityCompare = Integer.compare(f2.getPriority(), f1.getPriority());
-			return (priorityCompare != 0) ? priorityCompare : f1.getDepartureTime().compareTo(f2.getDepartureTime());
-		});
+
+		flights.sort(this::compareFlights);
 
 		List<FlightInstance> scheduledFlights = new ArrayList<>();
-		for (FlightInstance flight : flights) {
-			boolean conflict = false;
+		List<FlightInstance> modifiedFlights = new ArrayList<>();
 
-			for (FlightInstance scheduled : scheduledFlights) {
-				if (isConflict(scheduled, flight, minSpacingMinutes)) {
-					conflict = true;
-					break;
+		for (FlightInstance flight : flights) {
+			LocalDateTime originalDepartureTime = flight.getDepartureTime();
+			LocalDateTime originalArrivalTime = flight.getArrivalTime();
+
+			if (hasConflict(flight, scheduledFlights, minSpacingMinutes)) {
+				adjustFlightTimes(flight, scheduledFlights, minSpacingMinutes);
+				if (isModified(flight, originalDepartureTime, originalArrivalTime)) {
+					modifiedFlights.add(flight);
 				}
 			}
-
-			if (!conflict) {
-				scheduledFlights.add(flight);
-			} else {
-				flight.setDepartureTime(findNextAvailableSlot(scheduledFlights, flight, minSpacingMinutes));
-				flight.setArrivalTime(flight.getDepartureTime().plusMinutes(flight.getDurationMinutes()));
-				scheduledFlights.add(flight);
-			}
+			scheduledFlights.add(flight);
 		}
-		return scheduledFlights;
+
+		return modifiedFlights;
+	}
+
+	private int compareFlights(FlightInstance f1, FlightInstance f2) {
+		int priorityCompare = Integer.compare(f2.getPriority(), f1.getPriority());
+		return (priorityCompare != 0) ? priorityCompare : f1.getDepartureTime().compareTo(f2.getDepartureTime());
+	}
+
+	private boolean hasConflict(FlightInstance flight, List<FlightInstance> scheduledFlights, int minSpacingMinutes) {
+		return scheduledFlights.stream().anyMatch(scheduled -> isConflict(scheduled, flight, minSpacingMinutes));
+	}
+
+	private void adjustFlightTimes(FlightInstance flight, List<FlightInstance> scheduledFlights, int minSpacingMinutes) {
+		flight.setDepartureTime(findNextAvailableSlot(scheduledFlights, flight, minSpacingMinutes));
+		flight.setArrivalTime(flight.getDepartureTime().plusMinutes(flight.getDurationMinutes()));
+	}
+
+	private boolean isModified(FlightInstance flight, LocalDateTime originalDepartureTime, LocalDateTime originalArrivalTime) {
+		return !originalDepartureTime.equals(flight.getDepartureTime()) || !originalArrivalTime.equals(flight.getArrivalTime());
 	}
 
 	private boolean isConflict(FlightInstance scheduled, FlightInstance newFlight, int minSpacingMinutes) {
 		long spacingBefore = Duration.between(scheduled.getArrivalTime(), newFlight.getDepartureTime()).toMinutes();
-		long spacingAfter = Duration.between(newFlight.getArrivalTime(), scheduled.getDepartureTime()).toMinutes();
-
-		return spacingBefore < minSpacingMinutes || spacingAfter < minSpacingMinutes;
+		return spacingBefore < minSpacingMinutes;
 	}
 
 	private LocalDateTime findNextAvailableSlot(List<FlightInstance> scheduledFlights, FlightInstance flight, int minSpacingMinutes) {

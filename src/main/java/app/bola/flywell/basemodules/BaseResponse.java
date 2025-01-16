@@ -7,10 +7,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
- * Base Response class for all response DTOs corresponding to {@link FlyWellModel}
+ * Base Response class for all response DTOs, it is corresponding to {@link FlyWellModel}
  */
 
 
@@ -24,6 +23,7 @@ import java.time.LocalDateTime;
 public class BaseResponse implements Serializable {
 
     String publicId;
+    String message;
 
 
     @Override

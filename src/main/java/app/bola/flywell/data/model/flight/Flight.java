@@ -11,7 +11,7 @@ import java.util.Set;
 
 
 import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.FetchType.EAGER;
 
 @Entity
 @Getter
@@ -22,7 +22,6 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"departure_city", "arrival_city"}))
 public class Flight extends FlyWellModel {
 
-	private long duration;
 	private String arrivalCity;
 	private String departureCity;
 	private String displayImage;
@@ -33,27 +32,30 @@ public class Flight extends FlyWellModel {
 	@OneToOne(cascade = ALL)
 	private Airport arrivalAirport;
 
-	@OneToMany(cascade = ALL, orphanRemoval = true)
-	private Set<FlightInstance> flightInstances;
+	@OneToMany(mappedBy = "flight", cascade = ALL, fetch = EAGER)
+	@Builder.Default
+	private Set<FlightInstance> instances = new LinkedHashSet<>();
+
 
 	public void addFlightInstance(FlightInstance newInstance){
-		if (newInstance != null){
+		if (newInstance != null) {
 			newInstance.setFlight(this);
-			flightInstances.add(newInstance);
+			this.instances.add(newInstance);
 		}
 	}
+
 
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this)
 				.add("id", getId())
 				.add("publicId", getPublicId())
-				.add("duration", duration)
 				.add("arrivalCity", arrivalCity)
 				.add("departureCity", departureCity)
 				.add("displayImage", displayImage)
 				.add("departureAirport", departureAirport)
 				.add("arrivalAirport", arrivalAirport)
+				.add("instances", instances)
 				.toString();
 	}
 }

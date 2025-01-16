@@ -3,18 +3,18 @@ package app.bola.flywell.data.model.persons;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import static jakarta.persistence.GenerationType.UUID;
 
+
+@Getter
+@Setter
 @Entity
-@Data
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class OTP {
 	
 	@Id

@@ -3,7 +3,7 @@ package app.bola.flywell.services.notifications.mail;
 import app.bola.flywell.config.EmailValidationConfig;
 import app.bola.flywell.dto.request.NotificationRequest;
 import app.bola.flywell.dto.response.NotificationResponse;
-import app.bola.flywell.exceptions.InvalidRequestException;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -60,7 +60,7 @@ public class Mailer implements MailService{
 	}
 	
 	@NotNull
-	private ResponseEntity<NotificationResponse> sendNotification(NotificationRequest notificationRequest, String email) throws InvalidRequestException {
+	private ResponseEntity<NotificationResponse> sendNotification(NotificationRequest notificationRequest, String email){
 		HttpEntity<Notification> requestEntity = new HttpEntity<>(buildNotification(email, notificationRequest.getEmail()), getHttpHeaders());
 		ResponseEntity<NotificationResponse> response = restTemplate.postForEntity(
 				BREVO_SEND_EMAIL_API_URL,
@@ -73,7 +73,7 @@ public class Mailer implements MailService{
 		}
 		else {
 			log.error("{} response body:: {}", MESSAGE_FAILED_TO_SEND, Objects.requireNonNull(response.getBody()));
-			throw new InvalidRequestException("Error " + response.getStatusCode());
+			throw new RuntimeException("Error " + response.getStatusCode());
 		}
 	}
 	
@@ -84,7 +84,7 @@ public class Mailer implements MailService{
 	}
 	
 	@Override
-	public ResponseEntity<NotificationResponse> sendAdminInvitationEmail(NotificationRequest notificationRequest) throws InvalidRequestException {
+	public ResponseEntity<NotificationResponse> sendAdminInvitationEmail(NotificationRequest notificationRequest) {
 		context.setVariable("firstName", notificationRequest.getFirstName());
 		context.setVariable("email", notificationRequest.getEmail());
 		context.setVariable("code", notificationRequest.getCode());
@@ -95,7 +95,7 @@ public class Mailer implements MailService{
 	}
 	
 	@Override
-	public ResponseEntity<NotificationResponse> sendOtp(NotificationRequest notificationRequest) throws InvalidRequestException {
+	public ResponseEntity<NotificationResponse> sendOtp(NotificationRequest notificationRequest) {
 		context.setVariable("firstName", notificationRequest.getFirstName());
 		context.setVariable("email", notificationRequest.getEmail());
 		context.setVariable("code", notificationRequest.getCode());

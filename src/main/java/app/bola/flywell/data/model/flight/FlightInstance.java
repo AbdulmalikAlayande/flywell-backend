@@ -14,7 +14,9 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.EnumType.STRING;
+import static jakarta.persistence.FetchType.EAGER;
 
 @Entity
 @Getter
@@ -24,6 +26,7 @@ import static jakarta.persistence.EnumType.STRING;
 @AllArgsConstructor
 public class FlightInstance extends FlyWellModel {
 
+	@Builder.Default
 	private boolean isFullyBooked = Boolean.FALSE;
 
 	@Column(unique = true)
@@ -33,33 +36,53 @@ public class FlightInstance extends FlyWellModel {
 	private LocalDateTime departureTime;
 	private LocalDateTime arrivalTime;
 	private int baggageAllowance;
+	private int priority;
+	private long durationMinutes;
 
 	@OneToOne
 	private Aircraft airCraft;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@ToString.Exclude
 	private Flight flight;
 
 	@Enumerated(STRING)
 	private FlightStatus status;
 
-	@OneToMany
-	@ToString.Exclude
-	private Set<FlightSeat> flightSeat = new LinkedHashSet<>();
+	@OneToMany(cascade = ALL, fetch = EAGER)
+	@Builder.Default
+	private Set<FlightSeat> seats = new LinkedHashSet<>();
 
-	private int priority = 0;
-	private long durationMinutes;
+	@Builder.Default
+	@OneToMany(cascade = ALL, fetch = EAGER)
+	private Set<FlightReservation> reservations = new LinkedHashSet<>();
 
 	@PostLoad
 	@PostPersist
 	@PostUpdate
 	private void computeDuration() {
+
 		if (departureTime != null && arrivalTime != null) {
 			this.durationMinutes = Duration.between(departureTime, arrivalTime).toMinutes();
 		}
 	}
 
+	public void addReservation(FlightReservation reservation) {
+
+		if (reservation!= null) {
+			reservation.setFlightInstance(this);
+			reservations.add(reservation);
+		}
+	}
+
+	public int computeTotalPassengers(){
+
+		return reservations.stream().mapToInt(reservation -> {
+			if (reservation.getSeatMap().size() == reservation.getFormMap().size())
+				return reservation.getSeatMap().size();
+			else return reservation.getFormMap().size();
+		}).sum();
+	}
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this)
@@ -75,3 +98,4 @@ public class FlightInstance extends FlyWellModel {
 				.toString();
 	}
 }
+

@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -114,11 +115,19 @@ public class FlyWellFlightReservationService implements FlightReservationService
         FlightInstance flightInstance = flightInstanceRepository.findByPublicId(flightId)
                 .orElseThrow(EntityNotFoundException::new);
 
+        if (flightInstance.getDepartureTime().isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("Cannot cancel reservation for a past flight");
+        }
+
         FlightReservation flightReservation = flightInstance.getReservations().stream()
                 .filter(reservation -> Objects.equals(reservation.getPublicId(), reservationId))
                 .distinct().findAny()
                 .orElseThrow(() -> new EntityNotFoundException("FlightReservation with Id " + reservationId));
 
+        if (flightReservation.getStatus() == ReservationStatus.CANCELLED) {
+            return;
+        }
+        
         Set<FlightSeat> flightInstanceSeats = flightInstance.getSeats();
         flightReservation.setStatus(ReservationStatus.CANCELLED);
         flightReservation.getSeatMap().forEach((passenger, flightSeat) -> {
@@ -126,6 +135,26 @@ public class FlyWellFlightReservationService implements FlightReservationService
             filteredSeat.setReservationNumber(null);
             filteredSeat.setSeatStatus(SeatStatus.EMPTY);
         });
+
         seatRepository.saveAll(flightInstanceSeats);
+        reservationRepository.save(flightReservation);
+    }
+
+    @Override
+    public FlightReservationResponse updateReservationStatus(String flightId, String reservationId) {
+        FlightInstance flightInstance = flightInstanceRepository.findByPublicId(flightId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        FlightReservation flightReservation = flightInstance.getReservations().stream()
+                .filter(reservation -> Objects.equals(reservation.getPublicId(), reservationId))
+                .distinct().findAny()
+                .orElseThrow(() -> new EntityNotFoundException("FlightReservation with Id " + reservationId));
+
+        if (flightReservation.getStatus() == ReservationStatus.CANCELLED) {
+            throw new IllegalStateException("Cannot update status for a cancelled reservation");
+        }
+
+
+        return null;
     }
 }

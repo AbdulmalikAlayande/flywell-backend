@@ -7,5 +7,5 @@ import app.bola.flywell.dto.response.FlightReservationResponse;
 public interface FlightReservationService extends FlyWellService<FlightReservationRequest, FlightReservationResponse> {
 
     void cancelReservation(String flightId, String reservationId);
-
+    FlightReservationResponse updateReservationStatus(String flightId, String reservationId);
 }

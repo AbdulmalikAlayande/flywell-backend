@@ -1,11 +1,13 @@
 package app.bola.flywell.services.flightservice;
 
+import app.bola.flywell.data.model.enums.ReservationStatus;
 import app.bola.flywell.dto.request.FlightReservationRequest;
 import app.bola.flywell.dto.request.PassengerRequest;
 import app.bola.flywell.dto.response.FlightInstanceResponse;
 import app.bola.flywell.dto.response.FlightReservationResponse;
 import app.bola.flywell.dto.response.FlightSeatResponse;
 import app.bola.flywell.dto.response.PassengerResponse;
+import app.bola.flywell.exceptions.EntityNotFoundException;
 import app.bola.flywell.services.config.TestSetupConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +38,6 @@ class FlightReservationServiceTest {
 
     FlightReservationResponse response;
 
-
     @BeforeEach
     public void startEachTestWith(){
         setupHelper.clearFlightReservationDb();
@@ -53,7 +54,7 @@ class FlightReservationServiceTest {
     class FlightReservationCreationTest {
 
         @Test
-        public void testCreateReservationWithValidData_ReservationIsCreatedAndExistsInDb () {
+        public void testCreateReservationWithValidData_ReservationIsCreatedAndExistsInDb() {
             response = setupHelper.createFlightReservation();
             assertNotNull(response);
             assertEquals(LocalDate.now(), response.getCreationDate());
@@ -61,7 +62,7 @@ class FlightReservationServiceTest {
         }
 
         @Test
-        public void testCreateReservationWithValidData_ReservationContainsMappingsOfPassengersToSeats () {
+        public void testCreateReservationWithValidData_ReservationContainsMappingsOfPassengersToSeats() {
             response = setupHelper.createFlightReservation();
             assertNotNull(response.getSeatMap());
             assertEquals(7, response.getSeatMap().size());
@@ -74,8 +75,7 @@ class FlightReservationServiceTest {
         }
 
         @Test
-        public void testCreateReservationWithValidData_EachPassengerIsMappedToTheirRequestedSeat () {
-
+        public void testCreateReservationWithValidData_EachPassengerIsMappedToTheirRequestedSeat() {
             FlightInstanceResponse flightInstanceResponse = setupHelper.createFlightInstance();
             FlightReservationRequest reservationRequest = TestDataUtil.buildFlightReservationRequest(flightInstanceResponse.getPublicId());
 
@@ -105,38 +105,95 @@ class FlightReservationServiceTest {
         }
 
         @Test
-        public void testCreateReservationWithValidData_OneOfTheRequestedSeatIsOccupied_ReservationCreationFails () {
+        public void testCreateReservationWithValidData_OneOfTheRequestedSeatIsOccupied_ReservationCreationFails() {
+            FlightInstanceResponse flightInstanceResponse = setupHelper.createFlightInstance();
+            FlightReservationRequest reservationRequest1 = TestDataUtil.buildFlightReservationRequest(flightInstanceResponse.getPublicId());
+            flightReservationService.createNew(reservationRequest1);
 
+            FlightReservationRequest reservationRequest2 = TestDataUtil.buildFlightReservationRequest(flightInstanceResponse.getPublicId());
+
+            assertThrows(IllegalArgumentException.class, () -> {
+                flightReservationService.createNew(reservationRequest2);
+            });
         }
 
         @Test
-        public void testCreateReservationWithInvalidFlightInstanceId () {
+        public void testCreateReservationWithInvalidFlightInstanceId() {
+            FlightReservationRequest reservationRequest = TestDataUtil.buildFlightReservationRequest("invalid_flight_id");
 
+            assertThrows(EntityNotFoundException.class, () -> {
+                flightReservationService.createNew(reservationRequest);
+            });
         }
     }
 
     @Nested
-    class FlightReservationCancellationTest{
+    class FlightReservationCancellationTest {
 
         @Test
-        public void testCancelReservationWithValidData_ReservationIsCancelled () {
+        public void testCancelReservationWithValidData_ReservationIsCancelled() {
+            response = setupHelper.createFlightReservation();
             flightReservationService.cancelReservation(response.getFlightId(), response.getPublicId());
-            assertNull(flightReservationService.findByPublicId(response.getPublicId()));
-        }
-
-
-        @Test
-        public void testCancelReservationForAlreadyCancelledReservation_ReservationIsCancelled () {
+            FlightReservationResponse cancelledReservation = flightReservationService.findByPublicId(response.getPublicId());
+            assertNotNull(cancelledReservation);
+            assertEquals(ReservationStatus.CANCELLED, cancelledReservation.getStatus());
         }
 
         @Test
-        public void testCancelReservationForNonexistentReservationId_ReservationCancellationFails_ExceptionIsThrown () {
+        public void testCancelReservationForAlreadyCancelledReservation_NoExceptionThrown() {
+            response = setupHelper.createFlightReservation();
+            flightReservationService.cancelReservation(response.getFlightId(), response.getPublicId());
+            assertDoesNotThrow(() -> {
+                flightReservationService.cancelReservation(response.getFlightId(), response.getPublicId());
+            });
         }
 
         @Test
-        public void testCancelReservationForPastFlight_ReservationCancellationFails_ExceptionIsThrown () {
+        public void testCancelReservationForNonexistentReservationId_ReservationCancellationFails_ExceptionIsThrown() {
+            FlightInstanceResponse flightInstanceResponse = setupHelper.createFlightInstance();
+            assertThrows(EntityNotFoundException.class, () -> {
+                flightReservationService.cancelReservation(flightInstanceResponse.getPublicId(), "nonexistent_reservation_id");
+            });
         }
 
+        @Test
+        public void testCancelReservationForPastFlight_ReservationCancellationFails_ExceptionIsThrown() {
+            FlightInstanceResponse pastFlightInstance = setupHelper.createPastFlightInstance();
+            FlightReservationResponse pastReservation = setupHelper.createFlightReservation(pastFlightInstance.getPublicId());
+
+            assertThrows(IllegalStateException.class, () -> {
+                flightReservationService.cancelReservation(pastFlightInstance.getPublicId(), pastReservation.getPublicId());
+            });
+        }
     }
 
+    @Nested
+    class FlightReservationUpdateTest {
+
+        @Test
+        public void testUpdateReservationStatus_ValidReservation_StatusUpdatedToReserved() {
+            response = setupHelper.createFlightReservation();
+            FlightReservationResponse updatedResponse = flightReservationService.updateReservationStatus(response.getFlightId(), response.getPublicId());
+            assertEquals(ReservationStatus.RESERVED, updatedResponse.getStatus());
+        }
+
+        @Test
+        public void testUpdateReservationStatus_CancelledReservation_ThrowsException() {
+            response = setupHelper.createFlightReservation();
+            flightReservationService.cancelReservation(response.getFlightId(), response.getPublicId());
+
+            assertThrows(IllegalStateException.class, () -> {
+                flightReservationService.updateReservationStatus(response.getFlightId(), response.getPublicId());
+            });
+        }
+
+        @Test
+        public void testUpdateReservationStatus_NonexistentReservation_ThrowsException() {
+            FlightInstanceResponse flightInstanceResponse = setupHelper.createFlightInstance();
+
+            assertThrows(EntityNotFoundException.class, () -> {
+                flightReservationService.updateReservationStatus(flightInstanceResponse.getPublicId(), "nonexistent_reservation_id");
+            });
+        }
+    }
 }

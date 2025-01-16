@@ -11,7 +11,7 @@ import app.bola.flywell.dto.request.FlightReservationRequest;
 import app.bola.flywell.dto.response.FlightReservationResponse;
 import app.bola.flywell.generator.ReservationNumberGenerator;
 import jakarta.annotation.PostConstruct;
-import jakarta.persistence.EntityNotFoundException;
+import app.bola.flywell.exceptions.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -52,7 +52,7 @@ public class FlyWellFlightReservationService implements FlightReservationService
         reservation.setStatus(ReservationStatus.PENDING);
         reservation.setFlightInstance(flightInstance);
 
-//        mapRequestToReservation(request, flightInstance, reservation);
+        mapRequestToReservation(request, flightInstance, reservation);
         FlightReservation savedReservation = reservationRepository.save(reservation);
 
         flightInstance.addReservation(savedReservation);
@@ -85,11 +85,13 @@ public class FlyWellFlightReservationService implements FlightReservationService
     }
 
     public FlightReservationResponse findByPublicId(String publicId) {
-        return null;
+        return reservationRepository.findByPublicId(publicId)
+                .map(flightReservation -> mapper.map(flightReservation, FlightReservationResponse.class))
+                .orElse(null);
     }
 
     public boolean existsByPublicId(String publicId) {
-        return false;
+        return reservationRepository.existsByPublicId(publicId);
     }
 
     public Collection<FlightReservationResponse> findAll() {
@@ -107,4 +109,8 @@ public class FlyWellFlightReservationService implements FlightReservationService
         return mapper.map(reservation, FlightReservationResponse.class);
     }
 
+    @Override
+    public void cancelReservation(String flightId, String reservationId) {
+
+    }
 }

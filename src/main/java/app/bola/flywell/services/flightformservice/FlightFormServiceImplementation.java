@@ -3,53 +3,40 @@ package app.bola.flywell.services.flightformservice;
 import app.bola.flywell.dto.request.FlightFormRequest;
 import app.bola.flywell.dto.request.FlightRequest;
 import app.bola.flywell.dto.response.FlightFormResponse;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class FlightFormServiceImplementation implements FlightFormService{
-	
-	private static FlightFormService instance = null;
-	
-	public static FlightFormService getInstance() {
-		if (instance == null)
-			return new FlightFormServiceImplementation();
-		return instance;
-	}
-	
-	private FlightFormServiceImplementation(){}
+@Service
+@AllArgsConstructor
+public class FlightFormServiceImplementation implements FlightFormService {
+
+
 	@Override
-	public Optional<FlightFormResponse> generateFlightForm(FlightRequest flightRequest) {
-		return Optional.empty();
-	}
-	
-	@Override
-	public Optional<FlightFormResponse> save(FlightFormRequest flightFormRequest) {
-		return Optional.empty();
-	}
-	
-	@Override
-	public Optional<FlightFormResponse> findById(String flightFormId) {
-		return Optional.empty();
-	}
-	
-	@Override
-	public String deleteFlightFormBy(String flightFormId) {
+	public FlightFormResponse createNew(FlightFormRequest request) {
 		return null;
 	}
-	
+
 	@Override
-	public Optional<List<FlightFormResponse>> findAll() {
-		return Optional.empty();
+	public FlightFormResponse findByPublicId(String publicId) {
+		return null;
 	}
-	
+
 	@Override
-	public Optional<List<FlightFormResponse>> findAllByPassengerId(String passengerId) {
-		return Optional.empty();
+	public boolean existsByPublicId(String publicId) {
+		return false;
 	}
-	
+
 	@Override
-	public Optional<List<FlightFormResponse>> findAllByFlightId(String flightId) {
-		return Optional.empty();
+	public Collection<FlightFormResponse> findAll() {
+		return List.of();
+	}
+
+	@Override
+	public void removeAll() {
+
 	}
 }

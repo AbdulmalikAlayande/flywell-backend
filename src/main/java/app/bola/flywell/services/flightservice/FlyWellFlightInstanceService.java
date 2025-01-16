@@ -136,6 +136,7 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 
 	@Override
 	public void removeAll() {
+		flightSeatRepository.deleteAll();
 		flightInstanceRepository.deleteAll();
 	}
 

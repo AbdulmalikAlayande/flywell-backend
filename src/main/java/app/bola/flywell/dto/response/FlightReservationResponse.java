@@ -24,6 +24,7 @@ import java.util.Map;
 public class FlightReservationResponse extends BaseResponse {
 
     String status;
+    String flightId;
     String reservationNumber;
     LocalDate creationDate;
     Map<PassengerResponse, FlightSeatResponse> seatMap;

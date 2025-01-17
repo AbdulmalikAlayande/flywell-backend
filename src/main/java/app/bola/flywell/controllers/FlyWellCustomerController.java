@@ -18,7 +18,7 @@ import static app.bola.flywell.utils.Constants.ERROR_MESSAGE;
 import static app.bola.flywell.utils.Constants.REGISTRATION_SUCCESSFUL_MESSAGE;
 
 @RestController
-@RequestMapping("bola-air/api/v3/")
+@RequestMapping("customer")
 @AllArgsConstructor
 @Slf4j
 @CrossOrigin("*")
@@ -32,7 +32,7 @@ public class FlyWellCustomerController {
 	public String home(){
 		return "Welcome to FlyWell";
 	}
-	@PostMapping("register-customer/")
+	@PostMapping("register")
 	@Validated
 	public ApiResponse<?> registerCustomer(@RequestBody @Valid CustomerRequest customerRequest){
 		CustomerResponse response = new CustomerResponse();

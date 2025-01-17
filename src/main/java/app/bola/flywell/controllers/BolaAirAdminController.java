@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Controller
-@RequestMapping("bola-air/admin/")
+@RequestMapping("admin")
 @AllArgsConstructor
 @Slf4j
 @CrossOrigin("*")

@@ -1,4 +1,4 @@
-package app.bola.flywell.data.model.persons;
+package app.bola.flywell.data.model.users;
 
 import app.bola.flywell.basemodules.FlyWellModel;
 import app.bola.flywell.data.model.enums.Role;
@@ -6,10 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
-
 import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.CascadeType.MERGE;
 
 @SuperBuilder
 @AllArgsConstructor

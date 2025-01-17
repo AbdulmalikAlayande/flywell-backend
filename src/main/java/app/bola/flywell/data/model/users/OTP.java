@@ -1,4 +1,4 @@
-package app.bola.flywell.data.model.persons;
+package app.bola.flywell.data.model.users;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

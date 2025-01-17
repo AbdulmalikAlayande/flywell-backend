@@ -1,8 +1,7 @@
 package app.bola.flywell.broker;
 
-import app.bola.flywell.data.model.enums.Gender;
-import app.bola.flywell.data.model.persons.Customer;
-import app.bola.flywell.data.model.persons.UserBioData;
+import app.bola.flywell.data.model.users.Customer;
+import app.bola.flywell.data.model.users.UserBioData;
 import app.bola.flywell.dto.response.CustomerResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +27,6 @@ public class FlyWellPublisher {
                                 .firstName("John")
                                 .lastName("Doe")
                                 .email("john.doe@example.com")
-                                .gender(Gender.FEMALE)
                                 .phoneNumber("07036174617")
                                 .build()
                 )

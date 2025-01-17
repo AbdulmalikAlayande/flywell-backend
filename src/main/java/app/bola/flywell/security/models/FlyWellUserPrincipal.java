@@ -1,11 +1,9 @@
 package app.bola.flywell.security.models;
 
-import app.bola.flywell.data.model.persons.Customer;
+import app.bola.flywell.data.model.users.User;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.apache.pulsar.shade.org.glassfish.jersey.internal.inject.Custom;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -16,20 +14,22 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FlyWellUserPrincipal implements UserDetails {
-    private Customer customer;
+
+    private User user;
+    private List<GrantedAuthority> authorities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return customer.getBioData().getPassword();
+        return user.getBioData().getPassword();
     }
 
     @Override
     public String getUsername() {
-        return customer.getPublicId();
+        return user.getPublicId();
     }
 }

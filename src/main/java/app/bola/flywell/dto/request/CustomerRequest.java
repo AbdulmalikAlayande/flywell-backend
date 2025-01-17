@@ -1,10 +1,12 @@
 package app.bola.flywell.dto.request;
 
-import app.bola.flywell.data.model.persons.Customer;
+import app.bola.flywell.data.model.users.Customer;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.springframework.validation.annotation.Validated;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,11 +15,13 @@ import jakarta.validation.constraints.NotBlank;
  * Request DTO for {@link Customer} model
  */
 
-@Builder
-@Data
+@Getter
+@Setter
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Validated
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerRequest {
 
 	@NotBlank

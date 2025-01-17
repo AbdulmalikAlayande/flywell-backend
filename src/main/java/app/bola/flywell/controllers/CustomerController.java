@@ -23,7 +23,7 @@ import static app.bola.flywell.utils.Constants.REGISTRATION_SUCCESSFUL_MESSAGE;
 @Slf4j
 @CrossOrigin("*")
 @Validated
-public class FlyWellCustomerController {
+public class CustomerController {
 	
 	private CustomerService customerService;
 

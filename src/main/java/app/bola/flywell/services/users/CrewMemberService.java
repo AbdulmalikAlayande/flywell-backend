@@ -1,29 +1,15 @@
 package app.bola.flywell.services.users;
 
+import app.bola.flywell.basemodules.FlyWellService;
 import app.bola.flywell.data.model.flight.FlightInstance;
-import app.bola.flywell.data.model.persons.CrewMember;
-import app.bola.flywell.dto.response.CreateCrewMemberResponse;
-import app.bola.flywell.dto.response.CrewMemberResponse;
-import app.bola.flywell.dto.response.FlightScheduleResponse;
+import app.bola.flywell.dto.response.FlightInstanceResponse;
 import app.bola.flywell.dto.request.*;
-import app.bola.flywell.exceptions.*;
-import java.util.Optional;
 
-public interface CrewMemberService {
-    CreateCrewMemberResponse createCrewMember(CreateCrewMemberRequest createCrewMemberRequest) throws EmptyFieldException, FieldInvalidException;
-    void deleteCrewMemberById(String id) throws InvalidRequestException;
+public interface CrewMemberService extends FlyWellService<UserRequest, UserRequest> {
+
     FlightInstance assignCrewMember(FlightInstance instance);
-    void deleteCrewMemberByUsername(String userName) throws InvalidRequestException;
+    FlightInstanceResponse viewFlightSchedule(String flightId);
 
-    long getCountOfCrewMembers();
-    
-    boolean existsByUsername(String userName);
-
-    Optional<CrewMember> findCrewMemberByUserName(String userName) throws InvalidRequestException;
-
-    CrewMemberResponse updateDetailsOfRegisteredCrewMember(UpdateRequest updateRequest);
-    FlightScheduleResponse viewFlightSchedule(ViewFlightScheduleRequest flightScheduleRequest);
-    
 //test that the location of the crew members to be assigned is the location where the flight instance is coming from
 /*test that the flight instance does not have the crew members assigned to it yet, before assignment and after assignment
   the flight instance now has a number of crew members assigned to it.*/

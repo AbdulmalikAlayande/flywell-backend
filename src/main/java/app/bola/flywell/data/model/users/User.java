@@ -1,8 +1,11 @@
-package app.bola.flywell.data.model.persons;
+package app.bola.flywell.data.model.users;
 
+import app.bola.flywell.basemodules.FlyWellModel;
 import app.bola.flywell.data.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
+
+import static jakarta.persistence.CascadeType.ALL;
 
 @Builder
 @AllArgsConstructor
@@ -10,12 +13,10 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-public class FrontDeskOfficer extends Person{
-	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
-	private String id;
+public class User extends FlyWellModel {
+
 	@Enumerated(EnumType.STRING)
 	private Role role;
-	@OneToOne
+	@OneToOne(cascade = ALL)
 	private UserBioData bioData;
 }

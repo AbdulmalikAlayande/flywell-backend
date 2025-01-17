@@ -16,10 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static app.bola.flywell.utils.Constants.*;
 
@@ -28,7 +25,7 @@ import static app.bola.flywell.utils.Constants.*;
 @AllArgsConstructor
 public class Mailer implements MailService{
 
-	private final EmailValidationConfig validationConfig;
+	private final EmailValidationConfig emailValidationConfig;
 	private final RestTemplate restTemplate;
 	private final TemplateEngine templateEngine;
 	private final Context context;
@@ -37,8 +34,9 @@ public class Mailer implements MailService{
 	@NotNull
 	private HttpHeaders getHttpHeaders() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.set(API_KEY, validationConfig.getBrevoApiKey());
+		headers.set(API_KEY, emailValidationConfig.getBrevoApiKey());
 		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 		return headers;
 	}
 	@NotNull
@@ -90,7 +88,7 @@ public class Mailer implements MailService{
 		context.setVariable("code", notificationRequest.getCode());
 		context.setVariable("adminSignUpUrl", FRONTEND_BASE_URL+"admin-signup");
 		String email = templateEngine.process(notificationRequest.getMailPath(), context);
-		System.out.println(email);
+		log.info("{}", email);
 		return sendNotification(notificationRequest, email);
 	}
 	
@@ -102,16 +100,5 @@ public class Mailer implements MailService{
 		String email = templateEngine.process(notificationRequest.getMailPath(), context);
 		System.out.println(email);
 		return sendNotification(notificationRequest, email);
-	}
-	
-	@Override
-	public ResponseEntity<NotificationResponse> sendFlightFormAsPdf(NotificationRequest notificationRequest) {
-		
-		return null;
-	}
-	
-	@Override
-	public ResponseEntity<NotificationResponse> sendReservationConfirmationEmail(NotificationRequest notificationRequest) {
-		return null;
 	}
 }

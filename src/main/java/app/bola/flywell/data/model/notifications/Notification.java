@@ -1,6 +1,6 @@
 package app.bola.flywell.data.model.notifications;
 
-import app.bola.flywell.data.model.persons.Customer;
+import app.bola.flywell.data.model.users.Customer;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;

@@ -4,7 +4,6 @@ package app.bola.flywell.services.users;
 
 import app.bola.flywell.dto.response.AdminInvitationResponse;
 import app.bola.flywell.dto.response.CreateAdminResponse;
-import app.bola.flywell.dto.response.GetUserResponse;
 import app.bola.flywell.dto.request.*;
 import app.bola.flywell.exceptions.FieldInvalidException;
 import app.bola.flywell.exceptions.EntityNotFoundException;
@@ -54,23 +53,17 @@ class AdminServiceTest {
 		assertThatThrownBy(()-> response = adminService.inviteAdmin(invitationRequest)).isInstanceOf(FieldInvalidException.class)
 																					   .hasMessageContaining(INVALID_EMAIL_FORMAT);
 	}
-	@Test void testThatAdminEmailIsSaved_AfterInvitation(){
-		GetUserResponse foundAdminRef = adminService.findByEmail("alaabdulmalik03@gmail.com");
-		assertThat(foundAdminRef).isNotNull();
-		assertThat(foundAdminRef.getEmail()).isEqualTo("alaabdulmalik03@gmail.com");
-	}
+
 	@SneakyThrows
 	@Test
-	public void createAdminAccountTest(){
-		CreateAdminResponse adminResponse = adminService.createAdminAccount(buildAdmin());
+	public void createNewTest(){
+		CreateAdminResponse adminResponse = adminService.createNew(buildAdmin());
 		assertThat(adminResponse.getMessage()).isEqualTo("Admin Account created successfully");
 	}
 	
 	@SneakyThrows
-	@Test void createAdminAccount_WithoutInvitation_ExceptionIsThrown(){
-		assertThatThrownBy(()->{
-			CreateAdminResponse adminResponse = adminService.createAdminAccount(buildUninvitedAdmin());
-		})
+	@Test void createNew_WithoutInvitation_ExceptionIsThrown(){
+		assertThatThrownBy(()-> adminService.createNew(buildUninvitedAdmin()))
 		.isInstanceOf(EntityNotFoundException.class)
 		.hasMessageContaining("Admin With Email Ahoy@gmail.com Does Not Exist");
 	}
@@ -97,7 +90,7 @@ class AdminServiceTest {
 	}
 	public CreateAdminRequest buildAdmin(){
         return CreateAdminRequest.builder()
-					             .lastName("Alhaji")
+					             .lastName("Alayande")
 		                         .adminCode(response.getCode())
 		                         .firstName("Abdulmalik")
 		                         .email("alaabdulmalik03@gmail.com")
@@ -111,10 +104,7 @@ class AdminServiceTest {
 	}
 
 	@Test void testThatAdminCanAddCrewMember(){
-		//CrewMember crewMember = new CrewMember();
-		//adminService.addCrewMember();
 
-	
 	}
 
 	

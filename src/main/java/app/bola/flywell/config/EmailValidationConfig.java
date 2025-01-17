@@ -1,14 +1,11 @@
 package app.bola.flywell.config;
 
-import app.bola.flywell.validator.EmailDomainValidator;
-import app.bola.flywell.annotations.EmailPattern;
 import app.bola.flywell.services.notifications.FieldValidator;
 import app.bola.flywell.services.notifications.Validator;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.client.RestTemplate;
@@ -23,11 +20,6 @@ import java.util.Collections;
 
 
 @Configuration
-@ComponentScan(basePackages = "app.bola.flywell.validator",
-				basePackageClasses = {
-					EmailPattern.class,
-					EmailDomainValidator.class
-				})
 @EnableAutoConfiguration
 @Getter
 public class EmailValidationConfig {
@@ -64,11 +56,6 @@ public class EmailValidationConfig {
 		templateResolver.setCacheable(false);
 		return templateResolver;
 	}
-	
-	@Bean
-	public EmailDomainValidator validEmailDomain() {
-		return new EmailDomainValidator();
-	}
 
 	@Bean
 	public Context context() {
@@ -80,7 +67,7 @@ public class EmailValidationConfig {
 		return new FieldValidator();
 	}
 	@Bean
-	public EmailValidationConfig validationConfig(){
+	public EmailValidationConfig emailConfig(){
 		return new EmailValidationConfig();
 	}
 	

@@ -1,7 +1,7 @@
 package app.bola.flywell.services.users;
 
 import app.bola.flywell.config.EmailValidationConfig;
-import app.bola.flywell.data.model.persons.OTP;
+import app.bola.flywell.data.model.users.OTP;
 import app.bola.flywell.data.repositories.OTPRepository;
 import app.bola.flywell.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import static java.math.BigInteger.valueOf;
 @AllArgsConstructor
 public class FlyWellOTPService implements OTPService {
 	
-	private EmailValidationConfig validationConfig;
+	private EmailValidationConfig emailValidationConfig;
 	private OTPRepository otpRepository;
 	private static final int TOTP_LENGTH = valueOf(6).intValue();
 	private static final int TIME_STEP = 180000;
@@ -27,7 +27,7 @@ public class FlyWellOTPService implements OTPService {
 	public OTP createNew(String email) {
 
 		String value = generateTOTP(email);
-		String secretKey = email+validationConfig.getTotpSecret();
+		String secretKey = email+ emailValidationConfig.getTotpSecret();
 
 		OTP.OTPBuilder<?, ?> otpBuilder = OTP.builder();
 		otpBuilder.staleTime(System.currentTimeMillis()+TIME_STEP);
@@ -40,7 +40,7 @@ public class FlyWellOTPService implements OTPService {
 	}
 	
 	private String generateTOTP(String input) {
-		String secretKey = input+validationConfig.getTotpSecret();
+		String secretKey = input+ emailValidationConfig.getTotpSecret();
 		String emailHashcode = String.valueOf(secretKey.hashCode());
 		int halfLength = emailHashcode.length() / 2;
 		StringBuilder value = new StringBuilder();

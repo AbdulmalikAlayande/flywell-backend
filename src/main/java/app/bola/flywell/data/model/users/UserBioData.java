@@ -1,15 +1,12 @@
-package app.bola.flywell.data.model.persons;
+package app.bola.flywell.data.model.users;
 
 import app.bola.flywell.basemodules.FlyWellModel;
-import app.bola.flywell.data.model.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static jakarta.persistence.EnumType.STRING;
 
 @Entity
 @Getter
@@ -28,12 +25,6 @@ public class UserBioData extends FlyWellModel {
 	private String email;
 
 	private String phoneNumber;
-
-	@OneToOne
-	private Address address;
-
-	@Enumerated(STRING)
-	private Gender gender;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@Builder.Default

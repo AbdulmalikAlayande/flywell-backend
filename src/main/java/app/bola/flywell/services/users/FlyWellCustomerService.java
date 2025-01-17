@@ -1,8 +1,8 @@
 package app.bola.flywell.services.users;
 
-import app.bola.flywell.data.model.persons.Customer;
-import app.bola.flywell.data.model.persons.OTP;
-import app.bola.flywell.data.model.persons.UserBioData;
+import app.bola.flywell.data.model.users.Customer;
+import app.bola.flywell.data.model.users.OTP;
+import app.bola.flywell.data.model.users.UserBioData;
 import app.bola.flywell.data.repositories.CustomerRepository;
 import app.bola.flywell.data.repositories.UserBioDataRepository;
 import app.bola.flywell.dto.request.NotificationRequest;

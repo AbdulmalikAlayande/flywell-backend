@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Controller
-@RequestMapping("bola-air/admin/")
+@RequestMapping("admin")
 @AllArgsConstructor
 @Slf4j
 @CrossOrigin("*")
-public class BolaAirAdminController {
+public class AdminController {
 	
 	private AdminService adminService;
 	
@@ -45,7 +45,7 @@ public class BolaAirAdminController {
 	public ApiResponse<?> createAdminAccount(@Valid @RequestBody CreateAdminRequest createAdminRequest){
 		try {
 			ApiResponse<CreateAdminResponse> apiResponse = new ApiResponse<>();
-			CreateAdminResponse response = adminService.createAdminAccount(createAdminRequest);
+			CreateAdminResponse response = adminService.createNew(createAdminRequest);
 			apiResponse.setResponseData(response);
 			apiResponse.setSuccessful(HttpStatus.CREATED.is2xxSuccessful());
 			apiResponse.setStatusCode(HttpStatus.CREATED.value());

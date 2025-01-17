@@ -1,6 +1,7 @@
 package app.bola.flywell.services.flightservice;
 
 import app.bola.flywell.data.model.Passenger;
+import app.bola.flywell.data.model.enums.FlightStatus;
 import app.bola.flywell.data.model.enums.ReservationStatus;
 import app.bola.flywell.data.model.enums.SeatStatus;
 import app.bola.flywell.data.model.flight.FlightInstance;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -110,7 +112,43 @@ public class FlyWellFlightReservationService implements FlightReservationService
     }
 
     @Override
-    public void cancelReservation(String flightId, String reservationId) {
+    public FlightReservationResponse cancelReservation(String flightId, String reservationId) {
+        FlightInstance flightInstance = flightInstanceRepository.findByPublicId(flightId)
+                .orElseThrow(() -> new EntityNotFoundException("FlightInstance with Id " + flightId));
+
+        boolean isDeparted = flightInstance.getStatus() == FlightStatus.EN_ROUTE ||
+                flightInstance.getStatus() == FlightStatus.LANDED;
+
+        if (flightInstance.getDepartureTime().isBefore(LocalDateTime.now()) && isDeparted) {
+            throw new IllegalStateException("Cannot cancel reservation for a past flight");
+        }
+
+        FlightReservation flightReservation = flightInstance.getReservations().stream()
+                .filter(reservation -> Objects.equals(reservation.getPublicId(), reservationId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("FlightReservation with Id " + reservationId));
+
+        if (flightReservation.getStatus() == ReservationStatus.CANCELLED) {
+            return toResponse(flightReservation);
+        }
+
+        flightReservation.setStatus(ReservationStatus.CANCELLED);
+        flightReservation.getSeatMap().forEach((passenger, flightSeat) -> {
+            flightSeat.setReservationNumber(null);
+            flightSeat.setSeatStatus(SeatStatus.EMPTY);
+        });
+
+        flightInstance.getReservations().remove(flightReservation);
+        seatRepository.saveAll(flightInstance.getSeats());
+        reservationRepository.save(flightReservation);
+        flightInstanceRepository.save(flightInstance);
+
+        return toResponse(flightReservation);
+    }
+
+    @Override
+    public FlightReservationResponse updateReservationStatus(String flightId, String reservationId) {
+
         FlightInstance flightInstance = flightInstanceRepository.findByPublicId(flightId)
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -119,13 +157,13 @@ public class FlyWellFlightReservationService implements FlightReservationService
                 .distinct().findAny()
                 .orElseThrow(() -> new EntityNotFoundException("FlightReservation with Id " + reservationId));
 
-        Set<FlightSeat> flightInstanceSeats = flightInstance.getSeats();
-        flightReservation.setStatus(ReservationStatus.CANCELLED);
-        flightReservation.getSeatMap().forEach((passenger, flightSeat) -> {
-            var filteredSeat = flightInstanceSeats.stream().filter(seat -> seat.equals(flightSeat)).toList().getFirst();
-            filteredSeat.setReservationNumber(null);
-            filteredSeat.setSeatStatus(SeatStatus.EMPTY);
-        });
-        seatRepository.saveAll(flightInstanceSeats);
+        if (flightReservation.getStatus() == ReservationStatus.CANCELLED) {
+            throw new IllegalStateException("Cannot update status for a cancelled reservation");
+        }
+
+        flightReservation.setStatus(ReservationStatus.RESERVED);
+
+        FlightReservation updatedReservation = reservationRepository.save(flightReservation);
+        return toResponse(updatedReservation);
     }
 }

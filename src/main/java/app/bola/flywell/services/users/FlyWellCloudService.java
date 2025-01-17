@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Service
 @AllArgsConstructor
-public class Bola_Air_CloudService implements CloudService{
+public class FlyWellCloudService implements CloudService{
 	
 //	private CloudConfig config;
 	@Override

@@ -1,4 +1,4 @@
-package app.bola.flywell.utils;
+package app.bola.flywell.generator;
 
 import org.apache.commons.codec.binary.Base32;
 

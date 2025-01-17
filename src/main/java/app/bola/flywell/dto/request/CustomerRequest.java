@@ -1,18 +1,18 @@
 package app.bola.flywell.dto.request;
 
-import app.bola.flywell.validator.EmailDomainValidator;
-import app.bola.flywell.annotations.EmailPattern;
+import app.bola.flywell.data.model.persons.Customer;
+
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 
 /**
- * @author Alayande Abdulmalik
+ * Request DTO for {@link Customer} model
  */
+
 @Builder
 @Data
 @NoArgsConstructor
@@ -25,10 +25,8 @@ public class CustomerRequest {
 
 	@NotBlank
 	private String lastName;
-	@Email(message = "Please enter a valid email format", regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", groups = {
-			EmailDomainValidator.class })
 
-	@EmailPattern
+	@Email(message = "Please enter a valid email format", regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
 	@NotBlank
 	private String email;
 
@@ -37,7 +35,6 @@ public class CustomerRequest {
 
 	@NotBlank
 	@Size(max = 15, min = 8, message = "Invalid Password Length: Password length must be between 8 and 15 characters")
-	@Pattern(regexp = "^(?=.*[A-Z])(?=.*\\\\d)(?=.*[@$!%*#?&])[A-Za-z\\\\d@$!%*#?&]{8,}$",
-			message = "Password Must Contain At Least One Uppercase Character, A Number and One Special Character")
 	private String password;
+
 }

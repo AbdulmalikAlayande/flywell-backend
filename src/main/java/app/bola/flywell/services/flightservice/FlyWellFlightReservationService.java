@@ -148,6 +148,7 @@ public class FlyWellFlightReservationService implements FlightReservationService
 
     @Override
     public FlightReservationResponse updateReservationStatus(String flightId, String reservationId) {
+
         FlightInstance flightInstance = flightInstanceRepository.findByPublicId(flightId)
                 .orElseThrow(EntityNotFoundException::new);
 

@@ -8,10 +8,8 @@ import org.springframework.http.ResponseEntity;
 public interface  MailService {
 	
 	ResponseEntity<NotificationResponse> importContacts(NotificationRequest notificationRequest);
-	ResponseEntity<NotificationResponse> sendReservationConfirmationEmail(NotificationRequest notificationRequest);
 	ResponseEntity<NotificationResponse> sendAdminInvitationEmail(NotificationRequest notificationRequest) throws InvalidRequestException;
 	
 	ResponseEntity<NotificationResponse> sendOtp(NotificationRequest notificationRequest);
 	
-	ResponseEntity<NotificationResponse> sendFlightFormAsPdf(NotificationRequest notificationRequest);
 }

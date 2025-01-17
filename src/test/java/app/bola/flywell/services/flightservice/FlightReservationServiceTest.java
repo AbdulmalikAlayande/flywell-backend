@@ -112,18 +112,14 @@ class FlightReservationServiceTest {
 
             FlightReservationRequest reservationRequest2 = TestDataUtil.buildFlightReservationRequest(flightInstanceResponse.getPublicId());
 
-            assertThrows(IllegalArgumentException.class, () -> {
-                flightReservationService.createNew(reservationRequest2);
-            });
+            assertThrows(IllegalArgumentException.class, () -> flightReservationService.createNew(reservationRequest2));
         }
 
         @Test
         public void testCreateReservationWithInvalidFlightInstanceId() {
             FlightReservationRequest reservationRequest = TestDataUtil.buildFlightReservationRequest("invalid_flight_id");
 
-            assertThrows(EntityNotFoundException.class, () -> {
-                flightReservationService.createNew(reservationRequest);
-            });
+            assertThrows(EntityNotFoundException.class, () -> flightReservationService.createNew(reservationRequest));
         }
     }
 
@@ -136,7 +132,7 @@ class FlightReservationServiceTest {
             flightReservationService.cancelReservation(response.getFlightId(), response.getPublicId());
             FlightReservationResponse cancelledReservation = flightReservationService.findByPublicId(response.getPublicId());
             assertNotNull(cancelledReservation);
-            assertEquals(ReservationStatus.CANCELLED, cancelledReservation.getStatus());
+            assertEquals(ReservationStatus.CANCELLED, ReservationStatus.valueOf(cancelledReservation.getStatus()));
         }
 
         @Test
@@ -151,9 +147,7 @@ class FlightReservationServiceTest {
         @Test
         public void testCancelReservationForNonexistentReservationId_ReservationCancellationFails_ExceptionIsThrown() {
             FlightInstanceResponse flightInstanceResponse = setupHelper.createFlightInstance();
-            assertThrows(EntityNotFoundException.class, () -> {
-                flightReservationService.cancelReservation(flightInstanceResponse.getPublicId(), "nonexistent_reservation_id");
-            });
+            assertThrows(EntityNotFoundException.class, () -> flightReservationService.cancelReservation(flightInstanceResponse.getPublicId(), "nonexistent_reservation_id"));
         }
 
         @Test
@@ -161,9 +155,7 @@ class FlightReservationServiceTest {
             FlightInstanceResponse pastFlightInstance = setupHelper.createPastFlightInstance();
             FlightReservationResponse pastReservation = setupHelper.createFlightReservation(pastFlightInstance.getPublicId());
 
-            assertThrows(IllegalStateException.class, () -> {
-                flightReservationService.cancelReservation(pastFlightInstance.getPublicId(), pastReservation.getPublicId());
-            });
+            assertThrows(IllegalStateException.class, () -> flightReservationService.cancelReservation(pastFlightInstance.getPublicId(), pastReservation.getPublicId()));
         }
     }
 
@@ -174,7 +166,7 @@ class FlightReservationServiceTest {
         public void testUpdateReservationStatus_ValidReservation_StatusUpdatedToReserved() {
             response = setupHelper.createFlightReservation();
             FlightReservationResponse updatedResponse = flightReservationService.updateReservationStatus(response.getFlightId(), response.getPublicId());
-            assertEquals(ReservationStatus.RESERVED, updatedResponse.getStatus());
+            assertEquals(ReservationStatus.RESERVED, ReservationStatus.valueOf(updatedResponse.getStatus()));
         }
 
         @Test
@@ -182,18 +174,14 @@ class FlightReservationServiceTest {
             response = setupHelper.createFlightReservation();
             flightReservationService.cancelReservation(response.getFlightId(), response.getPublicId());
 
-            assertThrows(IllegalStateException.class, () -> {
-                flightReservationService.updateReservationStatus(response.getFlightId(), response.getPublicId());
-            });
+            assertThrows(IllegalStateException.class, () -> flightReservationService.updateReservationStatus(response.getFlightId(), response.getPublicId()));
         }
 
         @Test
         public void testUpdateReservationStatus_NonexistentReservation_ThrowsException() {
             FlightInstanceResponse flightInstanceResponse = setupHelper.createFlightInstance();
 
-            assertThrows(EntityNotFoundException.class, () -> {
-                flightReservationService.updateReservationStatus(flightInstanceResponse.getPublicId(), "nonexistent_reservation_id");
-            });
+            assertThrows(EntityNotFoundException.class, () -> flightReservationService.updateReservationStatus(flightInstanceResponse.getPublicId(), "nonexistent_reservation_id"));
         }
     }
 }

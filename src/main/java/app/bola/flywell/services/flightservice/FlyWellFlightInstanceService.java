@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static app.bola.flywell.data.model.enums.FlightStatus.SCHEDULED;
@@ -47,6 +48,9 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 	@Transactional
 	public FlightInstanceResponse createNew(FlightInstanceRequest request) {
 
+		if(request.getDepartureTime().isBefore(LocalDateTime.now())) {
+			throw new IllegalStateException("Flight Instances cannot be created with a departure time that has already passed");
+		}
 		Flight flight = flightRepository.findByPublicId(request.getFlightId())
 				.orElseThrow(() -> new EntityNotFoundException(Constants.ENTITY_NOT_FOUND.formatted("Flight")));
 
@@ -69,19 +73,6 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 
 		flightInstanceRepository.saveAll(scheduledInstances);
 		return toResponse(savedInstance);
-	}
-
-	private Aircraft findAvailableAircraft() {
-		Aircraft aircraft = aircraftService.findAvailableAircraft();
-		if (aircraft == null) {
-			//Todo: logger.error("No aircraft available for capacity >= {}. Manual intervention required.", capacity);
-			// notifyAdmin("No aircraft available for capacity: " + capacity + " for flight ");
-			// find next possible aircraft and reschedule flight
-			logger.error("No available aircraft found. The result of app.bola.flywell.services.aircraft.AircraftService.findAvailableAircraft() was null");
-			return null;
-		}
-		aircraft.setAvailable(false);
-		return aircraftRepository.save(aircraft);
 	}
 
 	@Override
@@ -159,6 +150,19 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 		flightInstance.setAirCraft(findAvailableAircraft());
 		FlightInstance updatedInstance = flightInstanceRepository.save(flightInstance);
 		return mapper.map(updatedInstance, FlightInstanceResponse.class);
+	}
+
+	private Aircraft findAvailableAircraft() {
+		Aircraft aircraft = aircraftService.findAvailableAircraft();
+		if (aircraft == null) {
+			//Todo: logger.error("No aircraft available for capacity >= {}. Manual intervention required.", capacity);
+			// notifyAdmin("No aircraft available for capacity: " + capacity + " for flight ");
+			// find next possible aircraft and reschedule flight
+			logger.error("No available aircraft found. The result of app.bola.flywell.services.aircraft.AircraftService.findAvailableAircraft() was null");
+			return null;
+		}
+		aircraft.setAvailable(false);
+		return aircraftRepository.save(aircraft);
 	}
 
 	private void populateFlightSeats(FlightInstance flightInstance, Aircraft aircraft) {

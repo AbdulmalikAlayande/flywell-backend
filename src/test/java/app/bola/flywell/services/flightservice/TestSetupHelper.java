@@ -35,7 +35,8 @@ public class TestSetupHelper {
 
     public FlightInstanceResponse createFlightInstance(){
         FlightResponse flightResponse = createFlight();
-        return flightInstanceService.createNew(TestDataUtil.buildFlightInstanceRequest(flightResponse.getPublicId(), LocalDateTime.parse("2021-11-08T12:00:00"), LocalDateTime.parse("2021-11-09T14:00:00"), 2));
+        createAircraft();
+        return flightInstanceService.createNew(TestDataUtil.buildFlightInstanceRequest(flightResponse.getPublicId(), LocalDateTime.parse("2025-11-08T12:00:00"), LocalDateTime.parse("2025-11-09T14:00:00"), 2));
     }
 
     FlightReservationResponse createFlightReservation(){
@@ -98,4 +99,11 @@ public class TestSetupHelper {
         clearFlightReservationDb();
     }
 
+    public FlightInstanceResponse createPastFlightInstance() {
+        return null;
+    }
+
+    public FlightReservationResponse createFlightReservation(String publicId) {
+        return null;
+    }
 }

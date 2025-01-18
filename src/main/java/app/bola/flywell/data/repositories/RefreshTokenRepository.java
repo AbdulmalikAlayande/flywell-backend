@@ -7,6 +7,5 @@ import java.util.Optional;
 
 public interface RefreshTokenRepository extends FlyWellRepository<RefreshToken> {
 
-    boolean existsByToken(String token);
     Optional<RefreshToken> findByToken(String token);
 }

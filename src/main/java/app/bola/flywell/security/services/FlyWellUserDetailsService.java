@@ -1,4 +1,4 @@
-package app.bola.flywell.security;
+package app.bola.flywell.security.services;
 
 import app.bola.flywell.data.model.users.User;
 import app.bola.flywell.data.repositories.UserRepository;

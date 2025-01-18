@@ -1,7 +1,7 @@
 package app.bola.flywell.security.config;
 
 import app.bola.flywell.data.repositories.UserRepository;
-import app.bola.flywell.security.FlyWellUserDetailsService;
+import app.bola.flywell.security.services.FlyWellUserDetailsService;
 import app.bola.flywell.security.filters.JwtAuthenticationFilter;
 import app.bola.flywell.security.handlers.AccessDeniedHandlerImpl;
 import app.bola.flywell.security.handlers.AuthenticationEntryPointImpl;
@@ -74,7 +74,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
 
     @Bean

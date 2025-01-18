@@ -6,6 +6,7 @@ import app.bola.flywell.dto.request.TokenRequest;
 import app.bola.flywell.dto.response.TokenResponse;
 import app.bola.flywell.security.providers.JwtTokenProvider;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -20,7 +21,7 @@ public class TokenService {
     final RefreshTokenRepository tokenRepository;
 
 
-    public TokenResponse refreshAccessToken(TokenRequest tokenRequest) {
+    public TokenResponse refreshAccessToken(@NotNull TokenRequest tokenRequest) {
 
         RefreshToken refreshToken = tokenRepository.findByToken(tokenRequest.getRefreshToken())
                 .orElseThrow(() -> new IllegalArgumentException("Refresh refreshToken not found"));
@@ -33,7 +34,7 @@ public class TokenService {
         String newRefreshToken = tokenProvider.generateRefreshToken(refreshToken.getUser());
 
         refreshToken.setToken(newRefreshToken);
-        refreshToken.setExpiryDate(Instant.now().plus(30, ChronoUnit.DAYS)); // Example: 30-day validity
+        refreshToken.setExpiryDate(Instant.now().plus(30, ChronoUnit.DAYS));
         RefreshToken updatedRefreshToken = tokenRepository.save(refreshToken);
 
         return new TokenResponse(accessToken, updatedRefreshToken.getToken());

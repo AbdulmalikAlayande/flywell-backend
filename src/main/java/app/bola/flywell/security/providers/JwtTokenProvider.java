@@ -86,6 +86,11 @@ public class JwtTokenProvider {
     }
 
     public String generateRefreshToken(User user) {
-        return null;
+        return Jwts.builder()
+                .subject(user.getBioData().getEmail())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(getSignInKey(), Jwts.SIG.HS256)
+                .compact();
     }
 }

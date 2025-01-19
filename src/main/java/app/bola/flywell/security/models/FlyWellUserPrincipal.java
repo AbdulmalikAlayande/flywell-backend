@@ -30,6 +30,6 @@ public class FlyWellUserPrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getPublicId();
+        return user.getEmail();
     }
 }

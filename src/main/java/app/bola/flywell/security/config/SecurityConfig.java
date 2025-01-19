@@ -7,6 +7,7 @@ import app.bola.flywell.security.handlers.AccessDeniedHandlerImpl;
 import app.bola.flywell.security.handlers.AuthenticationEntryPointImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -36,7 +37,7 @@ public class SecurityConfig {
     final AccessDeniedHandlerImpl accessDeniedHandler;
     final AuthenticationEntryPointImpl authenticationEntryPoint;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, AccessDeniedHandlerImpl accessDeniedHandler,
+    public SecurityConfig(@Lazy JwtAuthenticationFilter jwtAuthFilter, AccessDeniedHandlerImpl accessDeniedHandler,
                           AuthenticationEntryPointImpl authenticationEntryPoint) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.accessDeniedHandler = accessDeniedHandler;
@@ -53,9 +54,10 @@ public class SecurityConfig {
                     .contentSecurityPolicy(customizer -> customizer.policyDirectives("default-src 'self';"))
             )
             .authorizeHttpRequests(registry -> registry
-                    .requestMatchers("admin/**").hasRole("ADMIN").anyRequest().authenticated()
+                    .requestMatchers("admin/**").hasRole("ADMIN")
                     .requestMatchers("/customer/new").permitAll()
-                    .requestMatchers("reservation/**").hasAnyRole("ADMIN", "USER", "OFFICER").anyRequest().permitAll()
+                    .requestMatchers("reservation/**").hasAnyRole("ADMIN", "USER", "OFFICER")
+                    .anyRequest().permitAll()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

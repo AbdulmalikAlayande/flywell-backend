@@ -22,10 +22,14 @@ public class FlyWellUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByPublicId(username)
+
+        User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new EntityNotFoundException("User with email" + username));
 
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("Role_"+user.getRole().name()));
+        List<GrantedAuthority> authorities = user.getRoles()
+                .stream()
+                .map(role -> (GrantedAuthority) new SimpleGrantedAuthority("Role_" + role.getName())).toList();
+
         return new FlyWellUserPrincipal(user, authorities);
     }
 }

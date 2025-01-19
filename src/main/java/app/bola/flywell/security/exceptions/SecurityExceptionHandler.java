@@ -1,4 +1,4 @@
-package app.bola.flywell.exceptions;
+package app.bola.flywell.security.exceptions;
 
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -23,6 +23,6 @@ public class SecurityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication Failed: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Resource Not Found: " + ex.getMessage());
     }
 }

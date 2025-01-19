@@ -41,8 +41,8 @@ class CustomerServiceTest {
 	@SneakyThrows
 	@Test void testThatPassengerTriesToRegisterWithIncompleteDetails_ExceptionIsThrown(){
 		assertThatThrownBy(()-> customerService.createNew(buildIncompletePassenger()))
-											.isInstanceOf(NullPointerException.class)
-											.hasMessageContaining("");
+											.isInstanceOf(IllegalArgumentException.class)
+											.hasMessageContaining("'phoneNumber' 'password'");
 	}
 	
 	@SneakyThrows

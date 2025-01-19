@@ -1,16 +1,13 @@
 package app.bola.flywell.controllers;
 
-import app.bola.flywell.dto.request.TokenRequest;
-import app.bola.flywell.dto.response.TokenResponse;
-import app.bola.flywell.security.auth.TokenService;
+import app.bola.flywell.dto.request.LoginRequest;
+import app.bola.flywell.dto.response.LoginResponse;
+import app.bola.flywell.security.services.AuthService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @CrossOrigin("*")
@@ -19,11 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("auth")
 public class AuthController {
 
-    final TokenService tokenService;
+    final AuthService authService;
 
-    @PostMapping("/refresh-token")
-    public ResponseEntity<TokenResponse> generateRefreshToken(TokenRequest request) {
-        TokenResponse tokenResponse = tokenService.refreshAccessToken(request);
-        return ResponseEntity.status(HttpStatus.OK).body(tokenResponse);
-    };
+    @PostMapping("login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+        LoginResponse response = authService.login(loginRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String refreshToken, String accessToken) {
+        String response = authService.logout(refreshToken, accessToken);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }

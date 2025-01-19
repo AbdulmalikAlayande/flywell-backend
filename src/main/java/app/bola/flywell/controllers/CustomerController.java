@@ -30,7 +30,6 @@ public class CustomerController implements FlyWellController<CustomerRequest, Cu
 	public ResponseEntity<CustomerResponse> createNew(@RequestBody @Valid CustomerRequest customerRequest){
 		CustomerResponse response = customerService.createNew(customerRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
 	}
 
 	@Override

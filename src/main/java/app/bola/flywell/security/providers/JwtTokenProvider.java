@@ -76,20 +76,20 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateAccessToken(User user) {
+    public String generateAccessToken(UserDetails userDetails) {
         return Jwts.builder()
-                .subject(user.getBioData().getEmail())
+                .subject(userDetails.getUsername())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSignInKey(), Jwts.SIG.HS256)
                 .compact();
     }
 
-    public String generateRefreshToken(User user) {
+    public String generateRefreshToken(UserDetails userDetails) {
         return Jwts.builder()
-                .subject(user.getBioData().getEmail())
+                .subject(userDetails.getUsername())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .expiration(new Date(System.currentTimeMillis() +  jwtExpiration))
                 .signWith(getSignInKey(), Jwts.SIG.HS256)
                 .compact();
     }

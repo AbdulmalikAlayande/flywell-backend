@@ -36,8 +36,7 @@ public class FlyWellAdminService implements AdminService{
             validator.validateEmail(invitationRequest.getEmail());
             String adminCode = generateAdminCode(invitationRequest.getEmail());
             User user = new User();
-            user.setEmail(invitationRequest.getEmail());
-            user.setAdminCode(adminCode);
+
             userRepository.save(user);
             NotificationRequest notificationRequest = buildNotificationRequest(invitationRequest, adminCode);
             ResponseEntity<NotificationResponse> response = mailService.sendAdminInvitationEmail(notificationRequest);

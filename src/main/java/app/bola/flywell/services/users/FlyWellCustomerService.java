@@ -23,6 +23,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -37,9 +38,11 @@ public class FlyWellCustomerService implements CustomerService {
 	final ModelMapper mapper;
 	final MailService mailer;
 	final OTPService otpService;
+	final PasswordEncoder passwordEncoder;
 	final CustomerRepository customerRepository;
 	final UserBioDataRepository userBioDataRepository;
 	final Logger logger = LoggerFactory.getLogger(FlyWellCustomerService.class);
+
 
     @Override
 	@Transactional(rollbackFor = {SQLException.class, FailedRegistrationException.class})
@@ -50,6 +53,7 @@ public class FlyWellCustomerService implements CustomerService {
 				violation.getPropertyPath(), violation.getMessage())).toList().toString());
 
 		UserBioData bioData = mapper.map(customerRequest, UserBioData.class);
+		bioData.setPassword(passwordEncoder.encode(customerRequest.getPassword()));
 		UserBioData savedBio = userBioDataRepository.save(bioData);
 		Customer customer = new Customer();
 		customer.setBioData(savedBio);

@@ -1,16 +1,21 @@
 package app.bola.flywell.security.config;
 
 import app.bola.flywell.data.repositories.UserRepository;
-import app.bola.flywell.security.FlyWellUserDetailsService;
+import app.bola.flywell.security.services.FlyWellUserDetailsService;
 import app.bola.flywell.security.filters.JwtAuthenticationFilter;
+import app.bola.flywell.security.handlers.AccessDeniedHandlerImpl;
+import app.bola.flywell.security.handlers.AuthenticationEntryPointImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,23 +33,39 @@ import java.util.Arrays;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
+    final JwtAuthenticationFilter jwtAuthFilter;
+    final AccessDeniedHandlerImpl accessDeniedHandler;
+    final AuthenticationEntryPointImpl authenticationEntryPoint;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter) {
+    public SecurityConfig(@Lazy JwtAuthenticationFilter jwtAuthFilter, AccessDeniedHandlerImpl accessDeniedHandler,
+                          AuthenticationEntryPointImpl authenticationEntryPoint) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.accessDeniedHandler = accessDeniedHandler;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http.csrf(AbstractHttpConfigurer::disable)
+            .headers(headers -> headers
+                    .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
+                    .xssProtection(HeadersConfigurer.XXssConfig::disable)
+                    .contentSecurityPolicy(customizer -> customizer.policyDirectives("default-src 'self';"))
+            )
             .authorizeHttpRequests(registry -> registry
-                    .requestMatchers("admin/**").hasRole("ADMIN").anyRequest().authenticated()
-                    .requestMatchers("/customer/register").permitAll()
-                    .requestMatchers("/customer/register").hasAnyRole("ADMIN", "USER", "OFFICER").anyRequest().permitAll()
+                    .requestMatchers("admin/**").hasRole("ADMIN")
+                    .requestMatchers("/customer/new").permitAll()
+                    .requestMatchers("reservation/**").hasAnyRole("ADMIN", "USER", "OFFICER")
+                    .anyRequest().permitAll()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(handler -> handler
+                    .accessDeniedHandler(accessDeniedHandler)
+                    .authenticationEntryPoint(authenticationEntryPoint)
+            )
+            .cors(Customizer.withDefaults());
         return http.build();
     }
 
@@ -55,7 +76,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
 
     @Bean

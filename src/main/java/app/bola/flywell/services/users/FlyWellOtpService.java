@@ -1,7 +1,7 @@
 package app.bola.flywell.services.users;
 
 import app.bola.flywell.config.EmailValidationConfig;
-import app.bola.flywell.data.model.users.OTP;
+import app.bola.flywell.data.model.users.Otp;
 import app.bola.flywell.data.repositories.OTPRepository;
 import app.bola.flywell.exceptions.InvalidRequestException;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import static java.math.BigInteger.valueOf;
 
 @Service
 @AllArgsConstructor
-public class FlyWellOTPService implements OTPService {
+public class FlyWellOtpService implements OtpService {
 	
 	private EmailValidationConfig emailValidationConfig;
 	private OTPRepository otpRepository;
@@ -24,17 +24,17 @@ public class FlyWellOTPService implements OTPService {
 	
 	
 	@Override
-	public OTP createNew(String email) {
+	public Otp createNew(String email) {
 
 		String value = generateTOTP(email);
 		String secretKey = email+ emailValidationConfig.getTotpSecret();
 
-		OTP.OTPBuilder<?, ?> otpBuilder = OTP.builder();
+		Otp.OtpBuilder<?, ?> otpBuilder = Otp.builder();
 		otpBuilder.staleTime(System.currentTimeMillis()+TIME_STEP);
 		otpBuilder.secretKey(secretKey);
 		otpBuilder.userEmail(email);
 		otpBuilder.data(Long.parseLong(value));
-		OTP otp = otpBuilder.build();
+		Otp otp = otpBuilder.build();
 
 		return otpRepository.save(otp);
 	}
@@ -90,8 +90,8 @@ public class FlyWellOTPService implements OTPService {
 		return valueOfLengthSix.toString();
 	}
 	
-	private OTP validatedTOTP(String inputTotp) throws InvalidRequestException {
-		Optional<OTP> foundOTPRef = otpRepository.findByData(Long.parseLong(inputTotp));
+	private Otp validatedTOTP(String inputTotp) throws InvalidRequestException {
+		Optional<Otp> foundOTPRef = otpRepository.findByData(Long.parseLong(inputTotp));
 		return foundOTPRef.map(otp -> {
 			long currentTimeInMilliSeconds = System.currentTimeMillis();
 			// FIXME: 12/18/2023 THE EXPIRY SHOULD NOT BE SET HERE NORMALLY,
@@ -111,7 +111,7 @@ public class FlyWellOTPService implements OTPService {
 	}
 	
 	@Override
-	public OTP verifyOtp(String totp) throws InvalidRequestException {
+	public Otp verifyOtp(String totp) throws InvalidRequestException {
 		return validatedTOTP(totp);
 	}
 }

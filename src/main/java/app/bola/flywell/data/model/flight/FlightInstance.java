@@ -4,6 +4,7 @@ import app.bola.flywell.annotations.FlightNumberSequence;
 import app.bola.flywell.basemodules.FlyWellModel;
 import app.bola.flywell.data.model.aircraft.Aircraft;
 import app.bola.flywell.data.model.enums.FlightStatus;
+import app.bola.flywell.data.model.users.User;
 import com.google.common.base.MoreObjects;
 import jakarta.persistence.*;
 import lombok.*;
@@ -57,6 +58,10 @@ public class FlightInstance extends FlyWellModel {
 	@OneToMany(cascade = ALL, fetch = EAGER)
 	private Set<FlightReservation> reservations = new LinkedHashSet<>();
 
+	@Builder.Default
+	@ManyToMany
+	private Set<User> crew = new LinkedHashSet<>();
+
 	@PostLoad
 	@PostPersist
 	@PostUpdate
@@ -96,6 +101,12 @@ public class FlightInstance extends FlyWellModel {
 				.add("airCraft", airCraft)
 				.add("status", status)
 				.toString();
+	}
+
+	public void addCrewMember(User crewMember) {
+		if (crewMember != null) {
+			crew.add(crewMember);
+		}
 	}
 }
 

@@ -67,11 +67,6 @@ public class FlyWellFlightService implements FlightService{
 	}
 	
 	@Override
-	public List<Flight> getAllFlights() {
-		return Collections.emptyList();
-	}
-
-	@Override
 	public FlightResponse findFlightByRoute(String arrivalCity, String departureCity) {
 		ExampleMatcher matcher = ExampleMatcher.matching()
 				.withIgnorePaths("id", "duration", "displayImageName", "departureAirport", "arrivalAirport", "instances")

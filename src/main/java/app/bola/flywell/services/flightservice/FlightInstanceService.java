@@ -2,7 +2,6 @@ package app.bola.flywell.services.flightservice;
 
 import app.bola.flywell.basemodules.FlyWellService;
 import app.bola.flywell.data.model.enums.FlightStatus;
-import app.bola.flywell.data.model.flight.FlightInstance;
 import app.bola.flywell.dto.request.FlightInstanceRequest;
 import app.bola.flywell.dto.response.AircraftResponse;
 import app.bola.flywell.dto.response.FlightInstanceResponse;
@@ -17,14 +16,6 @@ import java.util.List;
 public interface FlightInstanceService extends FlyWellService<FlightInstanceRequest, FlightInstanceResponse> {
 
 	/**
-	 * Creates a new flight instance.
-	 *
-	 * @param flightInstanceRequest the request containing details for the new flight instance.
-	 * @return a response containing the details of the created flight instance.
-	 * @throws InvalidRequestException if the request is invalid.
-	 */
-	FlightInstanceResponse createNew(FlightInstanceRequest flightInstanceRequest);
-	/**
 	 * Finds all flight instances matching the given status.
 	 *
 	 * @param status the status of the flight instances to fetch (e.g., LANDED, EN_ROUTE, SCHEDULED).
@@ -32,14 +23,7 @@ public interface FlightInstanceService extends FlyWellService<FlightInstanceRequ
 	 */
 	List<FlightInstanceResponse> findAllByStatus(@NotNull FlightStatus status);
 	
-	/**
-	 * Finds a flight instance by its unique identifier.
-	 *
-	 * @param id the unique identifier of the flight instance.
-	 * @return the flight instance response with the specified ID, if found.
-	 */
-	FlightInstanceResponse findById(@NotNull String id);
-	
+
 	/**
 	 * Updates an existing flight instance with new details.
 	 *
@@ -87,4 +71,10 @@ public interface FlightInstanceService extends FlyWellService<FlightInstanceRequ
     AircraftResponse getAssignedAircraft(String publicId);
 
     FlightInstanceResponse assignAircraft(String publicId);
+
+    List<FlightInstanceResponse> getAvailableFlights();
+
+	FlightInstanceResponse assignCrewMemberToFlight(String crewMemberId, String flightId) throws InvalidRequestException;
+
+	FlightInstanceResponse viewFlightSchedule(String flightId);
 }

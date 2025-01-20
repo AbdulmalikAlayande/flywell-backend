@@ -28,11 +28,6 @@ public class UserBioData extends FlyWellModel {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@Builder.Default
-	private List<OTP> OTPs = new ArrayList<>();
+	private List<Otp> Otps = new ArrayList<>();
 
-	public void addOtp(OTP otp) {
-		if(otp != null){
-			OTPs.add(otp);
-		}
-	}
 }

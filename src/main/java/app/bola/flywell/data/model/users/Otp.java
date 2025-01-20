@@ -15,7 +15,7 @@ import static jakarta.persistence.GenerationType.UUID;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OTP {
+public class Otp {
 	
 	@Id
 	@GeneratedValue(strategy = UUID)

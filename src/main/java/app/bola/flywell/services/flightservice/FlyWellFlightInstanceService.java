@@ -11,22 +11,27 @@ import app.bola.flywell.data.repositories.AircraftRepository;
 import app.bola.flywell.data.repositories.FlightInstanceRepository;
 import app.bola.flywell.data.repositories.FlightRepository;
 import app.bola.flywell.data.repositories.FlightSeatRepository;
+import app.bola.flywell.data.specifications.FlightInstanceSpecification;
 import app.bola.flywell.dto.request.FlightInstanceRequest;
 import app.bola.flywell.dto.response.AircraftResponse;
 import app.bola.flywell.dto.response.FlightInstanceResponse;
 import app.bola.flywell.exceptions.EntityNotFoundException;
+import app.bola.flywell.exceptions.InvalidRequestException;
 import app.bola.flywell.services.aircraft.AircraftService;
+import app.bola.flywell.services.users.CrewMemberService;
 import app.bola.flywell.utils.Constants;
 import io.micrometer.observation.Observation;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static app.bola.flywell.data.model.enums.FlightStatus.SCHEDULED;
 
@@ -37,6 +42,7 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 	final ModelMapper mapper;
 	final AircraftService aircraftService;
 	final FlightRepository flightRepository;
+	final CrewMemberService crewMemberService;
 	final AircraftRepository aircraftRepository;
 	final FlightSeatRepository flightSeatRepository;
 	final FlightSpacingService flightSpacingService;
@@ -99,11 +105,6 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 	}
 
 	@Override
-	public FlightInstanceResponse findById(String id) {
-		return null;
-	}
-
-	@Override
 	public FlightInstanceResponse updateInstance(String id, FlightInstanceRequest flightInstanceRequest) {
 		return null;
 	}
@@ -150,6 +151,35 @@ public class FlyWellFlightInstanceService implements FlightInstanceService{
 		flightInstance.setAirCraft(findAvailableAircraft());
 		FlightInstance updatedInstance = flightInstanceRepository.save(flightInstance);
 		return mapper.map(updatedInstance, FlightInstanceResponse.class);
+	}
+
+	@Override
+	public List<FlightInstanceResponse> getAvailableFlights() {
+		Specification<FlightInstance> spec = Specification.where(FlightInstanceSpecification.hasStatus(SCHEDULED.name()));
+		return flightInstanceRepository.findAll(spec).stream().map(this::toResponse).collect(Collectors.toList());
+	}
+
+	@Override
+	public FlightInstanceResponse assignCrewMemberToFlight(String crewMemberId, String flightId) throws InvalidRequestException {
+
+		FlightInstance flightInstance = flightInstanceRepository
+				.findByPublicId(flightId).orElseThrow(() -> new EntityNotFoundException(Constants.ENTITY_NOT_FOUND.formatted("FlightInstance")));
+
+		if (flightInstance.getDepartureTime().isBefore(LocalDateTime.now())) {
+			throw new InvalidRequestException("");
+		}
+
+		if (flightInstance.getCrew().stream().anyMatch(crewMember -> crewMember.getPublicId().equals(crewMemberId))) {
+			throw new InvalidRequestException("");
+		}
+
+		flightInstance = crewMemberService.assignCrewMember(flightInstance, crewMemberId);
+		return toResponse(flightInstanceRepository.save(flightInstance));
+	}
+
+	@Override
+	public FlightInstanceResponse viewFlightSchedule(String flightId) {
+		return findByPublicId(flightId);
 	}
 
 	private Aircraft findAvailableAircraft() {

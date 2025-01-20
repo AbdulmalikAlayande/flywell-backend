@@ -3,7 +3,7 @@ package app.bola.flywell.services.users;
 
 
 import app.bola.flywell.dto.response.AdminInvitationResponse;
-import app.bola.flywell.dto.response.CreateAdminResponse;
+import app.bola.flywell.dto.response.AdminResponse;
 import app.bola.flywell.dto.request.*;
 import app.bola.flywell.exceptions.FieldInvalidException;
 import app.bola.flywell.exceptions.EntityNotFoundException;
@@ -24,15 +24,15 @@ class AdminServiceTest {
 	@Autowired
 	private AdminService adminService;
 	CreateAdminRequest createAdminRequest;
-	CreateAdminResponse createAdminResponse;
+	AdminResponse adminResponse;
 	AdminInvitationResponse response;
 	
 	@BeforeEach
 	@SneakyThrows
 	public void setUp() {
-		adminService.deleteAll();
+		adminService.removeAll();
 		createAdminRequest = new CreateAdminRequest();
-		createAdminResponse = new CreateAdminResponse();
+		adminResponse = new AdminResponse();
 		AdminInvitationRequest invitationRequest = new AdminInvitationRequest();
 		invitationRequest.setEmail("alaabdulmalik03@gmail.com");
 		response = adminService.inviteAdmin(invitationRequest);
@@ -57,7 +57,7 @@ class AdminServiceTest {
 	@SneakyThrows
 	@Test
 	public void createNewTest(){
-		CreateAdminResponse adminResponse = adminService.createNew(buildAdmin());
+		AdminResponse adminResponse = adminService.createNew(buildAdmin());
 		assertThat(adminResponse.getMessage()).isEqualTo("Admin Account created successfully");
 	}
 	

@@ -4,10 +4,11 @@ import app.bola.flywell.basemodules.FlyWellService;
 import app.bola.flywell.data.model.flight.FlightInstance;
 import app.bola.flywell.dto.response.FlightInstanceResponse;
 import app.bola.flywell.dto.request.*;
+import app.bola.flywell.dto.response.UserResponse;
 
-public interface CrewMemberService extends FlyWellService<UserRequest, UserRequest> {
+public interface CrewMemberService extends FlyWellService<UserRequest, UserResponse> {
 
-    FlightInstance assignCrewMember(FlightInstance instance);
+    FlightInstance assignCrewMember(FlightInstance instance, String crewMemberId);
     FlightInstanceResponse viewFlightSchedule(String flightId);
 
 //test that the location of the crew members to be assigned is the location where the flight instance is coming from

@@ -3,7 +3,7 @@ package app.bola.flywell.controllers;
 import app.bola.flywell.dto.request.*;
 import app.bola.flywell.dto.response.AdminInvitationResponse;
 import app.bola.flywell.dto.response.ApiResponse;
-import app.bola.flywell.dto.response.CreateAdminResponse;
+import app.bola.flywell.dto.response.AdminResponse;
 import app.bola.flywell.exceptions.*;
 import app.bola.flywell.services.users.AdminService;
 import jakarta.validation.Valid;
@@ -44,8 +44,8 @@ public class AdminController {
 	@PostMapping("create-admin-account/")
 	public ApiResponse<?> createAdminAccount(@Valid @RequestBody CreateAdminRequest createAdminRequest){
 		try {
-			ApiResponse<CreateAdminResponse> apiResponse = new ApiResponse<>();
-			CreateAdminResponse response = adminService.createNew(createAdminRequest);
+			ApiResponse<AdminResponse> apiResponse = new ApiResponse<>();
+			AdminResponse response = adminService.createNew(createAdminRequest);
 			apiResponse.setResponseData(response);
 			apiResponse.setSuccessful(HttpStatus.CREATED.is2xxSuccessful());
 			apiResponse.setStatusCode(HttpStatus.CREATED.value());

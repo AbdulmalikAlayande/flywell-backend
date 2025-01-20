@@ -1,15 +1,17 @@
 package app.bola.flywell.dto.response;
 
 import app.bola.flywell.basemodules.BaseResponse;
+import app.bola.flywell.data.model.flight.FlightInstance;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
- *  Response DTO corresponding to {@link app.bola.flywell.data.model.flight.FlightInstance}
+ *  Response DTO corresponding to {@link FlightInstance}
  */
 
 @Getter
@@ -30,6 +32,8 @@ public class FlightInstanceResponse extends BaseResponse {
 	LocalDateTime departureTime;
 	LocalDateTime arrivalTime;
 	AircraftResponse aircraft;
+	Set<UserResponse> crew;
+	Set<FlightReservationResponse> reservations;
 
 	@Override
 	public String toString() {

@@ -10,6 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class CreateAdminResponse {
+public class AdminResponse {
     String message;
 }

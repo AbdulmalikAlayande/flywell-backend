@@ -9,6 +9,7 @@ import app.bola.flywell.security.repositories.RoleRepository;
 import app.bola.flywell.services.notifications.mail.MailService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -83,6 +84,11 @@ public class FlyWellAdminService implements AdminService{
     @Override
     public void removeAll() {
         userRepository.deleteAll();
+    }
+
+    @Override
+    public Collection<AdminResponse> findAll(Pageable pageable) {
+        return List.of();
     }
 
 }

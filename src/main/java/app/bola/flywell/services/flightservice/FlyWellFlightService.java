@@ -111,7 +111,7 @@ public class FlyWellFlightService implements FlightService{
 	}
 
 	@Override
-	public Collection<FlightResponse> findAll() {
+	public List<FlightResponse> findAll() {
 		return List.of();
 	}
 }

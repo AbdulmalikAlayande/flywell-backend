@@ -6,6 +6,7 @@ import app.bola.flywell.security.services.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin("*")
@@ -17,6 +18,7 @@ public class AuthController {
     final AuthService authService;
 
     @PostMapping("login")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'CREW_MEMBER')")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         LoginResponse response = authService.login(loginRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);

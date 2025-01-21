@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -34,6 +35,7 @@ public class CustomerController implements FlyWellController<CustomerRequest, Cu
 	}
 
 	@Override
+	@PreAuthorize(value = "hasAnyRole('CUSTOMER', 'ADMIN')")
 	public ResponseEntity<CustomerResponse> findByPublicId(String publicId) {
 		CustomerResponse response = customerService.findByPublicId(publicId);
 		return ResponseEntity.status(HttpStatus.FOUND).body(response);
@@ -46,12 +48,14 @@ public class CustomerController implements FlyWellController<CustomerRequest, Cu
 	}
 
 	@Override
+	@PreAuthorize(value = "hasRole('ADMIN')")
 	public ResponseEntity<Collection<CustomerResponse>> findAll(){
 		List<CustomerResponse> response = customerService.findAll();
 		return ResponseEntity.status(HttpStatus.FOUND).body(response);
 	}
 
 	@GetMapping
+	@PreAuthorize(value = "hasRole('ADMIN')")
 	public ResponseEntity<Collection<CustomerResponse>> findAll(Pageable pageable) {
 		List<CustomerResponse> response = customerService.findAll(pageable);
 		return ResponseEntity.status(HttpStatus.OK).body(response);

@@ -8,8 +8,10 @@ import app.bola.flywell.exceptions.*;
 import app.bola.flywell.services.users.AdminService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -22,13 +24,14 @@ public class AdminController implements FlyWellController<CreateAdminRequest, Ad
 	
 	private AdminService adminService;
 	
-	@PostMapping("invite-admin/")
+	@PostMapping("invite-admin")
+	@PreAuthorize("hasRole('ADMIN') and hasAuthority('INVITE_ADMIN')")
 	public ResponseEntity<AdminInvitationResponse> inviteAdmin(@Valid @RequestBody AdminInvitationRequest invitationRequest) throws FieldInvalidException, InvalidRequestException, EmptyFieldException {
 		AdminInvitationResponse invitationResponse = adminService.inviteAdmin(invitationRequest);
 		return ResponseEntity.status(HttpStatus.OK).body(invitationResponse);
 	}
-	
-	@PostMapping("create-admin-account/")
+
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<AdminResponse> createNew(@Valid @RequestBody CreateAdminRequest createAdminRequest){
 		AdminResponse response = adminService.createNew(createAdminRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -41,6 +44,11 @@ public class AdminController implements FlyWellController<CreateAdminRequest, Ad
 
 	@Override
 	public ResponseEntity<Collection<AdminResponse>> findAll() {
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<Collection<AdminResponse>> findAll(Pageable pageable) {
 		return null;
 	}
 }

@@ -13,6 +13,7 @@ import app.bola.flywell.utils.Constants;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -87,5 +88,10 @@ public class FlyWellCrewMemberService implements CrewMemberService {
     @Override
     public void removeAll() {
 
+    }
+
+    @Override
+    public Collection<UserResponse> findAll(Pageable pageable) {
+        return List.of();
     }
 }

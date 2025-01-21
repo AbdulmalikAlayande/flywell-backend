@@ -57,7 +57,7 @@ public class RolePermissionInitializer implements CommandLineRunner {
 
     }
 
-    private void saveRoleAndPermissions(String[] customerPermissions, String role) {
+    private void saveRoleAndPermissions(String[] customerPermissions, String roleName) {
 
         List<Permission> permissions = new ArrayList<>();
         for (String permission : customerPermissions) {
@@ -66,7 +66,7 @@ public class RolePermissionInitializer implements CommandLineRunner {
         }
 
         List<Permission> savedPermissions = permissionRepository.saveAll(permissions);
-        Role savedRole = Role.builder().name(role).permissions(new HashSet<>(savedPermissions)).build();
-        roleRepository.save(savedRole);
+        Role role = Role.builder().name(roleName).permissions(new HashSet<>(savedPermissions)).build();
+        roleRepository.save(role);
     }
 }

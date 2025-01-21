@@ -20,4 +20,5 @@ public class UserServiceCommonImplementationProvider<T> {
         Assert.isTrue(violations.isEmpty(), violations.stream().map(violation -> String.format("Field '%s': %s",
                 violation.getPropertyPath(), violation.getMessage())).toList().toString());
     }
+
 }

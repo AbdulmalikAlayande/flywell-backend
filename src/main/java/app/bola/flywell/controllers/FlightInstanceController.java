@@ -7,8 +7,10 @@ import app.bola.flywell.exceptions.InvalidRequestException;
 import app.bola.flywell.services.flightservice.FlightInstanceService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -23,7 +25,7 @@ public class FlightInstanceController implements FlyWellController<FlightInstanc
 	
 	final FlightInstanceService flightInstanceService;
 
-
+	@PreAuthorize(value = "hasAnyRole('ADMIN', 'SYSTEM')")
 	public ResponseEntity<FlightInstanceResponse> createNew(@Valid @RequestBody FlightInstanceRequest instanceRequest){
 		FlightInstanceResponse response = flightInstanceService.createNew(instanceRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -36,18 +38,20 @@ public class FlightInstanceController implements FlyWellController<FlightInstanc
 	}
 
 	@PostMapping("assign-crew-member")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> assignCrewMemberToFlight(@RequestParam String crewMemberId, @RequestParam String flightId) throws InvalidRequestException {
 		FlightInstanceResponse response = flightInstanceService.assignCrewMemberToFlight(crewMemberId, flightId);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
 	}
 
-	@GetMapping("/{flight-id}/view-schedule")
-	public ResponseEntity<FlightInstanceResponse> viewFlightSchedule(@PathVariable("flight-id") String flightId){
-		FlightInstanceResponse response = flightInstanceService.viewFlightSchedule(flightId);
-		return ResponseEntity.status(HttpStatus.FOUND).body(response);
+	@Override
+	@PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'SYSTEM', 'CREW_MEMBER')")
+	public ResponseEntity<Collection<FlightInstanceResponse>> findAll(Pageable pageable) {
+		return null;
 	}
 
 	@Override
+	@PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'SYSTEM', 'CREW_MEMBER')")
 	public ResponseEntity<FlightInstanceResponse> findByPublicId(String publicId) {
 		FlightInstanceResponse response = flightInstanceService.findByPublicId(publicId);
 		return ResponseEntity.status(HttpStatus.FOUND).body(response);

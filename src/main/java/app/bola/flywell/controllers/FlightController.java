@@ -8,6 +8,7 @@ import app.bola.flywell.dto.response.FlightResponse;
 import app.bola.flywell.services.flightservice.FlightService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("flights")
@@ -27,7 +29,6 @@ public class FlightController implements FlyWellController<FlightRequest, Flight
 
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<FlightResponse> createNew(@Valid @RequestBody FlightRequest flightRequest){
-
 		FlightResponse response = flightService.createNew(flightRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
@@ -41,12 +42,22 @@ public class FlightController implements FlyWellController<FlightRequest, Flight
 
 
 	@Override
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<FlightResponse> findByPublicId(String publicId) {
-		return null;
+		FlightResponse response = flightService.findByPublicId(publicId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@Override
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Collection<FlightResponse>> findAll() {
-		return null;
+		Collection<FlightResponse> response = flightService.findAll();
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);	}
+
+	@Override
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Collection<FlightResponse>> findAll(Pageable pageable) {
+		Collection<FlightResponse> response = flightService.findAll(pageable);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 }

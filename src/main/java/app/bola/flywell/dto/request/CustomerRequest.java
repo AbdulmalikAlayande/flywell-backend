@@ -1,6 +1,6 @@
 package app.bola.flywell.dto.request;
 
-import app.bola.flywell.data.model.users.Customer;
+import app.bola.flywell.data.model.users.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Size;
@@ -12,7 +12,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * Request DTO for {@link Customer} model
+ * Request DTO for {@link User} model, {@linkplain User}s with CUSTOMER role
  */
 
 @Getter

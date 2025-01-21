@@ -22,7 +22,7 @@ import java.util.Collections;
 @Configuration
 @EnableAutoConfiguration
 @Getter
-public class EmailValidationConfig {
+public class EmailConfig {
 	public static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
 	
 	@Value("${totp.secret.key}")
@@ -67,8 +67,8 @@ public class EmailValidationConfig {
 		return new FieldValidator();
 	}
 	@Bean
-	public EmailValidationConfig emailConfig(){
-		return new EmailValidationConfig();
+	public EmailConfig emailConfig(){
+		return new EmailConfig();
 	}
 	
 	@Bean

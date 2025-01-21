@@ -11,8 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static jakarta.persistence.CascadeType.ALL;
-
 @Entity
 @Getter
 @Setter
@@ -27,9 +25,6 @@ public class User extends FlyWellModel {
 	private String firstName;
 	private String phoneNumber;
 	private String refreshToken;
-
-	@OneToOne(cascade = ALL)
-	private UserBioData bioData;
 
 	@ManyToMany
 	@Builder.Default

@@ -20,9 +20,12 @@ public class RolePermissionInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        initializeAdminRoleAndPermissions();
-        initializeCustomerRoleAndPermissions();
-        initializeCrewMemberRoleAndPermissions();
+        if (roleRepository.findAll().isEmpty()) {
+
+            initializeAdminRoleAndPermissions();
+            initializeCustomerRoleAndPermissions();
+            initializeCrewMemberRoleAndPermissions();
+        }
     }
 
     public void initializeAdminRoleAndPermissions() {

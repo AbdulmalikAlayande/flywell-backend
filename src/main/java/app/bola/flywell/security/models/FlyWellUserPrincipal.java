@@ -25,7 +25,7 @@ public class FlyWellUserPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getBioData().getPassword();
+        return user.getPassword();
     }
 
     @Override

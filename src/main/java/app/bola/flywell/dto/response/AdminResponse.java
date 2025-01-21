@@ -1,5 +1,6 @@
 package app.bola.flywell.dto.response;
 
+import app.bola.flywell.basemodules.BaseResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class AdminResponse {
-    String message;
+public class AdminResponse extends BaseResponse {
+
 }

@@ -1,7 +1,6 @@
 package app.bola.flywell.broker;
 
-import app.bola.flywell.data.model.users.Customer;
-import app.bola.flywell.data.model.users.UserBioData;
+import app.bola.flywell.data.model.users.User;
 import app.bola.flywell.dto.response.CustomerResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,25 +14,21 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FlyWellPublisher {
 
-    final PulsarTemplate<Customer> pulsarTemplate;
+    final PulsarTemplate<User> pulsarTemplate;
     final ModelMapper mapper;
     @Value("${spring.pulsar.producer.topic-name}")
     String topicName;
 
     public CustomerResponse sendMessage(){
-        Customer customer = Customer.builder()
-                .bioData(
-                        UserBioData.builder()
-                                .firstName("John")
-                                .lastName("Doe")
-                                .email("john.doe@example.com")
-                                .phoneNumber("07036174617")
-                                .build()
-                )
+        User customer = User.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .email("john.doe@example.com")
+                .phoneNumber("07036174617")
                .build();
 
         pulsarTemplate.sendAsync(topicName, customer);
         log.info("Published customer: {}", customer);
-        return mapper.map(customer.getBioData(), CustomerResponse.class);
+        return mapper.map(customer, CustomerResponse.class);
     }
 }

@@ -1,6 +1,6 @@
 package app.bola.flywell.broker;
 
-import app.bola.flywell.data.model.users.Customer;
+import app.bola.flywell.data.model.users.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.springframework.pulsar.annotation.PulsarListener;
@@ -16,7 +16,7 @@ public class FlyWellConsumer {
             subscriptionName = "${spring.pulsar.consumer.subscription.name}",
             subscriptionType = SubscriptionType.Shared
     )
-    public void handleCustomerMessage(Customer customer){
-        log.info("FlyWellConsumer::handleCustomerMessage:[Consumed Event Customer:: {}]", customer.toString());
+    public void handleCustomerMessage(User user){
+        log.info("FlyWellConsumer::handleCustomerMessage:[Consumed Event Customer:: {}]", user.toString());
     }
 }

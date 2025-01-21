@@ -22,6 +22,7 @@ public class Role {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Permission> permissions = new LinkedHashSet<>();
 }

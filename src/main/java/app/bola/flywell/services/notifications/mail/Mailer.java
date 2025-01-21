@@ -1,6 +1,6 @@
 package app.bola.flywell.services.notifications.mail;
 
-import app.bola.flywell.config.EmailValidationConfig;
+import app.bola.flywell.config.EmailConfig;
 import app.bola.flywell.dto.request.NotificationRequest;
 import app.bola.flywell.dto.response.NotificationResponse;
 
@@ -25,7 +25,7 @@ import static app.bola.flywell.utils.Constants.*;
 @AllArgsConstructor
 public class Mailer implements MailService{
 
-	private final EmailValidationConfig emailValidationConfig;
+	private final EmailConfig emailConfig;
 	private final RestTemplate restTemplate;
 	private final TemplateEngine templateEngine;
 	private final Context context;
@@ -34,7 +34,7 @@ public class Mailer implements MailService{
 	@NotNull
 	private HttpHeaders getHttpHeaders() {
 		HttpHeaders headers = new HttpHeaders();
-		headers.set(API_KEY, emailValidationConfig.getBrevoApiKey());
+		headers.set(API_KEY, emailConfig.getBrevoApiKey());
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 		return headers;

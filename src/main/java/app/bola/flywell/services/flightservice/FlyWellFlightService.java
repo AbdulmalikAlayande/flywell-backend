@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,6 +96,11 @@ public class FlyWellFlightService implements FlightService{
 	public void removeAll() {
 		flightRepository.deleteAll();
 		airportRepository.deleteAll();
+	}
+
+	@Override
+	public Collection<FlightResponse> findAll(Pageable pageable) {
+		return List.of();
 	}
 
 

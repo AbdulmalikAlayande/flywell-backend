@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,11 +68,6 @@ public class FlyWellFlightService implements FlightService{
 	}
 	
 	@Override
-	public List<Flight> getAllFlights() {
-		return Collections.emptyList();
-	}
-
-	@Override
 	public FlightResponse findFlightByRoute(String arrivalCity, String departureCity) {
 		ExampleMatcher matcher = ExampleMatcher.matching()
 				.withIgnorePaths("id", "duration", "displayImageName", "departureAirport", "arrivalAirport", "instances")
@@ -102,6 +98,11 @@ public class FlyWellFlightService implements FlightService{
 		airportRepository.deleteAll();
 	}
 
+	@Override
+	public Collection<FlightResponse> findAll(Pageable pageable) {
+		return List.of();
+	}
+
 
 	@Override
 	public FlightResponse findByPublicId(String publicId) {
@@ -116,7 +117,7 @@ public class FlyWellFlightService implements FlightService{
 	}
 
 	@Override
-	public Collection<FlightResponse> findAll() {
+	public List<FlightResponse> findAll() {
 		return List.of();
 	}
 }

@@ -28,8 +28,8 @@ public class AuthService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
 
-        String refreshToken = tokenProvider.generateRefreshToken(userDetails);
-        String accessToken = tokenProvider.generateAccessToken(userDetails);
+        String refreshToken = tokenProvider.generateToken(userDetails);
+        String accessToken = tokenProvider.generateToken(userDetails);
 
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new EntityNotFoundException("User with email "+username));

@@ -31,13 +31,6 @@ public interface FlightService extends FlyWellService<FlightRequest, FlightRespo
 	FlightResponse updateFlight(FlightUpdateRequest flightRequest);
 
 	/**
-	 * Retrieves all flights from the system.
-	 *
-	 * @return a list of all flights.
-	 */
-	List<Flight> getAllFlights();
-
-	/**
 	 * Finds a flight based on its arrival and departure locations.
 	 *
 	 * @param arrivalCity    the arrival location city.
@@ -54,8 +47,4 @@ public interface FlightService extends FlyWellService<FlightRequest, FlightRespo
 	 */
 	Long getCountOfAllFlights();
 
-	/**
-	 * Removes all flights and associated data from the system.
-	 */
-	void removeAll();
 }

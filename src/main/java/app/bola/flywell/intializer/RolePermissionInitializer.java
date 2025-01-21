@@ -9,27 +9,64 @@ import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @AllArgsConstructor
 public class RolePermissionInitializer implements CommandLineRunner {
 
-    RoleRepository roleRepository;
-    PermissionRepository permissionRepository;
+    final RoleRepository roleRepository;
+    final PermissionRepository permissionRepository;
 
     @Override
-    public void run(String... args) throws Exception {
-        Permission readPermission = Permission.builder().name("READ").build();
-        Permission writePermission = Permission.builder().name("WRITE").build();
+    public void run(String... args) {
+        if (roleRepository.findAll().isEmpty()) {
 
-        Role userRole = Role.builder().name("USER").permissions(Set.of(readPermission)).build();
-        Role adminRole = Role.builder().name("ADMIN").permissions(Set.of(readPermission, writePermission)).build();
-
-        if (roleRepository.findAll().isEmpty() && permissionRepository.findAll().isEmpty()) {
-            roleRepository.saveAll(List.of(userRole, adminRole));
-            permissionRepository.saveAll(List.of(readPermission, writePermission));
+            initializeAdminRoleAndPermissions();
+            initializeCustomerRoleAndPermissions();
+            initializeCrewMemberRoleAndPermissions();
         }
+    }
+
+    public void initializeAdminRoleAndPermissions() {
+
+        String[] adminPermissions = {
+                "CREATE_USER", "READ_USER", "UPDATE_USER", "BLOCK_USER",
+                "CREATE_FLIGHT", "READ_FLIGHT", "UPDATE_FLIGHT", "DELETE_FLIGHT",
+                "CREATE_AIRCRAFT", "READ_AIRCRAFT", "UPDATE_AIRCRAFT", "DELETE_AIRCRAFT",
+                "READ_NOTIFICATION"
+        };
+
+        saveRoleAndPermissions(adminPermissions, "ADMIN");
+    }
+
+    public void initializeCustomerRoleAndPermissions() {
+
+        String[] customerPermissions = {
+                "CREATE_CUSTOMER", "READ_CUSTOMER", "UPDATE_CUSTOMER",
+                "CREATE_RESERVATION", "READ_RESERVATION", "CANCEL_RESERVATION",
+                "READ_NOTIFICATION"
+        };
+
+        saveRoleAndPermissions(customerPermissions, "CUSTOMER");
+    }
+
+    public void initializeCrewMemberRoleAndPermissions() {
+        String[] crewMemberPermissions = {"READ_FLIGHT_INSTANCE"};
+        saveRoleAndPermissions(crewMemberPermissions, "CREW_MEMBER");
+
+    }
+
+    private void saveRoleAndPermissions(String[] customerPermissions, String roleName) {
+
+        List<Permission> permissions = new ArrayList<>();
+        for (String permission : customerPermissions) {
+            Permission build = Permission.builder().name(permission).build();
+            permissions.add(build);
+        }
+
+        List<Permission> savedPermissions = permissionRepository.saveAll(permissions);
+        Role role = Role.builder().name(roleName).permissions(new HashSet<>(savedPermissions)).build();
+        roleRepository.save(role);
     }
 }

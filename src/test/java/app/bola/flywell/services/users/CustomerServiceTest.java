@@ -2,6 +2,7 @@ package app.bola.flywell.services.users;
 
 import app.bola.flywell.dto.response.CustomerResponse;
 import app.bola.flywell.dto.request.*;
+import app.bola.flywell.dto.response.LoginResponse;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,9 +63,10 @@ class CustomerServiceTest {
 	@Test
 	@SneakyThrows
 	void testThatAccountActivationIsSuccessful_IfTheOtpEnteredIdCorrect(){
-		CustomerResponse response = customerService.activateCustomerAccount(customerResponse.getPublicId(), "");
+		LoginResponse response = customerService.activateCustomerAccount(customerResponse.getPublicId(), "");
 		assertThat(response).isNotNull();
-		assertThat(response.getMessage()).isEqualTo(SUCCESSFUL_ACTIVATION_MESSAGE);
+		assertThat(response.getAccessToken()).isNotNull().hasSizeGreaterThan(1);
+		assertThat(response.getRefreshToken()).isNotNull().hasSizeGreaterThan(1);
 	}
 
 	@Test void testThatWhenTokenHasExpiredAnotherOneIsGenerated(){

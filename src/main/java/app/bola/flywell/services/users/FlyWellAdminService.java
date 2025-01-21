@@ -5,74 +5,90 @@ import app.bola.flywell.data.repositories.*;
 import app.bola.flywell.dto.request.*;
 import app.bola.flywell.dto.response.*;
 import app.bola.flywell.exceptions.*;
-import app.bola.flywell.services.flightservice.FlightService;
-import app.bola.flywell.services.notifications.Validator;
+import app.bola.flywell.security.repositories.RoleRepository;
 import app.bola.flywell.services.notifications.mail.MailService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class FlyWellAdminService implements AdminService{
-    
+
+    final ModelMapper mapper;
+    final MailService mailService;
+    final RoleRepository roleRepository;
     final UserRepository userRepository;
-    private Validator validator;
-    private MailService mailService;
-    private ModelMapper mapper;
-    private FlightService flightService;
+    final PasswordEncoder passwordEncoder;
+    final UserServiceCommonImplementationProvider<CreateAdminRequest> implementationProvider;
 
     @Override
-    public CreateAdminResponse createNew(CreateAdminRequest createAdminRequest) {
-       return null;
+    public AdminResponse createNew(CreateAdminRequest request) {
+
+        implementationProvider.validateFields(request);
+
+        User admin = mapper.map(request, User.class);
+        admin.setPassword(passwordEncoder.encode(request.getPassword()));
+        admin.getRoles().add(roleRepository.findByName("ADMIN").getFirst());
+
+        User savedAdmin = userRepository.save(admin);
+        return toResponse(savedAdmin);
     }
 
     @Override
-    public AdminInvitationResponse inviteAdmin(AdminInvitationRequest invitationRequest) throws InvalidRequestException, FieldInvalidException, EmptyFieldException {
-        if (invitationRequest.getEmail() == null || invitationRequest.getEmail().isEmpty() || invitationRequest.getEmail().isBlank())
-            throw new EmptyFieldException("Email Cannot Be Blank Or Empty Spaces");
-        else {
-            validator.validateEmail(invitationRequest.getEmail());
-            String adminCode = generateAdminCode(invitationRequest.getEmail());
-            User user = new User();
+    public AdminInvitationResponse inviteAdmin(AdminInvitationRequest request) throws InvalidRequestException {
 
-            userRepository.save(user);
-            NotificationRequest notificationRequest = buildNotificationRequest(invitationRequest, adminCode);
-            ResponseEntity<NotificationResponse> response = mailService.sendAdminInvitationEmail(notificationRequest);
-            System.out.println(response);
-            return AdminInvitationResponse.builder()
-                           .email(invitationRequest.getEmail())
-                           .code(adminCode)
-                           .message("An Invitation Mail Has Been Sent To " + invitationRequest.getEmail())
-                           .build();
-        }
+        String adminCode = generateAdminCode(request.getEmail());
+
+        NotificationRequest.NotificationRequestBuilder notificationBuilder = NotificationRequest.builder();
+        notificationBuilder.email(request.getEmail());
+        notificationBuilder.code(adminCode);
+        notificationBuilder.mailPath("invite");
+
+        mailService.sendAdminInvitationEmail(notificationBuilder.build());
+        return AdminInvitationResponse.builder().email(request.getEmail()).code(adminCode).build();
     }
-    
-    private NotificationRequest buildNotificationRequest(AdminInvitationRequest invitationRequest, String code) {
-        return NotificationRequest.builder()
-                                  .email(invitationRequest.getEmail())
-                                  .code(code)
-                                  .mailPath("invite")
-                                  .firstName("Abdulmalik")
-                                  .build();
-    }
-    
+
     private String generateAdminCode(String adminEmail) {
-        String adminCodePrefix = "__BOLA--AIR__";
+
+        String adminCodePrefix = "__FW-ADMIN__";
         String prefixHashCode = String.valueOf(adminCodePrefix.hashCode());
         String adminEmailHashCode = String.valueOf(adminEmail.hashCode());
         return prefixHashCode+adminEmailHashCode;
     }
-    
-    @Override
-    public FlightResponse addNewFlight(FlightRequest flightRequest) {
-        return flightService.createNew(flightRequest);
+
+    private AdminResponse toResponse(User admin) {
+        return mapper.map(admin, AdminResponse.class);
     }
-    
+
     @Override
-    public void deleteAll() {
+    public AdminResponse findByPublicId(String publicId) {
+        return null;
+    }
+
+    @Override
+    public boolean existsByPublicId(String publicId) {
+        return false;
+    }
+
+    @Override
+    public Collection<AdminResponse> findAll() {
+        return List.of();
+    }
+
+    @Override
+    public void removeAll() {
         userRepository.deleteAll();
     }
-    
+
+    @Override
+    public Collection<AdminResponse> findAll(Pageable pageable) {
+        return List.of();
+    }
+
 }

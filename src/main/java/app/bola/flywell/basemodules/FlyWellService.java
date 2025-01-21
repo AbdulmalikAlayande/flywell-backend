@@ -1,5 +1,7 @@
 package app.bola.flywell.basemodules;
 
+import org.springframework.data.domain.Pageable;
+
 import java.util.Collection;
 
 public interface FlyWellService<Req, Res> {
@@ -12,4 +14,6 @@ public interface FlyWellService<Req, Res> {
     Collection<Res> findAll();
 
     void removeAll();
+
+    Collection<Res> findAll(Pageable pageable);
 }

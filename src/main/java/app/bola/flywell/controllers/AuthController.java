@@ -4,12 +4,11 @@ import app.bola.flywell.dto.request.LoginRequest;
 import app.bola.flywell.dto.response.LoginResponse;
 import app.bola.flywell.security.services.AuthService;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @CrossOrigin("*")
 @RestController
 @AllArgsConstructor
@@ -19,6 +18,7 @@ public class AuthController {
     final AuthService authService;
 
     @PostMapping("login")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'CREW_MEMBER')")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         LoginResponse response = authService.login(loginRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);

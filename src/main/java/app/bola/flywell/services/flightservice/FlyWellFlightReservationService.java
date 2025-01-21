@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -105,6 +106,11 @@ public class FlyWellFlightReservationService implements FlightReservationService
 
     public void removeAll() {
         reservationRepository.deleteAll();
+    }
+
+    @Override
+    public Collection<FlightReservationResponse> findAll(Pageable pageable) {
+        return List.of();
     }
 
     private FlightReservationResponse toResponse(FlightReservation reservation){

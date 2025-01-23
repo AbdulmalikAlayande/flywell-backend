@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,5 +28,6 @@ public class FlightReservationResponse extends BaseResponse {
     String flightId;
     String reservationNumber;
     LocalDate creationDate;
+    List<PaymentResponse> payment;
     Map<PassengerResponse, FlightSeatResponse> seatMap;
 }

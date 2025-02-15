@@ -41,8 +41,8 @@ public class CustomerController implements FlyWellController<CustomerRequest, Cu
 		return ResponseEntity.status(HttpStatus.FOUND).body(response);
 	}
 
-	@PostMapping("activate-account/{public-id}/{TOTP}")
-	public ResponseEntity<?> activateAccount(@PathVariable("public-id") String publicId, @PathVariable String TOTP) throws InvalidRequestException {
+	@PostMapping("activate-account/{public-id}/{otp}")
+	public ResponseEntity<?> activateAccount(@PathVariable("public-id") String publicId, @PathVariable("otp") String TOTP) throws InvalidRequestException {
 		LoginResponse response = customerService.activateCustomerAccount(TOTP, publicId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}

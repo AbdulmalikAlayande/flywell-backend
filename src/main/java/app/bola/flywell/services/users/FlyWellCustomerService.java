@@ -59,11 +59,11 @@ public class FlyWellCustomerService implements CustomerService {
 		customer.getRoles().add(roleRepository.findByName("USER").getFirst());
 
 		Otp otp = otpService.createNew(customer.getEmail());
-		mailer.sendOtp(buildNotificationRequest(customer.getFirstName(), customer.getEmail(), otp.getData()));
+		//mailer.sendOtp(buildNotificationRequest(customer.getFirstName(), customer.getEmail(), otp.getData()));
 
 		customer.addOtp(otp);
 		User savedCustomer = userRepository.save(customer);
-        return toResponse(savedCustomer);
+        	return toResponse(savedCustomer);
 	}
 
 	private CustomerResponse toResponse(User user) {

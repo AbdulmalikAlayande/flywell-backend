@@ -55,14 +55,14 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(registry -> registry
                     .requestMatchers("/customer/new").permitAll()
-                    .requestMatchers("admin/**").hasRole("ADMIN")
-                    .requestMatchers("reservation/**").hasAnyRole("ADMIN", "USER", "OFFICER")
-                    .requestMatchers("admin/**").hasRole("ADMIN")
-                    .requestMatchers("auth/**").hasAnyRole("ADMIN", "CUSTOMER", "CREW_MEMBER")
-                    .requestMatchers("crew-member/**").hasRole("OFFICER")
-                    .requestMatchers("flights/**").hasRole("ADMIN")
-                    .requestMatchers("flight-instance/**").hasAnyRole("ADMIN", "CUSTOMER")
-                    .requestMatchers("reservation/**").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers("/customer/activate-account/{public-id}/{otp}").permitAll()
+                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/reservation/**").hasAnyRole("ADMIN", "USER", "OFFICER")
+                    .requestMatchers("/crew-member/**").hasRole("OFFICER")
+                    .requestMatchers("/flights/**").hasRole("ADMIN")
+                    .requestMatchers("/flight-instance/**").hasAnyRole("ADMIN", "CUSTOMER")
+                    .requestMatchers("/reservation/**").hasAnyRole("USER", "ADMIN")
                     .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -93,7 +93,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://your-frontend-domain.com"));
+        configuration.setAllowedOrigins(Arrays.asList(
+                "https://flywell.tech",
+                "http://localhost:3000",
+                "https://www.flywell.tech",
+                "https://flywell.vercel.app"
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);

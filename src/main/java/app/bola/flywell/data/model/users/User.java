@@ -19,11 +19,14 @@ import java.util.Set;
 @AllArgsConstructor
 public class User extends FlyWellModel {
 
+	@Column(nullable = false, unique = true)
 	private String email;
+	@Column(nullable = false)
 	private String password;
 	private String lastName;
 	private String firstName;
 	private String phoneNumber;
+	private boolean active;
 	private String refreshToken;
 
 	@ManyToMany
@@ -41,3 +44,7 @@ public class User extends FlyWellModel {
 		}
 	}
 }
+
+/*
+
+*/

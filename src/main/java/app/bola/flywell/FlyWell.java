@@ -32,5 +32,5 @@ public class FlyWell {
 	public static void main(String[] args) {
 		SpringApplication.run(FlyWell.class, args);
 	}
-	
+
 }

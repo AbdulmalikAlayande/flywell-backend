@@ -88,6 +88,7 @@ public class FlightInstance extends FlyWellModel {
 			else return reservation.getFormMap().size();
 		}).sum();
 	}
+	
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this)

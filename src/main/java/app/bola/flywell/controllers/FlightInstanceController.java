@@ -22,7 +22,7 @@ import java.util.List;
 @CrossOrigin("*")
 @AllArgsConstructor
 public class FlightInstanceController implements FlyWellController<FlightInstanceRequest, FlightInstanceResponse> {
-	
+
 	final FlightInstanceService flightInstanceService;
 
 	@PreAuthorize(value = "hasAnyRole('ADMIN', 'SYSTEM')")

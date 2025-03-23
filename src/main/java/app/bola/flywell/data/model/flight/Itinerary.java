@@ -17,6 +17,7 @@ import java.util.List;
 @Builder
 @Entity
 public class Itinerary {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;

@@ -8,6 +8,8 @@ delete from flight_instance;
 delete from flight;
 delete from customer;
 delete from user_bio_data_otps;
+delete from user_otps;
+delete from user_roles;
 delete from otp;
 delete from user;
 delete from user_bio_data;

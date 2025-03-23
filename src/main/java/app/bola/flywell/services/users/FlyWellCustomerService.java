@@ -4,14 +4,13 @@ import app.bola.flywell.data.model.users.Otp;
 import app.bola.flywell.data.model.users.User;
 import app.bola.flywell.data.repositories.UserRepository;
 import app.bola.flywell.data.specifications.UserSpecification;
-import app.bola.flywell.dto.request.LoginRequest;
 import app.bola.flywell.dto.request.NotificationRequest;
 import app.bola.flywell.dto.response.CustomerResponse;
+import app.bola.flywell.dto.response.FlightReservationResponse;
 import app.bola.flywell.dto.response.LoginResponse;
 import app.bola.flywell.exceptions.EntityNotFoundException;
 import app.bola.flywell.security.models.Role;
 import app.bola.flywell.security.repositories.RoleRepository;
-import app.bola.flywell.security.services.AuthService;
 import app.bola.flywell.services.notifications.mail.MailService;
 import app.bola.flywell.dto.request.CustomerRequest;
 import app.bola.flywell.exceptions.FailedRegistrationException;
@@ -40,7 +39,6 @@ public class FlyWellCustomerService implements CustomerService {
 	final ModelMapper mapper;
 	final MailService mailer;
 	final OtpService otpService;
-	final AuthService authService;
 	final RoleRepository roleRepository;
 	final UserRepository userRepository;
 	final PasswordEncoder passwordEncoder;
@@ -59,11 +57,11 @@ public class FlyWellCustomerService implements CustomerService {
 		customer.getRoles().add(roleRepository.findByName("USER").getFirst());
 
 		Otp otp = otpService.createNew(customer.getEmail());
-		//mailer.sendOtp(buildNotificationRequest(customer.getFirstName(), customer.getEmail(), otp.getData()));
+		mailer.sendOtp(buildNotificationRequest(customer.getFirstName(), customer.getEmail(), otp.getData()));
 
 		customer.addOtp(otp);
 		User savedCustomer = userRepository.save(customer);
-        	return toResponse(savedCustomer);
+		return toResponse(savedCustomer);
 	}
 
 	private CustomerResponse toResponse(User user) {
@@ -76,8 +74,15 @@ public class FlyWellCustomerService implements CustomerService {
 	public LoginResponse activateCustomerAccount(String OTP, String publicId) throws InvalidRequestException {
 		Otp otp = otpService.verifyOtp(OTP);
 		logger.info("OTP successfully verified. Generated OTP: {}. For User {}", otp, publicId);
-		User user = userRepository.findByPublicId(publicId).orElseThrow(()->new InvalidRequestException("USER WITH EMAIL NOT FOUND"));
-		return authService.login(new LoginRequest(user.getEmail(), user.getPassword()));
+		User user = userRepository.findByPublicId(publicId).orElseThrow(()->new InvalidRequestException("User with public Id %s not found".formatted(publicId)));
+
+		user.setActive(true);
+		userRepository.save(user);
+
+		return LoginResponse.builder()
+				.userId(user.getPublicId())
+				.message("Account activated successfully. Please login with your credentials.")
+				.build();
 	}
 
 	private NotificationRequest buildNotificationRequest(String firstName, String email, long otp){
@@ -104,6 +109,13 @@ public class FlyWellCustomerService implements CustomerService {
 		return page.map(this::toResponse).toList();
 	}
 
+	@Override
+	public List<FlightReservationResponse> fetchCustomerReservations(String userId){
+		User customer = userRepository.findByPublicId(userId)
+				.orElseThrow(() -> new EntityNotFoundException(Constants.ENTITY_NOT_FOUND.formatted("Customer")));
+		
+		return null;
+	}
 	
 	@Override
 	public CustomerResponse findByPublicId(String publicId) {

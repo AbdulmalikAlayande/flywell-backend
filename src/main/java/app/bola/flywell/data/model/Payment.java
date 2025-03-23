@@ -4,8 +4,10 @@ package app.bola.flywell.data.model;
 import app.bola.flywell.basemodules.FlyWellModel;
 import app.bola.flywell.data.model.enums.*;
 import app.bola.flywell.data.model.flight.FlightReservation;
+import app.bola.flywell.data.model.users.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -25,6 +27,9 @@ public class Payment extends FlyWellModel {
 	private PaymentStatus status;
 	private LocalDateTime timeStamp;
 	private PaymentMethod paymentMethod;
+
+	@OneToOne
+	private User user;
 
 	@ManyToOne
 	private FlightReservation reservation;

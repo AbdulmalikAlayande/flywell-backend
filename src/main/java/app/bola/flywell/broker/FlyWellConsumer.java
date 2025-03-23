@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 public class FlyWellConsumer {
 
 
-    @PulsarListener(
-            topics = {"${spring.pulsar.producer.topic-name}"},
-            subscriptionName = "${spring.pulsar.consumer.subscription.name}",
-            subscriptionType = SubscriptionType.Shared
-    )
+//    @PulsarListener(
+//            topics = {"${spring.pulsar.producer.topic-name}"},
+//            subscriptionName = "${spring.pulsar.consumer.subscription.name}",
+//            subscriptionType = SubscriptionType.Shared
+//    )
     public void handleCustomerMessage(User user){
-        log.info("FlyWellConsumer::handleCustomerMessage:[Consumed Event Customer:: {}]", user.toString());
+//        log.info("FlyWellConsumer::handleCustomerMessage:[Consumed Event Customer:: {}]", user.toString());
     }
 }

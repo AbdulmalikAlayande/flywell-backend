@@ -4,6 +4,7 @@ import app.bola.flywell.basemodules.FlyWellController;
 import app.bola.flywell.dto.request.CustomerRequest;
 import app.bola.flywell.dto.response.CustomerResponse;
 import app.bola.flywell.dto.response.LoginResponse;
+import app.bola.flywell.dto.response.FlightReservationResponse;
 import app.bola.flywell.exceptions.*;
 import app.bola.flywell.services.users.CustomerService;
 import jakarta.validation.Valid;
@@ -29,6 +30,7 @@ public class CustomerController implements FlyWellController<CustomerRequest, Cu
 
 
 	@Override
+	@PostMapping("new")
 	public ResponseEntity<CustomerResponse> createNew(@RequestBody @Valid CustomerRequest customerRequest){
 		CustomerResponse response = customerService.createNew(customerRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -42,8 +44,9 @@ public class CustomerController implements FlyWellController<CustomerRequest, Cu
 	}
 
 	@PostMapping("activate-account/{public-id}/{otp}")
-	public ResponseEntity<?> activateAccount(@PathVariable("public-id") String publicId, @PathVariable("otp") String TOTP) throws InvalidRequestException {
+	public ResponseEntity<?> activateAccount(@PathVariable("public-id") String publicId, @PathVariable("otp") String TOTP) throws InvalidRequestException, AuthenticationFailedException {
 		LoginResponse response = customerService.activateCustomerAccount(TOTP, publicId);
+		log.info("Successfully activated {}", response);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
@@ -59,5 +62,13 @@ public class CustomerController implements FlyWellController<CustomerRequest, Cu
 	public ResponseEntity<Collection<CustomerResponse>> findAll(Pageable pageable) {
 		List<CustomerResponse> response = customerService.findAll(pageable);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+	
+	@GetMapping("{user-id}/reservations")
+	public ResponseEntity<Collection<FlightReservationResponse>> fetchReservations(@PathVariable("user-id") String userId) {
+
+		List<FlightReservationResponse> response = customerService.fetchCustomerReservations(userId);
+		return ResponseEntity.status(HttpStatus.FOUND).body(response);
+
 	}
 }

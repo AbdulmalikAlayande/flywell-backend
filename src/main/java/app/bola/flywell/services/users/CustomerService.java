@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface CustomerService extends FlyWellService<CustomerRequest, CustomerResponse> {
 
-	LoginResponse activateCustomerAccount(String OTP, String publicId) throws InvalidRequestException, AuthenticationFailedException;
+	CustomerResponse activateCustomerAccount(String OTP, String publicId) throws InvalidRequestException, AuthenticationFailedException;
 
 	long getCountOfCustomers();
 

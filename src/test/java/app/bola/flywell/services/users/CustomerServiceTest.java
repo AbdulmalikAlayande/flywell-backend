@@ -63,10 +63,10 @@ class CustomerServiceTest {
 	@Test
 	@SneakyThrows
 	void testThatAccountActivationIsSuccessful_IfTheOtpEnteredIdCorrect(){
-		LoginResponse response = customerService.activateCustomerAccount(customerResponse.getPublicId(), "");
+		CustomerResponse response = customerService.activateCustomerAccount(customerResponse.getPublicId(), "");
 		assertThat(response).isNotNull();
-		assertThat(response.getAccessToken()).isNotNull().hasSizeGreaterThan(1);
-		assertThat(response.getRefreshToken()).isNotNull().hasSizeGreaterThan(1);
+		assertThat(response.getMessage()).isNotNull();
+		assertThat(response.getMessage()).isEqualTo("Account activated successfully. Please login with your credentials.");
 	}
 
 	@Test void testThatWhenTokenHasExpiredAnotherOneIsGenerated(){

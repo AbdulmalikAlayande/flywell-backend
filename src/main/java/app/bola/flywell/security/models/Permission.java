@@ -1,7 +1,6 @@
 package app.bola.flywell.security.models;
 
-
-import app.bola.flywell.basemodules.FlyWellModel;
+import com.google.common.base.MoreObjects;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +20,14 @@ public class Permission{
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name", name)
+                .toString();
+    }
 }

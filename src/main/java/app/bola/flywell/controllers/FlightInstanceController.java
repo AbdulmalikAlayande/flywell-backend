@@ -46,13 +46,15 @@ public class FlightInstanceController implements FlyWellController<FlightInstanc
 
 	@Override
 	@PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'SYSTEM', 'CREW_MEMBER')")
+	@GetMapping("all")
 	public ResponseEntity<Collection<FlightInstanceResponse>> findAll(Pageable pageable) {
 		return null;
 	}
 
 	@Override
+	@GetMapping("{public-id}")
 	@PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER', 'SYSTEM', 'CREW_MEMBER')")
-	public ResponseEntity<FlightInstanceResponse> findByPublicId(String publicId) {
+	public ResponseEntity<FlightInstanceResponse> findByPublicId(@PathVariable("public-id") String publicId) {
 		FlightInstanceResponse response = flightInstanceService.findByPublicId(publicId);
 		return ResponseEntity.status(HttpStatus.FOUND).body(response);
 	}
@@ -60,7 +62,6 @@ public class FlightInstanceController implements FlyWellController<FlightInstanc
 	@Override
 	public ResponseEntity<Collection<FlightInstanceResponse>> findAll() {
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
-
 	}
 
 }

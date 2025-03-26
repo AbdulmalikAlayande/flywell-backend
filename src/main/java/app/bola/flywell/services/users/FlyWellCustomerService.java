@@ -7,7 +7,6 @@ import app.bola.flywell.data.specifications.UserSpecification;
 import app.bola.flywell.dto.request.NotificationRequest;
 import app.bola.flywell.dto.response.CustomerResponse;
 import app.bola.flywell.dto.response.FlightReservationResponse;
-import app.bola.flywell.dto.response.LoginResponse;
 import app.bola.flywell.exceptions.EntityNotFoundException;
 import app.bola.flywell.security.models.Role;
 import app.bola.flywell.security.repositories.RoleRepository;
@@ -54,7 +53,7 @@ public class FlyWellCustomerService implements CustomerService {
 
 		User customer = mapper.map(customerRequest, User.class);
 		customer.setPassword(passwordEncoder.encode(customerRequest.getPassword()));
-		customer.getRoles().add(roleRepository.findByName("USER").getFirst());
+		customer.getRoles().add(roleRepository.findByName("CUSTOMER").getFirst());
 
 		Otp otp = otpService.createNew(customer.getEmail());
 		mailer.sendOtp(buildNotificationRequest(customer.getFirstName(), customer.getEmail(), otp.getData()));
@@ -71,18 +70,18 @@ public class FlyWellCustomerService implements CustomerService {
 
 	@Override
 	@Transactional
-	public LoginResponse activateCustomerAccount(String OTP, String publicId) throws InvalidRequestException {
+	public CustomerResponse activateCustomerAccount(String OTP, String publicId) throws InvalidRequestException {
 		Otp otp = otpService.verifyOtp(OTP);
 		logger.info("OTP successfully verified. Generated OTP: {}. For User {}", otp, publicId);
 		User user = userRepository.findByPublicId(publicId).orElseThrow(()->new InvalidRequestException("User with public Id %s not found".formatted(publicId)));
 
 		user.setActive(true);
-		userRepository.save(user);
+		User savedCustomer = userRepository.save(user);
 
-		return LoginResponse.builder()
-				.userId(user.getPublicId())
-				.message("Account activated successfully. Please login with your credentials.")
-				.build();
+		CustomerResponse response = toResponse(savedCustomer);
+		response.setMessage("Account activated successfully. Please login with your credentials.");
+
+		return response;
 	}
 
 	private NotificationRequest buildNotificationRequest(String firstName, String email, long otp){
@@ -90,7 +89,7 @@ public class FlyWellCustomerService implements CustomerService {
 				       .email(email)
 				       .code(String.valueOf(otp))
 				       .OTP(otp)
-				       .mailPath("otp")
+				       .mailPath("otp-template")
 				       .firstName(firstName)
 				       .build();
 	}

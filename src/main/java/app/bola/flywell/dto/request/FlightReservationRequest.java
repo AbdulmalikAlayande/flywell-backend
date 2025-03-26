@@ -24,5 +24,5 @@ public class FlightReservationRequest {
     String flightId;
     List<String> seatIds;
     List<PassengerRequest> passengers;
-    Map<PassengerRequest, Integer> seatMap;
+    Map<Integer, PassengerRequest> seatMap;
 }

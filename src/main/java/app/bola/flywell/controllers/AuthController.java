@@ -24,8 +24,14 @@ public class AuthController {
     }
 
     @PostMapping("logout")
-    public ResponseEntity<?> logout(@RequestHeader("Authorization") String refreshToken, String accessToken) {
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String refreshToken, String accessToken) {
         String response = authService.logout(refreshToken, accessToken);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("resend-otp")
+    public ResponseEntity<String> resendOtp(@RequestParam String email){
+        String response = authService.resendOtp(email);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

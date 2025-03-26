@@ -27,7 +27,11 @@ public class User extends FlyWellModel {
 	private String firstName;
 	private String phoneNumber;
 	private boolean active;
+	@Lob
+	@Column(name = "refresh_token", columnDefinition = "LONGTEXT")
 	private String refreshToken;
+
+
 
 	@ManyToMany
 	@Builder.Default

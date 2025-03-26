@@ -6,6 +6,8 @@ import app.bola.flywell.security.repositories.RoleRepository;
 import app.bola.flywell.security.repositories.PermissionRepository;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,7 @@ public class RolePermissionInitializer implements CommandLineRunner {
 
     final RoleRepository roleRepository;
     final PermissionRepository permissionRepository;
+    final Logger logger = LoggerFactory.getLogger(RolePermissionInitializer.class);
 
     @Override
     public void run(String... args) {
@@ -65,8 +68,11 @@ public class RolePermissionInitializer implements CommandLineRunner {
             permissions.add(build);
         }
 
-        List<Permission> savedPermissions = permissionRepository.saveAll(permissions);
-        Role role = Role.builder().name(roleName).permissions(new HashSet<>(savedPermissions)).build();
-        roleRepository.save(role);
+        logger.info("Permissions {}", permissions);
+
+        Role role = Role.builder().name(roleName).permissions(new HashSet<>(permissions)).build();
+        logger.info("Role: {}", role);
+        Role savedRole = roleRepository.save(role);
+        logger.info("Saved Role: {}", savedRole);
     }
 }

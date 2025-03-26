@@ -81,14 +81,14 @@ class FlightReservationServiceTest {
 
             FlightReservationResponse reservationResponse = flightReservationService.createNew(reservationRequest);
 
-            Map<PassengerRequest, Integer> requestSeatMap = reservationRequest.getSeatMap();
+            Map<Integer, PassengerRequest> requestSeatMap = reservationRequest.getSeatMap();
             Map<PassengerResponse, FlightSeatResponse> responseSeatMap = reservationResponse.getSeatMap();
 
             assertEquals(requestSeatMap.size(), responseSeatMap.size(), "Seat maps should have the same size");
 
-            for (Map.Entry<PassengerRequest, Integer> requestEntry : requestSeatMap.entrySet()) {
-                PassengerRequest requestPassenger = requestEntry.getKey();
-                Integer requestedSeatNumber = requestEntry.getValue();
+            for (Map.Entry<Integer, PassengerRequest> requestEntry : requestSeatMap.entrySet()) {
+                PassengerRequest requestPassenger = requestEntry.getValue();
+                Integer requestedSeatNumber = requestEntry.getKey();
 
                 PassengerResponse matchedResponsePassenger = responseSeatMap.keySet().stream()
                         .filter(responsePassenger -> responsePassenger.getFirstname().equals(requestPassenger.getFirstname())

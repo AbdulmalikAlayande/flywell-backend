@@ -3,7 +3,6 @@ package app.bola.flywell.controllers;
 import app.bola.flywell.basemodules.FlyWellController;
 import app.bola.flywell.dto.request.CustomerRequest;
 import app.bola.flywell.dto.response.CustomerResponse;
-import app.bola.flywell.dto.response.LoginResponse;
 import app.bola.flywell.dto.response.FlightReservationResponse;
 import app.bola.flywell.exceptions.*;
 import app.bola.flywell.services.users.CustomerService;
@@ -45,7 +44,7 @@ public class CustomerController implements FlyWellController<CustomerRequest, Cu
 
 	@PostMapping("activate-account/{public-id}/{otp}")
 	public ResponseEntity<?> activateAccount(@PathVariable("public-id") String publicId, @PathVariable("otp") String TOTP) throws InvalidRequestException, AuthenticationFailedException {
-		LoginResponse response = customerService.activateCustomerAccount(TOTP, publicId);
+		CustomerResponse response = customerService.activateCustomerAccount(TOTP, publicId);
 		log.info("Successfully activated {}", response);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}

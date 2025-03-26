@@ -33,7 +33,7 @@ public class FlightController implements FlyWellController<FlightRequest, Flight
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
-	@PutMapping
+	@PutMapping("update")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<FlightResponse> updateFlight(@Valid @RequestBody FlightUpdateRequest flightUpdateRequest){
 		FlightResponse response = flightService.updateFlight(flightUpdateRequest);

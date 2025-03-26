@@ -65,7 +65,7 @@ public class FlyWellFlightReservationService implements FlightReservationService
     }
 
     private void mapRequestToReservation(FlightReservationRequest request, FlightInstance flightInstance, FlightReservation reservation) {
-        request.getSeatMap().forEach((passengerRequest, seatId) -> {
+        request.getSeatMap().forEach(( seatId, passengerRequest) -> {
 
             Passenger passenger = mapper.map(passengerRequest, Passenger.class);
             Passenger savedPassenger = passengerRepository.save(passenger);

@@ -30,8 +30,9 @@ public class FlightReservationController implements FlyWellController<FlightRese
     }
 
     @Override
+    @GetMapping("{public-id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
-    public ResponseEntity<FlightReservationResponse> findByPublicId(String publicId) {
+    public ResponseEntity<FlightReservationResponse> findByPublicId(@PathVariable("public-id") String publicId) {
         FlightReservationResponse response = reservationService.findByPublicId(publicId);
         return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }
@@ -50,7 +51,7 @@ public class FlightReservationController implements FlyWellController<FlightRese
         return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }
 
-    @PutMapping("{flight-id}/{reservation-id}/update")
+    @PutMapping("{flight-id}/{reservation-id}/update-status")
     @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     public ResponseEntity<FlightReservationResponse> updateReservationStatus(@PathVariable("flight-id") String flightId,
                                                                              @PathVariable("reservation-id") String reservationId){

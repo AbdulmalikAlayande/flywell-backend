@@ -1,16 +1,15 @@
 package app.bola.flywell.security.config;
 
-import app.bola.flywell.data.repositories.UserRepository;
 import app.bola.flywell.security.providers.FlyWellAuthenticationProvider;
 import app.bola.flywell.security.services.FlyWellUserDetailsService;
 import app.bola.flywell.security.filters.FlyWellAuthorizationFilter;
 import app.bola.flywell.security.handlers.AccessDeniedHandlerImpl;
 import app.bola.flywell.security.handlers.AuthenticationEntryPointImpl;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,7 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -26,6 +24,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
@@ -72,7 +72,7 @@ public class SecurityConfig {
                     .accessDeniedHandler(accessDeniedHandler)
                     .authenticationEntryPoint(authenticationEntryPoint)
             )
-            .cors(Customizer.withDefaults());
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()));
         return http.build();
     }
 
@@ -107,4 +107,24 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+    @Bean
+    public WebMvcConfigurer webMvcConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(@NotNull CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins(
+                                "https://flywell.tech",
+                                "http://localhost:3000",
+                                "https://www.flywell.tech",
+                                "https://flywell.vercel.app"
+                        )
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("Authorization", "Content-Type")
+                        .allowCredentials(true);
+            }
+        };
+    }
+
 }

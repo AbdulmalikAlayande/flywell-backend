@@ -5,9 +5,9 @@ import app.bola.flywell.security.services.FlyWellUserDetailsService;
 import app.bola.flywell.security.filters.FlyWellAuthorizationFilter;
 import app.bola.flywell.security.handlers.AccessDeniedHandlerImpl;
 import app.bola.flywell.security.handlers.AuthenticationEntryPointImpl;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -24,8 +24,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
@@ -55,6 +53,7 @@ public class SecurityConfig {
                     .contentSecurityPolicy(customizer -> customizer.policyDirectives("default-src 'self';"))
             )
             .authorizeHttpRequests(registry -> registry
+            	    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/customer/new").permitAll()
                     .requestMatchers("/customer/activate-account/{public-id}/{otp}").permitAll()
                     .requestMatchers("/auth/**").permitAll()
@@ -106,25 +105,6 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    @Bean
-    public WebMvcConfigurer webMvcConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(@NotNull CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins(
-                                "https://flywell.tech",
-                                "http://localhost:3000",
-                                "https://www.flywell.tech",
-                                "https://flywell.vercel.app"
-                        )
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("Authorization", "Content-Type", "Accept")
-                        .allowCredentials(true);
-            }
-        };
     }
 
 }

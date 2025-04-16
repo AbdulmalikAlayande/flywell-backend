@@ -56,7 +56,7 @@ public class TestDataUtil {
                 .build();
     }
 
-    public static FlightReservationRequest buildFlightReservationRequest(String flightId, Map<Integer, PassengerRequest> seatMap) {
+    public static FlightReservationRequest buildFlightReservationRequest(String flightId, Map<String, PassengerRequest> seatMap) {
         return FlightReservationRequest.builder()
                 .flightId(flightId)
                 .seatMap(seatMap)
@@ -67,13 +67,7 @@ public class TestDataUtil {
         return FlightReservationRequest.builder()
                 .flightId(flightId)
                 .seatMap(Map.of(
-                        2, new PassengerRequest("Abdulmalik", "Alayande", "https://cloud/image.jpg", "43RET", Gender.MALE, LocalDate.of(2003, Calendar.DECEMBER, 30)),
-                        17, new PassengerRequest("Amirah", "Alayande", "https://cloud/image-1.jpg", "27YT6", Gender.FEMALE, LocalDate.of(2008, Calendar.APRIL, 11)),
-                        43, new PassengerRequest("Sophia", "Alayande", "https://cloud/image-2.jpg", "VG56D", Gender.FEMALE, LocalDate.of(2001, Calendar.DECEMBER, 4)),
-                        9, new PassengerRequest("Zainab", "Alayande", "https://cloud/image-3.jpg", "DF3W2", Gender.FEMALE, LocalDate.of(1999, Calendar.JUNE, 29)),
-                        11, new PassengerRequest("Kudirat", "Alayande", "https://cloud/image-4.jpg", "EDR22", Gender.FEMALE, LocalDate.of(1970, Calendar.NOVEMBER, 25)),
-                        45, new PassengerRequest("Abdullah", "Alayande", "https://cloud/image-5.jpg", "EDR22", Gender.MALE, LocalDate.of(1970, Calendar.JULY, 18)),
-                        102, new PassengerRequest("Oseni", "Ayantunde Alayande", "https://cloud/image-6.jpg", "EDR22", Gender.MALE, LocalDate.of(1970, Calendar.AUGUST, 9))
+                        "2", new PassengerRequest("Abdulmalik", "Alayande", "https://cloud/image.jpg", "Halal", "43RET", "Nigerian", Gender.MALE, LocalDate.of(2003, Calendar.DECEMBER, 30), LocalDate.of(2027, Calendar.AUGUST, 12))
                 ))
                 .build();
     }

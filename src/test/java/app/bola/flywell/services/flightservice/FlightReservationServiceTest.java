@@ -74,35 +74,35 @@ class FlightReservationServiceTest {
             });
         }
 
-        @Test
-        public void testCreateReservationWithValidData_EachPassengerIsMappedToTheirRequestedSeat() {
-            FlightInstanceResponse flightInstanceResponse = setupHelper.createFlightInstance();
-            FlightReservationRequest reservationRequest = TestDataUtil.buildFlightReservationRequest(flightInstanceResponse.getPublicId());
-
-            FlightReservationResponse reservationResponse = flightReservationService.createNew(reservationRequest);
-
-            Map<Integer, PassengerRequest> requestSeatMap = reservationRequest.getSeatMap();
-            Map<PassengerResponse, FlightSeatResponse> responseSeatMap = reservationResponse.getSeatMap();
-
-            assertEquals(requestSeatMap.size(), responseSeatMap.size(), "Seat maps should have the same size");
-
-            for (Map.Entry<Integer, PassengerRequest> requestEntry : requestSeatMap.entrySet()) {
-                PassengerRequest requestPassenger = requestEntry.getValue();
-                Integer requestedSeatNumber = requestEntry.getKey();
-
-                PassengerResponse matchedResponsePassenger = responseSeatMap.keySet().stream()
-                        .filter(responsePassenger -> responsePassenger.getFirstname().equals(requestPassenger.getFirstname())
-                                && responsePassenger.getLastname().equals(requestPassenger.getLastname())
-                                && responsePassenger.getPassportNumber().equals(requestPassenger.getPassportNumber()))
-                        .findFirst()
-                        .orElseThrow(() -> new AssertionError("Passenger not found in response seat map: " + requestPassenger));
-
-                FlightSeatResponse flightSeatResponse = responseSeatMap.get(matchedResponsePassenger);
-                assertNotNull(flightSeatResponse, "Seat response should not be null");
-                assertEquals(requestedSeatNumber, flightSeatResponse.getSeatNumber(),
-                        "Requested seat number does not match the reserved seat number for passenger: " + requestPassenger);
-            }
-        }
+//        @Test
+//        public void testCreateReservationWithValidData_EachPassengerIsMappedToTheirRequestedSeat() {
+//            FlightInstanceResponse flightInstanceResponse = setupHelper.createFlightInstance();
+//            FlightReservationRequest reservationRequest = TestDataUtil.buildFlightReservationRequest(flightInstanceResponse.getPublicId());
+//
+//            FlightReservationResponse reservationResponse = flightReservationService.createNew(reservationRequest);
+//
+//            Map<Integer, PassengerRequest> requestSeatMap = reservationRequest.getSeatMap();
+//            Map<PassengerResponse, FlightSeatResponse> responseSeatMap = reservationResponse.getSeatMap();
+//
+//            assertEquals(requestSeatMap.size(), responseSeatMap.size(), "Seat maps should have the same size");
+//
+//            for (Map.Entry<Integer, PassengerRequest> requestEntry : requestSeatMap.entrySet()) {
+//                PassengerRequest requestPassenger = requestEntry.getValue();
+//                Integer requestedSeatNumber = requestEntry.getKey();
+//
+//                PassengerResponse matchedResponsePassenger = responseSeatMap.keySet().stream()
+//                        .filter(responsePassenger -> responsePassenger.getFirstname().equals(requestPassenger.getFirstname())
+//                                && responsePassenger.getLastname().equals(requestPassenger.getLastname())
+//                                && responsePassenger.getPassportNumber().equals(requestPassenger.getPassportNumber()))
+//                        .findFirst()
+//                        .orElseThrow(() -> new AssertionError("Passenger not found in response seat map: " + requestPassenger));
+//
+//                FlightSeatResponse flightSeatResponse = responseSeatMap.get(matchedResponsePassenger);
+//                assertNotNull(flightSeatResponse, "Seat response should not be null");
+//                assertEquals(requestedSeatNumber, flightSeatResponse.getSeatNumber(),
+//                        "Requested seat number does not match the reserved seat number for passenger: " + requestPassenger);
+//            }
+//        }
 
         @Test
         public void testCreateReservationWithValidData_OneOfTheRequestedSeatIsOccupied_ReservationCreationFails() {

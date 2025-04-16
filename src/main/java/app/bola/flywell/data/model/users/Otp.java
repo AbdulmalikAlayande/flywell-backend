@@ -1,5 +1,6 @@
 package app.bola.flywell.data.model.users;
 
+import com.google.common.base.MoreObjects;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -23,8 +24,20 @@ public class Otp {
 	private long data;
 	private String secretKey;
 	private long staleTime;
-	private boolean isExpired;
-	private boolean isUsed;
+	private boolean expired;
+	private boolean used;
 	private String userEmail;
-	
+
+	@Override
+	public String toString() {
+		return MoreObjects.toStringHelper(this)
+				.add("id", id)
+				.add("data", data)
+				.add("secretKey", secretKey)
+				.add("staleTime", staleTime)
+				.add("expired", expired)
+				.add("used", used)
+				.add("userEmail", userEmail)
+				.toString();
+	}
 }

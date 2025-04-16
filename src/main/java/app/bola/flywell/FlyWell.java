@@ -34,3 +34,13 @@ public class FlyWell {
 	}
 
 }
+
+/*
+const reservationId = useMemo(
+        () =>
+            `${flightDetails.airline.substring(0, 2).toUpperCase()}${Math.floor(
+                100000 + Math.random() * 900000
+            )}`,
+        [flightDetails.airline]
+ );
+*/

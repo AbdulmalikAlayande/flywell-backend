@@ -30,6 +30,7 @@ public class BaseResponse implements Serializable {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("publicId", publicId)
+                .add("message", message)
                 .toString();
     }
 }

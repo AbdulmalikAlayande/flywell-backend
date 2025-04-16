@@ -19,7 +19,7 @@ import java.io.IOException;
 
 @Component
 @AllArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class FlyWellAuthorizationFilter extends OncePerRequestFilter {
 
     private JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;

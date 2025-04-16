@@ -26,9 +26,12 @@ public class PassengerRequest {
     String firstname;
     String lastname;
     String passportUrl;
+    String mealPreference;
     String passportNumber;
+    String nationality;
     Gender gender;
     LocalDate dateOfBirth;
+    LocalDate passportExpiryDate;
 
     @Override
     public boolean equals(Object o) {

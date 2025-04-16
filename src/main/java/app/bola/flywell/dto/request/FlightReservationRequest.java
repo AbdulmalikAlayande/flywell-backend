@@ -24,5 +24,11 @@ public class FlightReservationRequest {
     String flightId;
     List<String> seatIds;
     List<PassengerRequest> passengers;
-    Map<PassengerRequest, Integer> seatMap;
+//    Map<Integer, PassengerRequest> seatMap;
+    Map<String, PassengerRequest> seatMap;
+
+    String contactEmail;
+    String contactPhone;
+
+    boolean specialAssistance;
 }

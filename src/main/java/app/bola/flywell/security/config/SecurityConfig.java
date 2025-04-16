@@ -1,14 +1,15 @@
 package app.bola.flywell.security.config;
 
 import app.bola.flywell.data.repositories.UserRepository;
+import app.bola.flywell.security.providers.FlyWellAuthenticationProvider;
 import app.bola.flywell.security.services.FlyWellUserDetailsService;
-import app.bola.flywell.security.filters.JwtAuthenticationFilter;
+import app.bola.flywell.security.filters.FlyWellAuthorizationFilter;
 import app.bola.flywell.security.handlers.AccessDeniedHandlerImpl;
 import app.bola.flywell.security.handlers.AuthenticationEntryPointImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -33,11 +34,11 @@ import java.util.Arrays;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    final JwtAuthenticationFilter jwtAuthFilter;
+    final FlyWellAuthorizationFilter jwtAuthFilter;
     final AccessDeniedHandlerImpl accessDeniedHandler;
     final AuthenticationEntryPointImpl authenticationEntryPoint;
 
-    public SecurityConfig(@Lazy JwtAuthenticationFilter jwtAuthFilter, AccessDeniedHandlerImpl accessDeniedHandler,
+    public SecurityConfig(FlyWellAuthorizationFilter jwtAuthFilter, AccessDeniedHandlerImpl accessDeniedHandler,
                           AuthenticationEntryPointImpl authenticationEntryPoint) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.accessDeniedHandler = accessDeniedHandler;
@@ -76,15 +77,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository){
-        return new FlyWellUserDetailsService(userRepository);
-    }
-
-    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
 
+    @Bean
+    public AuthenticationProvider authenticationProvider(FlyWellUserDetailsService userDetailsService){
+        return new FlyWellAuthenticationProvider(passwordEncoder(), userDetailsService);
+    }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();

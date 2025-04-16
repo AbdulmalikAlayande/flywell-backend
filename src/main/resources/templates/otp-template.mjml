@@ -1,0 +1,59 @@
+<mjml>
+    <mj-head>
+        <mj-title>Activate Your Account</mj-title>
+        <mj-preview>Your One Time Password (OTP) Inside</mj-preview>
+    </mj-head>
+
+    <mj-body background-color="#f9f9f9" width="600px">
+
+        <!-- Header -->
+        <mj-section background-color="#000000" padding="20px">
+            <mj-column width="100%">
+                <mj-image width="150px" src="https://res.cloudinary.com/dxqpdqzue/image/upload/v1703337350/cloudinary_images/bola_air/static_assets/logo-no-background_1_oo7qni.png" alt="Logo" align="center"/>
+                <mj-text align="center" color="#ffffff" font-size="18px" font-family="Helvetica Neue, Arial">Fly Anywhere You Want</mj-text>
+            </mj-column>
+        </mj-section>
+
+        <!-- Main Body -->
+        <mj-section background-color="#fff" padding="20px">
+            <mj-column width="100%">
+                <mj-text font-size="20px" color="#ff7f50" font-family="Arial, sans-serif" font-weight="bold">Activate Your Account</mj-text>
+                <mj-text font-size="16px" font-family="Arial, sans-serif">Hi {{firstName}},</mj-text>
+                <mj-text font-size="16px" font-family="Arial, sans-serif">
+                    Welcome to Bola-Air! We are very pleased to have you.<br/>
+                    Your account was successfully created, but you need to activate it.
+                </mj-text>
+                <mj-text font-size="16px" font-family="Arial, sans-serif">
+                    Enter the OTP below in the activation page input fields:
+                </mj-text>
+                <mj-text font-size="24px" font-weight="bold" color="#4169e1">{{code}}</mj-text>
+
+                <mj-button background-color="#4169e1" color="#ffffff" font-size="16px" padding="10px 25px"
+                           href="https://your-frontend-domain.com/activate">Activate Now</mj-button>
+
+                <mj-text font-size="14px" color="#888" font-family="Arial, sans-serif">
+                    Please do not share this code with anyone.
+                </mj-text>
+            </mj-column>
+        </mj-section>
+
+        <!-- Footer -->
+        <mj-section background-color="#000000" padding="20px">
+            <mj-column width="100%">
+                <mj-text font-size="14px" color="#fff" font-family="Arial, sans-serif">
+                    For More Information:<br/>
+                    Email: <a href="mailto:alaabdulmalik03@gmail.com" style="color:#fff;">alaabdulmalik03@gmail.com</a><br/>
+                    WhatsApp: <a href="https://wa.me/2347036174617" style="color:#fff;">07036174617</a>
+                </mj-text>
+
+                <mj-social font-size="15px" icon-size="30px" mode="horizontal" align="left">
+                    <mj-social-element name="facebook" href="https://www.facebook.com/abdulmalik.alayande.39"/>
+                    <mj-social-element name="instagram" href="https://www.instagram.com/blaq_mhee/"/>
+                    <mj-social-element name="twitter" href="https://twitter.com/The_good_man02"/>
+                    <mj-social-element name="linkedin" href="https://www.linkedin.com/in/abdulmalik-alayande-b49814250/"/>
+                </mj-social>
+            </mj-column>
+        </mj-section>
+
+    </mj-body>
+</mjml>

@@ -4,23 +4,29 @@ import app.bola.flywell.config.EmailConfig;
 import app.bola.flywell.data.model.users.Otp;
 import app.bola.flywell.data.repositories.OTPRepository;
 import app.bola.flywell.exceptions.InvalidRequestException;
+import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
-import java.util.Optional;
-
-import static java.lang.Integer.parseInt;
-import static java.math.BigInteger.valueOf;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.time.Duration;
+import java.time.Instant;
 
 @Service
 @AllArgsConstructor
 public class FlyWellOtpService implements OtpService {
 	
-	private EmailConfig emailConfig;
-	private OTPRepository otpRepository;
-	private static final int TOTP_LENGTH = valueOf(6).intValue();
-	private static final int TIME_STEP = 180000;
+	final EmailConfig emailConfig;
+	final OTPRepository otpRepository;
+	private final Logger logger = LoggerFactory.getLogger(FlyWellOtpService.class);
+
+	private static final int TOTP_LENGTH = 6;
+	private static final Duration OTP_VALIDITY_DURATION = Duration.ofSeconds(60);
+	private static final String HMAC_ALGORITHM = "HmacSHA256";
 	
 	
 	@Override
@@ -29,90 +35,56 @@ public class FlyWellOtpService implements OtpService {
 		String value = generateTOTP(email);
 		String secretKey = email+ emailConfig.getTotpSecret();
 
-		Otp.OtpBuilder<?, ?> otpBuilder = Otp.builder();
-		otpBuilder.staleTime(System.currentTimeMillis()+TIME_STEP);
-		otpBuilder.secretKey(secretKey);
-		otpBuilder.userEmail(email);
-		otpBuilder.data(Long.parseLong(value));
-		Otp otp = otpBuilder.build();
+		Otp otp = Otp.builder()
+					.staleTime(Instant.now().plus(OTP_VALIDITY_DURATION).toEpochMilli())
+					.secretKey(secretKey)
+					.userEmail(email)
+					.data(Long.parseLong(value))
+					.build();
 
 		return otpRepository.save(otp);
 	}
-	
-	private String generateTOTP(String input) {
-		String secretKey = input+ emailConfig.getTotpSecret();
-		String emailHashcode = String.valueOf(secretKey.hashCode());
-		int halfLength = emailHashcode.length() / 2;
-		StringBuilder value = new StringBuilder();
-		StringBuilder value1 = new StringBuilder();
-		for (int index = 0; index < emailHashcode.length(); index++) {
-			if (index > halfLength)
-				value1.append(emailHashcode.charAt(index));
-			else value.append(emailHashcode.charAt(index));
-		}
-		int addition = parseInt(String.valueOf(value)) + parseInt(String.valueOf(value1));
-		String stringValueOfAddition;
-		if (addition > 0) stringValueOfAddition = String.valueOf(addition);
-		else stringValueOfAddition = String.valueOf(-1*addition);
-		String stringOfLengthSix;
-		if (stringValueOfAddition.length() != 6)
-			stringOfLengthSix=getStringOfLengthSix(stringValueOfAddition);
-		else stringOfLengthSix = stringValueOfAddition;
-		return stringOfLengthSix;
+
+	private String generateTOTP(String email) {
+		try{
+			final TimeBasedOneTimePasswordGenerator totp =
+					new TimeBasedOneTimePasswordGenerator(OTP_VALIDITY_DURATION, TOTP_LENGTH);
+
+			byte[] secretKeyBytes = (email + emailConfig.getTotpSecret()).getBytes();
+			SecretKey secretKey = new SecretKeySpec(secretKeyBytes, HMAC_ALGORITHM);
+
+			int otp = totp.generateOneTimePassword(secretKey, Instant.now());
+			String stringOtp = String.format("%0" + TOTP_LENGTH + "d", otp);
+			logger.info("Generated OTP: {}", stringOtp);
+			return stringOtp;
+
+		}catch (InvalidKeyException exception) {
+			logger.error(exception.getMessage());
+			logger.error("OTP Generation Failed: Invalid OTP Key", exception);
+            throw new RuntimeException(exception);
+        }
 	}
 
-	public String getStringOfLengthSix(String value){
-		int remainingLength = value.length() - TOTP_LENGTH;
-		System.out.println(remainingLength);
-		String valueOfLengthSix;
-		if (remainingLength > 0)
-			valueOfLengthSix = removeValues(value);
-		else valueOfLengthSix = addValues(value, -1*remainingLength);
-		return valueOfLengthSix;
-	}
-	
-	private String addValues(String value, int remainingLength) {
-		SecureRandom random = new SecureRandom();
-		StringBuilder valueBuilder = new StringBuilder(value);
-		for (int index = 0; index < remainingLength; index++) {
-			valueBuilder.append(random.nextInt(10));
-		}
-		return valueBuilder.toString();
-	}
-	
-	private String removeValues(String value) {
-		StringBuilder valueOfLengthSix = new StringBuilder();
-		for (int index = 0; index < value.length(); index++) {
-			if (index > TOTP_LENGTH)
-				break;
-			else valueOfLengthSix.append(value.charAt(index));
-		}
-		return valueOfLengthSix.toString();
-	}
-	
-	private Otp validatedTOTP(String inputTotp) throws InvalidRequestException {
-		Optional<Otp> foundOTPRef = otpRepository.findByData(Long.parseLong(inputTotp));
-		return foundOTPRef.map(otp -> {
-			long currentTimeInMilliSeconds = System.currentTimeMillis();
-			// FIXME: 12/18/2023 THE EXPIRY SHOULD NOT BE SET HERE NORMALLY,
-			//  IT SHOULD BE SOMETHING THAT EXPIRES ITSELF ONCE THE TIME IS EQUAL TO THE SYSTEM CURRENT TIME
-			//  IN MILLISECONDS
-			if (currentTimeInMilliSeconds > otp.getStaleTime()){
-				otp.setExpired(true);
-				otpRepository.save(otp);
-				throw new RuntimeException("OTP Has Expired");
-			}
-			if (otp.isUsed()) throw new RuntimeException("OTP Has Been Used");
-			else {
-				otp.setUsed(true);
-				return otpRepository.save(otp);
-			}
-		}).orElseThrow(()->new InvalidRequestException("Invalid Otp"));
-	}
-	
 	@Override
 	public Otp verifyOtp(String totp) throws InvalidRequestException {
-		return validatedTOTP(totp);
+
+		long inputOtp;
+		try {
+			inputOtp = Long.parseLong(totp);
+		} catch (NumberFormatException e) {
+			throw new InvalidRequestException("OTP must be numeric.");
+		}
+
+		Otp otp = otpRepository.findByData(inputOtp)
+							   .orElseThrow(() -> new InvalidRequestException("Invalid OTP"));
+
+		if (System.currentTimeMillis() > otp.getStaleTime()) {
+			throw new InvalidRequestException("OTP has expired, please request a new one.");
+		}
+
+		otp.setUsed(true);
+		return otpRepository.save(otp);
 	}
+
 }
 	

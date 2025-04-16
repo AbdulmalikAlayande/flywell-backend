@@ -20,7 +20,6 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@CrossOrigin("*")
 @AllArgsConstructor
 @RequestMapping("customer")
 public class CustomerController implements FlyWellController<CustomerRequest, CustomerResponse> {

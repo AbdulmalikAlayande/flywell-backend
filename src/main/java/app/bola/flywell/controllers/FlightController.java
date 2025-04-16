@@ -20,7 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("flights")
-@CrossOrigin("*")
 @AllArgsConstructor
 
 public class FlightController implements FlyWellController<FlightRequest, FlightResponse> {

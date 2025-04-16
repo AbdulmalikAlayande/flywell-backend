@@ -19,7 +19,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("flight-instance/")
-@CrossOrigin("*")
 @AllArgsConstructor
 public class FlightInstanceController implements FlyWellController<FlightInstanceRequest, FlightInstanceResponse> {
 

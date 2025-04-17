@@ -31,7 +31,7 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class SecurityConfig{
 
     final FlyWellAuthorizationFilter jwtAuthFilter;
     final AccessDeniedHandlerImpl accessDeniedHandler;
@@ -47,7 +47,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(AbstractHttpConfigurer::disable)
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(AbstractHttpConfigurer::disable)
             .headers(headers -> headers
                     .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
                     .xssProtection(HeadersConfigurer.XXssConfig::disable)
@@ -71,8 +72,7 @@ public class SecurityConfig {
             .exceptionHandling(handler -> handler
                     .accessDeniedHandler(accessDeniedHandler)
                     .authenticationEntryPoint(authenticationEntryPoint)
-            )
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+            );
         return http.build();
     }
 
@@ -103,6 +103,7 @@ public class SecurityConfig {
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

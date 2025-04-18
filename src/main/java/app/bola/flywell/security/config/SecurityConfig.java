@@ -50,7 +50,7 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.cors(withDefaults())
+        http.cors(Customizer.withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
             .headers(headers -> headers
                     .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
@@ -103,8 +103,8 @@ public class SecurityConfig{
                 "https://www.flywell.tech",
                 "https://flywell.vercel.app"
         ));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "Requestor-Type"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 

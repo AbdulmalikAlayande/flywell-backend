@@ -48,31 +48,31 @@ public class SecurityConfig{
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.cors(AbstractHttpConfigurer::disable)
-            .csrf(AbstractHttpConfigurer::disable)
-            .headers(headers -> headers
-                    .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
-                    .xssProtection(HeadersConfigurer.XXssConfig::disable)
-                    .contentSecurityPolicy(customizer -> customizer.policyDirectives("default-src 'self';"))
-            )
-            .authorizeHttpRequests(registry -> registry
-            	    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers("/customer/new").permitAll()
-                    .requestMatchers("/customer/activate-account/{public-id}/{otp}").permitAll()
-                    .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/reservation/**").hasAnyRole("ADMIN", "USER", "OFFICER")
-                    .requestMatchers("/crew-member/**").hasRole("OFFICER")
-                    .requestMatchers("/flights/**").hasRole("ADMIN")
-                    .requestMatchers("/flight-instance/**").hasAnyRole("ADMIN", "CUSTOMER")
-                    .requestMatchers("/reservation/**").hasAnyRole("USER", "ADMIN")
-                    .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .exceptionHandling(handler -> handler
-                    .accessDeniedHandler(accessDeniedHandler)
-                    .authenticationEntryPoint(authenticationEntryPoint)
-            );
+            .csrf(AbstractHttpConfigurer::disable);
+//            .headers(headers -> headers
+//                    .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
+//                    .xssProtection(HeadersConfigurer.XXssConfig::disable)
+//                    .contentSecurityPolicy(customizer -> customizer.policyDirectives("default-src 'self';"))
+//            )
+//            .authorizeHttpRequests(registry -> registry
+//            	    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//                    .requestMatchers("/customer/new").permitAll()
+//                    .requestMatchers("/customer/activate-account/{public-id}/{otp}").permitAll()
+//                    .requestMatchers("/auth/**").permitAll()
+//                    .requestMatchers("/admin/**").hasRole("ADMIN")
+//                    .requestMatchers("/reservation/**").hasAnyRole("ADMIN", "USER", "OFFICER")
+//                    .requestMatchers("/crew-member/**").hasRole("OFFICER")
+//                    .requestMatchers("/flights/**").hasRole("ADMIN")
+//                    .requestMatchers("/flight-instance/**").hasAnyRole("ADMIN", "CUSTOMER")
+//                    .requestMatchers("/reservation/**").hasAnyRole("USER", "ADMIN")
+//                    .anyRequest().authenticated()
+//            )
+//            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+//            .exceptionHandling(handler -> handler
+//                    .accessDeniedHandler(accessDeniedHandler)
+//                    .authenticationEntryPoint(authenticationEntryPoint)
+//            );
         return http.build();
     }
 

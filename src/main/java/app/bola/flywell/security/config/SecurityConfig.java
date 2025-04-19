@@ -64,7 +64,6 @@ public class SecurityConfig{
                     .requestMatchers("/crew-member/**").hasRole("OFFICER")
                     .requestMatchers("/flights/**").hasRole("ADMIN")
                     .requestMatchers("/flight-instance/**").hasAnyRole("ADMIN", "CUSTOMER")
-                    .requestMatchers("/reservation/**").hasAnyRole("USER", "ADMIN")
                     .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

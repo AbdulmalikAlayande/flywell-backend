@@ -1,5 +1,6 @@
 ### FlyWell ###
 /src/main/resources/secret.properties
+/src/main/resources/application-dev.properties
 target
 keys.json
 src/main/resources/http

@@ -96,8 +96,8 @@ public class SecurityConfig{
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://flywell.tech",
                 "http://localhost:3000",
-                "https://www.flywell.tech/",
-                "https://flywell.vercel.app/"
+                "https://www.flywell.tech",
+                "https://flywell.vercel.app"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "X-Requested-With", "Requestor-Type"));

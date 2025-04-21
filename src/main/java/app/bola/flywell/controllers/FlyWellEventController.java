@@ -1,22 +1,28 @@
 package app.bola.flywell.controllers;
 
-import app.bola.flywell.broker.FlyWellPublisher;
+import app.bola.flywell.broker.FlyWellEventPublisher;
+import app.bola.flywell.broker.SimpleEventPublisher;
 import app.bola.flywell.dto.response.CustomerResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/producer")
 @AllArgsConstructor
 public class FlyWellEventController {
 
-    final FlyWellPublisher flyWellPublisher;
+    final SimpleEventPublisher eventPublisher;
 
-    @PostMapping("/publish-customer-event")
-    public ResponseEntity<CustomerResponse> publishEvent() {
-        return ResponseEntity.ok(flyWellPublisher.sendMessage());
+    @PostMapping("/publish-customer-event/{message}")
+    public ResponseEntity<?> publishEvent(@PathVariable String message) {
+        eventPublisher.publishPlainMessage(message);
+        return ResponseEntity.ok("Message Published");
+    }
+
+    @GetMapping("/publish-text-event/{message}")
+    public ResponseEntity<?> publishTextEvent(@PathVariable String message) {
+        eventPublisher.publishPlainMessage(message);
+        return ResponseEntity.ok("Message Published");
     }
 }

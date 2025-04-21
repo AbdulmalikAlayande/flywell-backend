@@ -3,10 +3,11 @@ package app.bola.flywell;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.pulsar.annotation.EnablePulsar;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-//@EnablePulsar
+@EnablePulsar
 @EnableJpaAuditing
 @SpringBootApplication
 public class FlyWell {
@@ -23,7 +24,7 @@ public class FlyWell {
 		return newList;
 	}
 
-	@RequestMapping("/")
+	@GetMapping("/")
 	@ResponseBody
 	String home() {
 		return "Hello World!";

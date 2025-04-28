@@ -1,7 +1,10 @@
-#ARG PROJECT_VERSION=0.0.1
-#
-## Expose port
-#EXPOSE 8082
-#
-## Run the application
-#ENTRYPOINT ["java", "-jar", "flywell.jar"]
+FROM eclipse-temurin:21-jdk
+
+WORKDIR /app
+
+COPY target/flywell-0.0.1-SNAPSHOT.jar flywell.jar
+
+EXPOSE 8081
+
+ENTRYPOINT ["java", "-jar", "flywell.jar"]
+

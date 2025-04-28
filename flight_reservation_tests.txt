@@ -86,3 +86,18 @@ testCreateReservationUnderHighConcurrentRequests
 testRetrieveReservationsWithLargeDataset
 testUpdateReservationWithHighLatency
 testCancelReservationWithMultipleSimultaneousRequests
+
+src/
+└── main/
+    └── java/
+        └── com/yourapp/
+            ├── broker/               ← Event distribution layer
+            │   ├── websocket/        ← WebSocket-specific code
+            │   │   ├── config/       ← STOMP, SockJS, etc.
+            │   │   ├── controller/   ← MessageMapping endpoints
+            │   │   ├── handler/      ← Interceptors, error handlers, etc.
+            │   │   └── dto/          ← WebSocket message models
+            │   └── pulsar/           ← Pulsar-specific implementation
+            │       ├── producer/
+            │       ├── consumer/
+            │       └── config/

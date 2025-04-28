@@ -1,8 +1,6 @@
 package app.bola.flywell.controllers;
 
-import app.bola.flywell.broker.FlyWellEventPublisher;
-import app.bola.flywell.broker.SimpleEventPublisher;
-import app.bola.flywell.dto.response.CustomerResponse;
+import app.bola.flywell.broker.pulsar.SimpleEventPublisher;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

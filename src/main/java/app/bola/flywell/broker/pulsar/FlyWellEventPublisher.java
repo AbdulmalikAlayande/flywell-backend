@@ -1,4 +1,4 @@
-package app.bola.flywell.broker;
+package app.bola.flywell.broker.pulsar;
 
 import app.bola.flywell.dto.response.CustomerResponse;
 import lombok.RequiredArgsConstructor;

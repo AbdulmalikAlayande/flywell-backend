@@ -1,6 +1,5 @@
-package app.bola.flywell.broker;
+package app.bola.flywell.broker.pulsar;
 
-import app.bola.flywell.data.model.users.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.springframework.pulsar.annotation.PulsarListener;
